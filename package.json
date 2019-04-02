@@ -1,0 +1,28 @@
+{
+    "name": "ezUI",
+    "version": "1.0.0",
+    "description": "{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "browserify": "browserify ./src/js/ezUI.js > ./dist/ezUI.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://gitee.com/nmtuan/ezUI.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.4.0",
+        "@babel/preset-env": "^7.4.2",
+        "browserify": "^16.2.3",
+        "del": "^4.1.0",
+        "gulp": "^4.0.0",
+        "gulp-babel": "^8.0.0",
+        "gulp-sourcemaps": "^2.6.5",
+        "vinyl-buffer": "^1.0.1",
+        "vinyl-source-stream": "^2.0.0"
+    }
+}
