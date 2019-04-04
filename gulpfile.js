@@ -68,7 +68,7 @@ gulp.task('browserify', function () {
 
 //html
 gulp.task('html', function () {
-    var task = gulp.src(config.srcPath + '*.ejs')
+    var task = gulp.src(config.srcPath + '**/!(_)*.ejs')
         .pipe(ejs())
         .pipe(rename({
             extname: '.html'
