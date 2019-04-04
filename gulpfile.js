@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var del = require('del');
 var rename = require('gulp-rename');
+var plumber = require('gulp-plumber');
 
 //css
 var sass = require('gulp-sass');
@@ -37,6 +38,7 @@ gulp.task('del', function (callback) {
 //css
 gulp.task('css', function () {
     var task = gulp.src(config.srcPath + 'scss/*.scss')
+        .pipe(plumber())
         .pipe(sass({
             outputStyle: 'expanded'
         }).on('error', sass.logError))
@@ -50,6 +52,7 @@ gulp.task('css', function () {
 //es6 --> es5
 gulp.task('babel', function () {
     var task = gulp.src(config.srcPath + 'js/**/*.js')
+        .pipe(plumber())
         // .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['@babel/preset-env']
@@ -67,6 +70,7 @@ gulp.task('js', function () {
 
     return b.bundle()
         .pipe(source('ezUI.js'))
+        .pipe(plumber())
         // .pipe(buffer())
         // .pipe(sourcemaps.init())
         // .pipe(sourcemaps.write("."))
@@ -79,6 +83,7 @@ gulp.task('js', function () {
 //html
 gulp.task('html', function () {
     var task = gulp.src(config.srcPath + '**/!(_)*.ejs')
+        .pipe(plumber())
         .pipe(ejs())
         .pipe(rename({
             extname: '.html'
