@@ -41,7 +41,7 @@ gulp.task('css', function () {
 });
 
 //es6 --> es5
-gulp.task('js', function () {
+gulp.task('babel', function () {
     var task = gulp.src(config.srcPath + 'js/**/*.js')
         // .pipe(sourcemaps.init())
         .pipe(babel({
@@ -53,7 +53,7 @@ gulp.task('js', function () {
 });
 
 //require
-gulp.task('browserify', function () {
+gulp.task('js', function () {
     var b = browserify({
         entries: config.tmpPath + 'js/ezUI.js'
     });
@@ -111,7 +111,9 @@ gulp.task('html', function () {
 
 //watch
 gulp.task('watch', function () {
-    gulp.watch(config.srcPath + '**/*.js', gulp.series('del', 'js', 'browserify'));
+    gulp.watch(config.srcPath + '/scss/**/*.scss', gulp.series('css'));
+    gulp.watch(config.srcPath + '/js/**/*.js', gulp.series('babel', 'js'));
+    gulp.watch(config.srcPath + '/**/*.ejs', gulp.series('html'));
 });
 
-gulp.task('serve', gulp.series('del', 'js', 'browserify', 'watch'));
+gulp.task('serve', gulp.series('del', 'css', 'babel', 'js', 'html', 'watch'));
