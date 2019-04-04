@@ -125,8 +125,13 @@ gulp.task('html', function () {
 //watch
 gulp.task('watch', function () {
     browserSync.init({
-        server: './dist/',
-        directory: true
+        server: {
+            baseDir: './dist/',
+            directory: true
+        },
+        ghostMode: false,
+        online: false,
+        notify: false
     });
 
     gulp.watch(config.srcPath + 'scss/**/*.scss', gulp.series('css'));
