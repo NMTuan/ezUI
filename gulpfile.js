@@ -17,6 +17,10 @@ var ejs = require('gulp-ejs');
 var html = require('gulp-html-beautify');
 var htmlMin = require('gulp-htmlmin');
 
+//serve
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+
 
 var config = {
     srcPath: 'src/',
@@ -36,7 +40,10 @@ gulp.task('css', function () {
         .pipe(sass({
             outputStyle: 'expanded'
         }).on('error', sass.logError))
-        .pipe(gulp.dest(config.distPath + 'css/'));
+        .pipe(gulp.dest(config.distPath + 'css/'))
+        .pipe(reload({
+            stream: true
+        }));
     return task;
 });
 
@@ -63,7 +70,10 @@ gulp.task('js', function () {
         // .pipe(buffer())
         // .pipe(sourcemaps.init())
         // .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest(config.distPath + 'js/'));
+        .pipe(gulp.dest(config.distPath + 'js/'))
+        .pipe(reload({
+            stream: true
+        }));
 });
 
 //html
@@ -105,15 +115,23 @@ gulp.task('html', function () {
             minifyJS: true, //压缩页面JS
             minifyCSS: true //压缩页面CSS
         }))
-        .pipe(gulp.dest(config.distPath));
+        .pipe(gulp.dest(config.distPath))
+        .pipe(reload({
+            stream: true
+        }));
     return task;
 });
 
 //watch
 gulp.task('watch', function () {
-    gulp.watch(config.srcPath + '/scss/**/*.scss', gulp.series('css'));
-    gulp.watch(config.srcPath + '/js/**/*.js', gulp.series('babel', 'js'));
-    gulp.watch(config.srcPath + '/**/*.ejs', gulp.series('html'));
+    browserSync.init({
+        server: './dist/',
+        directory: true
+    });
+
+    gulp.watch(config.srcPath + 'scss/**/*.scss', gulp.series('css'));
+    gulp.watch(config.srcPath + 'js/**/*.js', gulp.series('babel', 'js'));
+    gulp.watch(config.srcPath + '**/*.ejs', gulp.series('html'));
 });
 
 gulp.task('serve', gulp.series('del', 'css', 'babel', 'js', 'html', 'watch'));

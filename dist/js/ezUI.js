@@ -7,6 +7,7 @@ var _test = _interopRequireDefault(require("./test/test"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 global.test = _test.default;
+(0, _test.default)();
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./test/test":2}],2:[function(require,module,exports){
 "use strict";
