@@ -1,6 +1,9 @@
 var gulp = require('gulp');
 var del = require('del');
 
+//css
+var sass = require('gulp-sass');
+
 //js
 var babel = require('gulp-babel');
 // var sourcemaps = require('gulp-sourcemaps');
@@ -18,6 +21,16 @@ var config = {
 gulp.task('del', function (callback) {
     del.sync([config.tmpPath, config.distPath]);
     callback();
+});
+
+//css
+gulp.task('css', function () {
+    var task = gulp.src(config.srcPath + 'scss/*.scss')
+        .pipe(sass({
+            outputStyle: 'expanded'
+        }).on('error', sass.logError))
+        .pipe(gulp.dest(config.distPath + 'css/'));
+    return task;
 });
 
 //es6 --> es5
