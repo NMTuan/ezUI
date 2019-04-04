@@ -6,3 +6,15 @@ body {
   height: 100px;
   border: 1px solid #000;
 }
+
+.ez.text-red {
+  color: "#f44336";
+}
+
+.ez.text-pink {
+  color: "#e91e63";
+}
+
+.ez.text-purple {
+  color: "#9c27b0";
+}
