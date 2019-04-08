@@ -5,6 +5,7 @@ var plumber = require('gulp-plumber');
 
 //css
 var sass = require('gulp-sass');
+var cssmin = require('gulp-clean-css');
 
 //js
 var babel = require('gulp-babel');
@@ -42,6 +43,11 @@ gulp.task('css', function () {
         .pipe(sass({
             outputStyle: 'expanded'
         }).on('error', sass.logError))
+        .pipe(gulp.dest(config.distPath + 'css/'))
+        .pipe(cssmin())
+        .pipe(rename({
+            suffix: '.min'
+        }))
         .pipe(gulp.dest(config.distPath + 'css/'))
         .pipe(reload({
             stream: true
