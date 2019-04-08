@@ -8,14 +8,14 @@
         @each $color_type,
         $color_value in $color {
             @if $color_type=="base" {
-                &.#{$color_name} {
-                    color: $color_value;
+                &.bg-#{$color_name} {
+                    background-color: $color_value;
                 }
             }
 
             @else if $color_name !="shades" {
-                &.#{$color_name}-#{$color_type} {
-                    color: $color_value;
+                &.bg-#{$color_name}-#{$color_type} {
+                    background-color: $color_value;
                 }
             }
         }
@@ -23,8 +23,8 @@
 
     @each $color,
     $color_value in $shades {
-        &.#{$color} {
-            color: $color_value;
+        &.bg-#{$color} {
+            background-color: $color_value;
         }
     }
 }
