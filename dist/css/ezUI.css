@@ -1,3 +1,13 @@
+.ez.row:after, .ez.row:before {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .ez.red {
   color: #F44336;
 }
@@ -2052,4 +2062,64 @@
 
 .ez.bg-transparent {
   background-color: transparent;
+}
+
+.ez.row-span-md {
+  margin: -4px;
+}
+
+.ez.row-span-md .col {
+  padding: 4px;
+}
+
+.ez.col {
+  float: left;
+}
+
+.ez.col1 {
+  width: 8.33333%;
+}
+
+.ez.col2 {
+  width: 16.66667%;
+}
+
+.ez.col3 {
+  width: 25%;
+}
+
+.ez.col4 {
+  width: 33.33333%;
+}
+
+.ez.col5 {
+  width: 41.66667%;
+}
+
+.ez.col6 {
+  width: 50%;
+}
+
+.ez.col7 {
+  width: 58.33333%;
+}
+
+.ez.col8 {
+  width: 66.66667%;
+}
+
+.ez.col9 {
+  width: 75%;
+}
+
+.ez.col10 {
+  width: 83.33333%;
+}
+
+.ez.col11 {
+  width: 91.66667%;
+}
+
+.ez.col12 {
+  width: 100%;
 }

@@ -1,0 +1,28 @@
+.ez {
+    &.row {
+        @extend %clear;
+
+        &-span {
+            &-md {
+                margin: -4px;
+
+                .col {
+                    padding: 4px;
+                }
+            }
+        }
+    }
+
+    &.col {
+        $i: 1;
+        float: left;
+
+        @while($i <=12) {
+            &#{$i} {
+                width: 100% / 12 * $i;
+            }
+
+            $i: $i+1;
+        }
+    }
+}

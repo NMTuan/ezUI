@@ -1,0 +1,14 @@
+//清除浮动
+%clear {
+
+    &:after,
+    &:before {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}

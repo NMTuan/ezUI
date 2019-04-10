@@ -4,17 +4,35 @@
 
 结构部分
 
-- [ ] 颜色
-    - [ ] 文字颜色
-    - [ ] 背景颜色
+- [x] 颜色
+    - [x] 文字颜色 color
+    - [x] 背景颜色 background
 - [ ] 布局
-    - [ ] 栅格系统
-    - [ ] 等分栅格
-    - [ ] 固定边栏
+    - [ ] 栅格系统 grid
+    - [ ] 等分栅格 average
+    - [ ] 固定边栏 fixed
 
 脚本部分
 
 - [ ] 
+
+## 参考
+
+- http://amazeui.org/
+- https://www.layui.com/
+- http://www.bootcss.com/
+- http://aui.dianm.cc/
+- http://frozenui.github.io/
+- http://sui.taobao.org/sui/docs/index.html
+- https://weui.io/ 移动端
+- http://dev.dcloud.net.cn/mui/ 移动
+- https://semantic-ui.com/
+- https://foundation.zurb.com/
+- https://getuikit.com/
+- https://semantic-ui.com/
+- https://purecss.io/
+- https://at-ui.github.io/at-ui/#/zh
+- http://element.eleme.io/
 
 #### 介绍
 
