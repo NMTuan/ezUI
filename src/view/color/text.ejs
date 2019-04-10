@@ -1,4 +1,38 @@
 <% title = '文字颜色'; %>
 <%-include('../compoents/default/_header.ejs');%>
+<%
+    var colors = [
+    "red",
+    "pink",
+    "purple",
+    "deep-purple",
+    "indigo",
+    "blue",
+    "light-blue",
+    "cyan",
+    "teal",
+    "green",
+    "light-green",
+    "lime", 
+    "yellow",
+    "amber",
+    "orange",
+    "deep-orange",
+    "brown",
+    "blue-grey",
+    "grey"
+    ];
+%>
+<% colors.forEach(color => { %>
+<h3><%= color; %></h3>
+<div class="ez <%= color; %>">.<%= color; %></div>
+<% ['l5','l4','l3','l2','l1','d4','d3','d2','d1'].forEach(type=>{ %>
+<div class="ez <%= color; %>-<%=type%>">.<%= color; %>-<%= type %></div>
+<% }) %>
+<% }) %>
 
+<h3>shades</h3>
+<div class="ez white bg-black">.white</div>
+<div class="ez black">.black</div>
+<div class="ez transparent bg-black">.transparent</div>
 <%-include('../compoents/default/_footer.ejs');%>
