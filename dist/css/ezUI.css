@@ -2064,11 +2064,11 @@
   background-color: transparent;
 }
 
-.ez.row-span-md {
+.ez.row-span {
   margin: -4px;
 }
 
-.ez.row-span-md .col {
+.ez.row-span .col {
   padding: 4px;
 }
 
