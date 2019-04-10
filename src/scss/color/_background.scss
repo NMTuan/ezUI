@@ -14,7 +14,7 @@
             }
 
             @else if $color_name !="shades" {
-                &.bg-#{$color_name}-#{$color_type} {
+                &.bg-#{$color_name}.bg-#{$color_type} {
                     background-color: $color_value;
                 }
             }
