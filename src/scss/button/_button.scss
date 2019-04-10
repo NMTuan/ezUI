@@ -1,0 +1,125 @@
+.ez {
+    &.btn {
+        display: inline-block;
+        background-color: $defaultBgColor;
+        color: $defaultColor;
+        cursor: pointer;
+        border: 1px solid $defaultBgColor;
+        font-size: 14px;
+        line-height: 1;
+        padding: 9px 15px;
+
+        &.btn-border {
+            color: $defaultColor;
+            background-color: $defaultBgColor2;
+            border: 1px solid $defaultBgColor;
+        }
+    }
+
+    &.btn-radius {
+        border-radius: 4px;
+    }
+
+    &.btn-round {
+        border-radius: 32px;
+    }
+
+    &.btn-sm {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    &.btn-xs {
+        padding: 3px 5px;
+        font-size: 12px;
+    }
+
+    &.btn-lg {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    &.btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    &.btn-primary {
+        background-color: $primaryBgColor;
+        color: $primaryColor;
+        border: 1px solid $primaryBgColor;
+
+        &.btn-border {
+            color: $primaryBgColor;
+            background-color: $primaryBgColor2;
+            border: 1px solid $primaryBgColor;
+        }
+    }
+
+    &.btn-secondary {
+        background-color: $secondaryBgColor;
+        color: $secondaryColor;
+        border: 1px solid $secondaryBgColor;
+
+        &.btn-border {
+            color: $secondaryBgColor;
+            background-color: $secondaryBgColor2;
+            border: 1px solid $secondaryBgColor;
+        }
+    }
+
+    &.btn-success {
+        background-color: $successBgColor;
+        color: $successColor;
+        border: 1px solid $successBgColor;
+
+        &.btn-border {
+            color: $successBgColor;
+            background-color: $successBgColor2;
+            border: 1px solid $successBgColor;
+        }
+    }
+
+    &.btn-warning {
+        background-color: $warningBgColor;
+        color: $warningColor;
+        border: 1px solid $warningBgColor;
+
+        &.btn-border {
+            color: $warningBgColor;
+            background-color: $warningBgColor2;
+            border: 1px solid $warningBgColor;
+        }
+    }
+
+    &.btn-danger {
+        background-color: $dangerBgColor;
+        color: $dangerColor;
+        border: 1px solid $dangerBgColor;
+
+        &.btn-border {
+            color: $dangerBgColor;
+            background-color: $dangerBgColor2;
+            border: 1px solid $dangerBgColor;
+        }
+    }
+
+    &.btn-link {
+        background-color: $linkBgColor;
+        color: $linkColor;
+        border: 1px solid $linkBgColor;
+    }
+
+    &.btn-disabled {
+        background-color: $disabledBgColor;
+        color: $disabledColor;
+        border: 1px solid $disabledBgColor;
+        cursor: not-allowed;
+
+        &.btn-border {
+            color: $disabledColor;
+            background-color: $disabledBgColor2;
+            border: 1px solid $disabledBgColor;
+        }
+    }
+}

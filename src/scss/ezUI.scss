@@ -1,6 +1,18 @@
+//公共，通用
+@import '../../node_modules/normalize.css/normalize';
 @import './common/common';
+@import './color/color';
 
+//配置信息
+@import './config';
+
+//文字颜色
 @import './color/text';
+//背景颜色
 @import './color/background';
 
+//栅格
 @import './layout/grid';
+
+//按钮
+@import './button/button';
