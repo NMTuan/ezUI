@@ -108,6 +108,13 @@
         background-color: $linkBgColor;
         color: $linkColor;
         border: 1px solid $linkBgColor;
+
+        &.btn-border {
+            color: $linkColor;
+            background-color: $linkBgColor;
+            border: 1px solid $linkBgColor;
+            text-decoration: underline;
+        }
     }
 
     &.btn-disabled {
