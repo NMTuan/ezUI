@@ -2598,3 +2598,65 @@ body {
   background-color: #fafafa;
   border: 1px solid #f5f5f5;
 }
+
+.ez.table {
+  font-size: 14px;
+  border-collapse: collapse;
+  color: #212121;
+}
+
+.ez.table th,
+.ez.table td {
+  line-height: 34px;
+  padding: 4px 15px;
+}
+
+.ez.table th {
+  color: #424242;
+  text-align: left;
+}
+
+.ez.table-line th,
+.ez.table-line td {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.ez.table-vline th,
+.ez.table-vline td {
+  border-right: 1px solid #e0e0e0;
+}
+
+.ez.table-vline th:last-child,
+.ez.table-vline td:last-child {
+  border-right: 0;
+}
+
+.ez.table-border {
+  border: 1px solid #e0e0e0;
+}
+
+.ez.table-stripe tbody tr:nth-child(odd) {
+  background-color: #f5f5f5;
+}
+
+.ez.table-block {
+  width: 100%;
+}
+
+.ez.table-sm th,
+.ez.table-sm td {
+  line-height: 26px;
+  padding: 3px 10px;
+}
+
+.ez.table-xs th,
+.ez.table-xs td {
+  line-height: 20px;
+  padding: 2px 5px;
+}
+
+.ez.table-lg th,
+.ez.table-lg td {
+  line-height: 42px;
+  padding: 4px 20px;
+}

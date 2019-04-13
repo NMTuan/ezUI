@@ -1,0 +1,82 @@
+<% title = '表格'; %>
+<%-include('../compoents/default/_header.ejs');%>
+
+<pre>
+
+须做到：表格内放同规格的按钮，保证行高不被撑开，还有边距。建议放小一号按钮。
+</pre>
+
+<% [
+    {name: '基础表格 .table', cls: 'ez table'},
+    {name: '横线表格 .table.table-line', cls: 'ez table table-line'},
+    {name: '竖线表格 .table.table-vline', cls: 'ez table table-vline'},
+    {name: '边框表格 .table.table-border', cls: 'ez table table-border'},
+    {name: '交错表格 .table.table-stripe', cls: 'ez table table-stripe'},
+    {name: '.table', cls: 'ez table table table-line'},
+    {name: '.table-sm', cls: 'ez table table-sm table-line'},
+    {name: '.table-xs', cls: 'ez table table-xs table-line'},
+    {name: '.table-lg', cls: 'ez table table-lg table-line'},
+    {name: '100%宽度 .table.table-block', cls: 'ez table table-border table-line table-vline table-block'},
+
+].forEach(item => { %>
+<h3><%= item.name %> </h3>
+<table class="<%= item.cls %>">
+    <thead>
+        <tr>
+            <th>1</th>
+            <th>12</th>
+            <th>123</th>
+            <th>1234</th>
+            <th>12345</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>1</th>
+            <td>12</td>
+            <td>123</td>
+            <td>1234</td>
+            <td>
+                <% if (item.name === '.table-sm') { %>
+                <button class="ez btn btn-sm">.btn-sm</button>
+                <% } else if (item.name === '.table-xs') { %>
+                <button class="ez btn btn-xs">.btn-xs</button>
+                <% } else if (item.name === '.table-lg') { %>
+                <button class="ez btn btn-lg">.btn-lg</button>
+                <% } else if (item.name === '.table') { %>
+                <button class="ez btn">.btn</button>
+                <% } else { %>
+                12345
+                <% } %>
+            </td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>22</td>
+            <td>223</td>
+            <td>2234</td>
+            <td>
+                <% if (item.name === '.table-sm') { %>
+                <button class="ez btn btn-xs">.btn-xs</button>
+                <% } else if (item.name === '.table-xs') { %>
+                无解
+                <% } else if (item.name === '.table-lg') { %>
+                <button class="ez btn">.btn</button>
+                <% } else if (item.name === '.table') { %>
+                <button class="ez btn btn-sm">.btn-sm</button>
+                <% } else { %>
+                12345
+                <% } %>
+            </td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>32</td>
+            <td>323</td>
+            <td>3234</td>
+            <td>32345</td>
+        </tr>
+    </tbody>
+</table>
+<% }) %>
+<%-include('../compoents/default/_footer.ejs');%>
