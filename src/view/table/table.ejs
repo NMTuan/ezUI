@@ -11,7 +11,14 @@
     {name: '横线表格 .table.table-line', cls: 'ez table table-line'},
     {name: '竖线表格 .table.table-vline', cls: 'ez table table-vline'},
     {name: '边框表格 .table.table-border', cls: 'ez table table-border'},
-    {name: '交错表格 .table.table-stripe', cls: 'ez table table-stripe'},
+    {name: '全边框 .table.table-border.table-line.table-vline', cls: 'ez table table-border table-line table-vline'},
+    {name: '颜色 .table.table-primary', cls: 'ez table table-border table-line table-vline table-primary'},
+    {name: '颜色 .table.table-secondary', cls: 'ez table table-line table-secondary'},
+    {name: '颜色 .table.table-success', cls: 'ez table table-border table-line table-vline table-hover table-success'},
+    {name: '颜色 .table.table-warning', cls: 'ez table table-border table-line table-vline table-warning table-stripe'},
+    {name: '颜色 .table.table-danger', cls: 'ez table table-border table-line table-vline table-danger'},
+    {name: '交错表格 .table.table-stripe', cls: 'ez table table-line table-stripe'},
+    {name: '鼠标划过 .table.table-hover', cls: 'ez table table-line table-stripe table-hover'},
     {name: '.table', cls: 'ez table table table-line'},
     {name: '.table-sm', cls: 'ez table table-sm table-line'},
     {name: '.table-xs', cls: 'ez table table-xs table-line'},
@@ -38,13 +45,13 @@
             <td>1234</td>
             <td>
                 <% if (item.name === '.table-sm') { %>
-                <button class="ez btn btn-sm">.btn-sm</button>
+                <button class="ez btn btn-sm btn-success">.btn-sm</button>
                 <% } else if (item.name === '.table-xs') { %>
-                <button class="ez btn btn-xs">.btn-xs</button>
+                <button class="ez btn btn-xs btn-success">.btn-xs</button>
                 <% } else if (item.name === '.table-lg') { %>
-                <button class="ez btn btn-lg">.btn-lg</button>
+                <button class="ez btn btn-lg btn-success">.btn-lg</button>
                 <% } else if (item.name === '.table') { %>
-                <button class="ez btn">.btn</button>
+                <button class="ez btn btn-success">.btn</button>
                 <% } else { %>
                 12345
                 <% } %>
@@ -54,16 +61,28 @@
             <th>2</th>
             <td>22</td>
             <td>223</td>
-            <td>2234</td>
             <td>
                 <% if (item.name === '.table-sm') { %>
-                <button class="ez btn btn-xs">.btn-xs</button>
+                <button class="ez btn btn-border btn-radius btn-xs btn-danger">.btn-xs</button>
                 <% } else if (item.name === '.table-xs') { %>
                 无解
                 <% } else if (item.name === '.table-lg') { %>
-                <button class="ez btn">.btn</button>
+                <button class="ez btn btn-border btn-radius btn-danger">.btn</button>
                 <% } else if (item.name === '.table') { %>
-                <button class="ez btn btn-sm">.btn-sm</button>
+                <button class="ez btn btn-border btn-radius btn-sm btn-danger">.btn-sm</button>
+                <% } else { %>
+                1234
+                <% } %>
+            </td>
+            <td>
+                <% if (item.name === '.table-sm') { %>
+                <button class="ez btn btn-xs btn-warning">.btn-xs</button>
+                <% } else if (item.name === '.table-xs') { %>
+                无解
+                <% } else if (item.name === '.table-lg') { %>
+                <button class="ez btn btn-warning">.btn</button>
+                <% } else if (item.name === '.table') { %>
+                <button class="ez btn btn-sm btn-warning">.btn-sm</button>
                 <% } else { %>
                 12345
                 <% } %>
@@ -74,9 +93,62 @@
             <td>32</td>
             <td>323</td>
             <td>3234</td>
-            <td>32345</td>
+            <th>th</th>
         </tr>
     </tbody>
 </table>
 <% }) %>
+<h3>自定义颜色</h3>
+<table class="ez table table-border table-line table-vline table-block">
+    <thead>
+        <tr>
+            <th rowspan="2">THEAD</th>
+            <th colspan="4" class="ez bg-blue bg-l5">12</th>
+        </tr>
+        <tr>
+            <th class="ez bg-teal bg-l5">12</th>
+            <th>123</th>
+            <th colspan="2" class="ez bg-pink bg-l2 text-white">1234</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>2</th>
+            <td>22</td>
+            <td>223</td>
+            <td class="ez bg-red bg-l5">2234</td>
+            <td>22345</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>32</td>
+            <td>323</td>
+            <td>3234</td>
+            <td>32345</td>
+        </tr>
+        <tr class="ez bg-yellow bg-l5">
+            <th>4</th>
+            <td>42</td>
+            <td class="ez text-red text-d2">423</td>
+            <td>4234</td>
+            <td>42345</td>
+        </tr>
+        <tr>
+            <th>5</th>
+            <td>52</td>
+            <td>523</td>
+            <td>5234</td>
+            <td>52345</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>TFOOT</th>
+            <td>62</td>
+            <th>623</th>
+            <td>6234</td>
+            <td>62345</td>
+        </tr>
+    </tfoot>
+</table>
 <%-include('../compoents/default/_footer.ejs');%>

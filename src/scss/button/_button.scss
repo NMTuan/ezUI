@@ -1,4 +1,35 @@
 .ez {
+    $defaultColor: color('grey', 'd4');
+    $defaultBgColor: color('grey', 'l2');
+    $defaultBgColor2: color('grey', 'l5');
+
+    $primaryColor: color('shades', 'white');
+    $primaryBgColor: color('blue', 'd1');
+    $primaryBgColor2: color('blue', 'l5');
+
+    $secondaryColor: color('shades', 'white');
+    $secondaryBgColor: color('light-blue', 'd1');
+    $secondaryBgColor2: color('light-blue', 'l5');
+
+    $successColor: color('shades', 'white');
+    $successBgColor: color('green', 'd1');
+    $successBgColor2: color('green', 'l5');
+
+    $warningColor: color('shades', 'white');
+    $warningBgColor: color('orange', 'd1');
+    $warningBgColor2: color('orange', 'l5');
+
+    $dangerColor: color('shades', 'white');
+    $dangerBgColor: color('red', 'd1');
+    $dangerBgColor2: color('red', 'l5');
+
+    $linkColor: color('blue', 'd2');
+    $linkBgColor: color('shades', 'transparent');
+
+    $disabledColor: color('grey', 'base');
+    $disabledBgColor: color('grey', 'l4');
+    $disabledBgColor2: color('grey', 'l5');
+
     &.btn {
         display: inline-block;
         background-color: $defaultBgColor;

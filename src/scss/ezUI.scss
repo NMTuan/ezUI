@@ -1,10 +1,13 @@
 //公共，通用
+$types: ('primary', 'secondary', 'success', 'warning', 'danger', 'link', 'disabled');
 @import '../../node_modules/normalize.css/normalize';
 @import './common/common';
 @import './color/color';
 
-//配置信息
-@import './config';
+html,
+body {
+    background-color: color('shades', 'white');
+}
 
 //文字颜色
 @import './color/text';

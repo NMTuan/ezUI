@@ -7,13 +7,13 @@
         $color_value in $color {
             @if $color_type=="base" {
                 &.text-#{$color_name} {
-                    color: $color_value;
+                    color: $color_value !important;
                 }
             }
 
             @else if $color_name !="shades" {
                 &.text-#{$color_name}.text-#{$color_type} {
-                    color: $color_value;
+                    color: $color_value !important;
                 }
             }
         }
@@ -22,7 +22,7 @@
     @each $color,
     $color_value in $shades {
         &.text-#{$color} {
-            color: $color_value;
+            color: $color_value !important;
         }
     }
 }

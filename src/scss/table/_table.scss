@@ -1,4 +1,6 @@
 .ez {
+    $borderColor: color('grey', 'l2');
+
     &.table {
         font-size: 14px;
         border-collapse: collapse;
@@ -13,13 +15,14 @@
         th {
             color: color('grey', 'd3');
             text-align: left;
+            background-color: color('grey', 'l4');
         }
 
         &-line {
 
             th,
             td {
-                border-bottom: 1px solid color('grey', 'l2');
+                border-bottom: 1px solid $borderColor;
             }
         }
 
@@ -27,7 +30,7 @@
 
             th,
             td {
-                border-right: 1px solid color('grey', 'l2');
+                border-right: 1px solid $borderColor;
 
                 &:last-child {
                     border-right: 0;
@@ -36,18 +39,42 @@
         }
 
         &-border {
-            border: 1px solid color('grey', 'l2');
+            border: 1px solid $borderColor;
         }
 
         &-stripe {
             tbody tr:nth-child(odd) {
-                background-color: color('grey', 'l4');
+                background-color: color('grey', 'l5');
+            }
+        }
+
+        &-hover {
+            tr {
+
+                &:hover,
+                &.hover {
+
+                    th,
+                    td {
+                        background-color: color('grey', 'l3');
+                    }
+                }
             }
         }
 
         &-block {
             width: 100%;
         }
+
+        // &-fixed {
+        //     table-layout: fixed;
+
+        //     th,
+        //     td {
+        //         overflow: auto;
+        //         white-space: nowrap;
+        //     }
+        // }
 
         &-sm {
 
@@ -64,6 +91,7 @@
             td {
                 line-height: 20px;
                 padding: 2px 5px;
+                font-size: 12px;
             }
         }
 
@@ -75,6 +103,68 @@
                 padding: 4px 20px;
             }
         }
+
+        $bgColor: ('primary': color('blue', 'l5'),
+        'secondary': color('light-blue', 'l5'),
+        'success': color('green', 'l5'),
+        'warning': color('orange', 'l5'),
+        'danger': color('red', 'l5'),
+        );
+
+        $hoverColor: ('primary': color('blue', 'l4'),
+        'secondary': color('light-blue', 'l4'),
+        'success': color('green', 'l4'),
+        'warning': color('orange', 'l4'),
+        'danger': color('red', 'l4'),
+        );
+
+        $borderColor: ('primary': color('blue', 'l4'),
+        'secondary': color('light-blue', 'l4'),
+        'success': color('green', 'l4'),
+        'warning': color('orange', 'l4'),
+        'danger': color('red', 'l4'),
+        );
+
+        @each $type in $types {
+            &-#{$type} {
+                @if map-has-key($borderColor, $type) {
+                    border-color: map-get($borderColor, $type);
+
+                    &.table-hover {
+                        tr {
+
+                            &:hover,
+                            &.hover {
+
+                                th,
+                                td {
+                                    background-color: map-get($hoverColor, $type);
+                                }
+                            }
+
+                        }
+                    }
+
+                    &.table-stripe {
+                        tbody tr:nth-child(odd) {
+                            background-color: map-get($bgColor, $type);
+                        }
+
+                    }
+
+                    th {
+                        background-color: map-get($bgColor, $type);
+                    }
+
+                    th,
+                    td {
+                        border-color: map-get($borderColor, $type);
+                    }
+                }
+            }
+        }
+
+
     }
 
 }
