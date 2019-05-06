@@ -1,7 +1,18 @@
 .ez {
     &.row {
         @extend %clear;
+    
+        @for $i from 1 through 15 {
+            &-span#{$i} {
+                margin: -#{$i}px;
 
+                .col {
+                    padding: #{$i}px;
+                }
+            }
+
+        }
+        
         &-span {
             margin: -4px;
 

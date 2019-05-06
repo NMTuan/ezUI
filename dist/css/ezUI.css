@@ -2408,6 +2408,126 @@ body {
   background-color: transparent !important;
 }
 
+.ez.row-span1 {
+  margin: -1px;
+}
+
+.ez.row-span1 .col {
+  padding: 1px;
+}
+
+.ez.row-span2 {
+  margin: -2px;
+}
+
+.ez.row-span2 .col {
+  padding: 2px;
+}
+
+.ez.row-span3 {
+  margin: -3px;
+}
+
+.ez.row-span3 .col {
+  padding: 3px;
+}
+
+.ez.row-span4 {
+  margin: -4px;
+}
+
+.ez.row-span4 .col {
+  padding: 4px;
+}
+
+.ez.row-span5 {
+  margin: -5px;
+}
+
+.ez.row-span5 .col {
+  padding: 5px;
+}
+
+.ez.row-span6 {
+  margin: -6px;
+}
+
+.ez.row-span6 .col {
+  padding: 6px;
+}
+
+.ez.row-span7 {
+  margin: -7px;
+}
+
+.ez.row-span7 .col {
+  padding: 7px;
+}
+
+.ez.row-span8 {
+  margin: -8px;
+}
+
+.ez.row-span8 .col {
+  padding: 8px;
+}
+
+.ez.row-span9 {
+  margin: -9px;
+}
+
+.ez.row-span9 .col {
+  padding: 9px;
+}
+
+.ez.row-span10 {
+  margin: -10px;
+}
+
+.ez.row-span10 .col {
+  padding: 10px;
+}
+
+.ez.row-span11 {
+  margin: -11px;
+}
+
+.ez.row-span11 .col {
+  padding: 11px;
+}
+
+.ez.row-span12 {
+  margin: -12px;
+}
+
+.ez.row-span12 .col {
+  padding: 12px;
+}
+
+.ez.row-span13 {
+  margin: -13px;
+}
+
+.ez.row-span13 .col {
+  padding: 13px;
+}
+
+.ez.row-span14 {
+  margin: -14px;
+}
+
+.ez.row-span14 .col {
+  padding: 14px;
+}
+
+.ez.row-span15 {
+  margin: -15px;
+}
+
+.ez.row-span15 .col {
+  padding: 15px;
+}
+
 .ez.row-span {
   margin: -4px;
 }
