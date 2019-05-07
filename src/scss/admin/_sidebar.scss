@@ -21,7 +21,7 @@
                      text-decoration: none;
                      display: block;
                      &:hover {
-                         background-color: color('blue-grey', 'd3');
+                         background-color: color($common-color, 'd3');
                      }
                  }
              }

@@ -12,10 +12,10 @@
                 height: $header_height - 12;
                 line-height: $header_height - 12;
                 font-size: 14px;
-                background-color: color('blue-grey', 'd1');
-                color: color('blue-grey', 'l3');
+                background-color: color($common-color, 'd1');
+                color: color($common-color, 'l3');
                 &:hover {
-                    background-color: color('blue-grey', 'd2');
+                    background-color: color($common-color, 'd2');
                 }
                 &.current {
                     margin: 0 1px 0 0;
@@ -23,7 +23,7 @@
                     line-height: $header_height;
                     background-color: color('blue-grey', 'l5');
                     font-size: 16px;
-                    color: color('blue-grey', 'd3');
+                    color: color($common-color, 'd3');
                 }
             }
         }
