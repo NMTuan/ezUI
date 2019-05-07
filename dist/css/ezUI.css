@@ -337,7 +337,7 @@ template {
   display: none;
 }
 
-.ez.row:after, .ez.row:before {
+.ez.clearfix:after, .ez.row:after, .ez.clearfix:before, .ez.row:before {
   content: '';
   display: block;
   clear: both;
@@ -350,6 +350,14 @@ template {
 html,
 body {
   background-color: #FFFFFF;
+}
+
+.ez.pull-right {
+  float: right;
+}
+
+.ez.pull-left {
+  float: left;
 }
 
 .ez.text-red {
@@ -2902,4 +2910,99 @@ body {
 .ez.table-danger th,
 .ez.table-danger td {
   border-color: #FFCDD2;
+}
+
+.ez.header {
+  background-color: #607d8b;
+  position: fixed;
+  height: 50px;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+.ez.header-logo {
+  width: 220px;
+  height: 50px;
+  color: #FFFFFF;
+  line-height: 50px;
+  text-align: center;
+}
+
+.ez.sidebar {
+  width: 220px;
+  background-color: #263238;
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.ez.main {
+  overflow: auto;
+  margin: 50px 0 0 220px;
+  background-color: #eceff1;
+}
+
+.ez.sidebar-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.ez.sidebar-menu {
+  height: 100%;
+  margin: 0;
+  margin-right: -100px;
+  padding: 0;
+  overflow: auto;
+  list-style-type: none;
+}
+
+.ez.sidebar-menu > li {
+  margin: 0;
+  padding: 0;
+  line-height: 46px;
+  font-size: 14px;
+}
+
+.ez.sidebar-menu > li > a {
+  color: #FFFFFF;
+  text-decoration: none;
+  display: block;
+}
+
+.ez.sidebar-menu > li > a:hover {
+  background-color: #37474f;
+}
+
+.ez.header-tabs {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ez.header-tabs-item {
+  float: left;
+  margin: 12px 1px 0 0;
+  padding: 0 18px;
+  height: 38px;
+  line-height: 38px;
+  font-size: 14px;
+  background-color: #546e7a;
+  color: #b0bec5;
+}
+
+.ez.header-tabs-item:hover {
+  background-color: #455a64;
+}
+
+.ez.header-tabs-item.current {
+  margin: 0 1px 0 0;
+  height: 50px;
+  line-height: 50px;
+  background-color: #eceff1;
+  font-size: 16px;
+  color: #37474f;
 }

@@ -1,0 +1,31 @@
+.ez {
+    $header_height: 50px;
+    &.header {
+        &-tabs {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            &-item {
+                float: left;
+                margin: 12px 1px 0 0;
+                padding: 0 18px;
+                height: $header_height - 12;
+                line-height: $header_height - 12;
+                font-size: 14px;
+                background-color: color('blue-grey', 'd1');
+                color: color('blue-grey', 'l3');
+                &:hover {
+                    background-color: color('blue-grey', 'd2');
+                }
+                &.current {
+                    margin: 0 1px 0 0;
+                    height: $header_height;
+                    line-height: $header_height;
+                    background-color: color('blue-grey', 'l5');
+                    font-size: 16px;
+                    color: color('blue-grey', 'd3');
+                }
+            }
+        }
+    }
+}

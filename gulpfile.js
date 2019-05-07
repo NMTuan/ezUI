@@ -133,6 +133,13 @@ gulp.task('html', function () {
     return task;
 });
 
+//static
+gulp.task('static', function () {
+    var task = gulp.src(config.srcPath + '/static/**/*.*')
+        .pipe(gulp.dest(config.distPath + '/static'));
+    return task;
+});
+
 //watch
 gulp.task('watch', function () {
     browserSync.init({
@@ -150,4 +157,4 @@ gulp.task('watch', function () {
     gulp.watch(config.srcPath + '**/*.ejs', gulp.series('html'));
 });
 
-gulp.task('serve', gulp.series('del', 'css', 'babel', 'js', 'html', 'watch'));
+gulp.task('serve', gulp.series('del', 'css', 'babel', 'js', 'html', 'static', 'watch'));

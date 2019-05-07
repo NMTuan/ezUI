@@ -9,6 +9,20 @@ body {
     background-color: color('shades', 'white');
 }
 
+.ez {
+    &.pull {
+        &-right {
+            float: right;
+        }
+        &-left {
+            float: left;
+        }
+    }
+    &.clearfix {
+        @extend %clear;
+    }
+}
+
 //文字颜色
 @import './color/text';
 //背景颜色
@@ -22,3 +36,6 @@ body {
 
 //表格
 @import './table/table';
+
+//admin
+@import "./admin/admin";

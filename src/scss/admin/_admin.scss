@@ -1,0 +1,42 @@
+.ez {
+    $header_height: 50px;
+    $sidebar_width: 220px;
+    &.header {
+        background-color: color('blue-grey', 'base');
+        position: fixed;
+        height: $header_height;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 20;
+        &-logo {
+            width: $sidebar_width;
+            height: $header_height;
+            color: color('shades', 'white');
+            line-height: $header_height;
+            text-align: center;
+        }
+    }
+    &.sidebar {
+        width: $sidebar_width;
+        background-color: color('blue-grey', 'd4');
+        position: fixed;
+        top: $header_height;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+    }
+    &.main {
+        overflow: auto;
+        margin: $header_height 0 0 $sidebar_width;
+        background-color: color('blue-grey', 'l5');
+        //position: absolute;
+        //top: 0;
+        //right: 0;
+        //bottom: 0;
+        //left: 0;
+    }
+}
+
+@import "./sidebar";
+@import "./header";
