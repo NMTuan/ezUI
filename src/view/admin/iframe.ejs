@@ -1,16 +1,16 @@
 <% title = 'iframe版管理端布局'; %>
-<%-include('../compoents/default/_header.ejs');%>
+<%- include('../compoents/default/_header.ejs'); %>
 <div class="ez header clearfix">
     <div class="ez header-logo pull-left">
         管理中心
     </div>
     <div class="ez pull-left">
         <ul class="ez header-tabs">
-            <li class="ez header-tabs-item current">首页啊啊 </li>
-            <li class="ez header-tabs-item">栏目一 </li>
-            <li class="ez header-tabs-item">哈哈哈哈 </li>
+            <li class="ez header-tabs-item current">首页啊啊</li>
+            <li class="ez header-tabs-item">栏目一</li>
+            <li class="ez header-tabs-item">哈哈哈哈</li>
         </ul>
-      
+
     </div>
     <div class="ez pull-right">
         <ul class="ez header-menu">
@@ -21,33 +21,41 @@
 </div>
 <div class="ez sidebar">
     <div id="sidebar_menu" class="ez sidebar-container">
-            <ul class="ez sidebar-menu">
-                <li><a href="#">首页</a></li>
-                <li><a href="#">用户管理</a></li>
-                <li><a href="#">号码管理</a></li>
-                <li><a href="#">短信管理</a></li>
-                <li><a href="#">财务管理</a></li>
-                <% for(var i = 0; i<50; i++){%>
-                <li><a href="#"><%-i%></a></li>
-                <%}%>
-            </ul>
-        </div>
+        <ul class="ez sidebar-menu">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">用户管理</a></li>
+            <li><a href="#">号码管理</a></li>
+            <li><a href="#">短信管理</a></li>
+            <li><a href="#">财务管理</a></li>
+            <% for(var i = 0; i < 50; i++){ %>
+            <li><a href="#"><%- i %></a></li>
+            <% } %>
+        </ul>
+    </div>
 </div>
 <div class="ez main">
-    <%for(var i = 0; i < 100; i++){%>
-        <p><%-i%> test</p>
-    <%}%>
+    <ul class="ez main_tabs">
+        <li>首页 <i class="fa fa-times"></i></li>
+        <li>客户管理 <i class="fa fa-times"></i></li>
+        <li>代理商管理 <i class="fa fa-times"></i></li>
+        <li>充值明细 <i class="fa fa-times"></i></li>
+    </ul>
+    <% for(var i = 0; i < 100; i++){ %>
+    <p><%- i %> test</p>
+    <% } %>
 </div>
-<%-include('../compoents/default/_footer.ejs');%>
+<%- include('../compoents/default/_footer.ejs'); %>
 
 <script>
     var data = [
-        {name: '首页', ctrl: 'index', action: 'index',  url: '###'},
+        {name: '首页', ctrl: 'index', action: 'index', url: '###'},
         {name: '用户管理', url: '###'},
-        {name: '号码管理', url: '###', child: [
+        {
+            name: '号码管理', url: '###', child: [
                 {name: '号码池', url: '###'},
                 {name: '预占号码', url: '###'}
-            ]},
+            ]
+        },
         {name: '短信管理', url: '###'},
         {name: '财务管理', url: '###'},
     ];

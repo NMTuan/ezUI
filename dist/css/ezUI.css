@@ -2913,9 +2913,10 @@ body {
 }
 
 .ez.header {
-  background-color: #607d8b;
-  position: fixed;
+  background-color: #9e9e9e;
   height: 50px;
+  box-shadow: 0 0 6px #9e9e9e;
+  position: fixed;
   top: 0;
   right: 0;
   left: 0;
@@ -2932,7 +2933,7 @@ body {
 
 .ez.sidebar {
   width: 220px;
-  background-color: #263238;
+  background-color: #fafafa;
   position: fixed;
   top: 50px;
   bottom: 0;
@@ -2968,13 +2969,13 @@ body {
 }
 
 .ez.sidebar-menu > li > a {
-  color: #FFFFFF;
+  color: #000000;
   text-decoration: none;
   display: block;
 }
 
 .ez.sidebar-menu > li > a:hover {
-  background-color: #37474f;
+  background-color: #424242;
 }
 
 .ez.header-tabs {
@@ -2990,12 +2991,12 @@ body {
   height: 38px;
   line-height: 38px;
   font-size: 14px;
-  background-color: #546e7a;
-  color: #b0bec5;
+  background-color: #757575;
+  color: #eeeeee;
 }
 
 .ez.header-tabs-item:hover {
-  background-color: #455a64;
+  background-color: #616161;
 }
 
 .ez.header-tabs-item.current {
@@ -3004,5 +3005,21 @@ body {
   line-height: 50px;
   background-color: #eceff1;
   font-size: 16px;
-  color: #37474f;
+  color: #424242;
+}
+
+.ez.main_tabs {
+  margin: 0;
+  padding: 12px 0 0 0;
+  border-bottom: 1px solid #9e9e9e;
+  font-size: 0;
+}
+
+.ez.main_tabs li {
+  margin: 0;
+  padding: 8px;
+  display: inline-block;
+  border-top: 1px solid #9e9e9e;
+  border-right: 1px solid #9e9e9e;
+  font-size: 14px;
 }

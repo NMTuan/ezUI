@@ -3,8 +3,9 @@
     $sidebar_width: 220px;
     &.header {
         background-color: color($common-color, 'base');
-        position: fixed;
         height: $header_height;
+        box-shadow: 0 0 6px color($common-color, 'base');
+        position: fixed;
         top: 0;
         right: 0;
         left: 0;
@@ -19,7 +20,7 @@
     }
     &.sidebar {
         width: $sidebar_width;
-        background-color: color($common-color, 'd4');
+        background-color: color($common-color, 'l5');
         position: fixed;
         top: $header_height;
         bottom: 0;
@@ -40,3 +41,4 @@
 
 @import "./sidebar";
 @import "./header";
+@import "./main";
