@@ -33,63 +33,46 @@
     </div>
     <div class="ez sidebar">
         <div id="sidebar_menu" class="ez sidebar-container">
-            <ul class="ez sidebar-menu">
-                <li><a href="#">首页</a></li>
-                <li><a href="#">用户管理</a></li>
-                <li><a href="#">号码管理</a></li>
-                <li><a href="#">短信管理</a></li>
-                <li><a href="#">财务管理</a></li>
-                <li><a href="#">0</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">8</a></li>
-                <li><a href="#">9</a></li>
-                <li><a href="#">10</a></li>
-                <li><a href="#">11</a></li>
-                <li><a href="#">12</a></li>
-                <li><a href="#">13</a></li>
-                <li><a href="#">14</a></li>
-                <li><a href="#">15</a></li>
-                <li><a href="#">16</a></li>
-                <li><a href="#">17</a></li>
-                <li><a href="#">18</a></li>
-                <li><a href="#">19</a></li>
-                <li><a href="#">20</a></li>
-                <li><a href="#">21</a></li>
-                <li><a href="#">22</a></li>
-                <li><a href="#">23</a></li>
-                <li><a href="#">24</a></li>
-                <li><a href="#">25</a></li>
-                <li><a href="#">26</a></li>
-                <li><a href="#">27</a></li>
-                <li><a href="#">28</a></li>
-                <li><a href="#">29</a></li>
-                <li><a href="#">30</a></li>
-                <li><a href="#">31</a></li>
-                <li><a href="#">32</a></li>
-                <li><a href="#">33</a></li>
-                <li><a href="#">34</a></li>
-                <li><a href="#">35</a></li>
-                <li><a href="#">36</a></li>
-                <li><a href="#">37</a></li>
-                <li><a href="#">38</a></li>
-                <li><a href="#">39</a></li>
-                <li><a href="#">40</a></li>
-                <li><a href="#">41</a></li>
-                <li><a href="#">42</a></li>
-                <li><a href="#">43</a></li>
-                <li><a href="#">44</a></li>
-                <li><a href="#">45</a></li>
-                <li><a href="#">46</a></li>
-                <li><a href="#">47</a></li>
-                <li><a href="#">48</a></li>
-                <li><a href="#">49</a></li>
-            </ul>
+            <div class="ez sidebar-menu">
+                <ul>
+                    <li><a href="#">首页</a>
+                    </li>
+                    <li><a href="#">机构管理</a>
+                    </li>
+                    <li><a href="#">所有机构</a>
+                        <ul>
+                            <li><a href="#">我跟进的机构</a>
+                            </li>
+                            <li><a href="#">我维护的机构</a>
+                            </li>
+                            <li><a href="#">实名审核</a>
+                            </li>
+                            <li><a href="#">已开产品</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#">短信管理</a>
+                    </li>
+                    <li><a href="#">财务管理</a>
+                        <ul>
+                            <li><a href="#">财务总览</a>
+                            </li>
+                            <li><a href="#">订单管理</a>
+                            </li>
+                            <li><a href="#">流水</a>
+                                <ul>
+                                    <li><a href="#">充值明细</a>
+                                    </li>
+                                    <li><a href="#">消费明细</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#">认款</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="ez main">
@@ -203,4 +186,4 @@
 </body>
 
 </html>
-<script>var data=[{name:"首页",ctrl:"index",action:"index",url:"###"},{name:"用户管理",url:"###"},{name:"号码管理",url:"###",child:[{name:"号码池",url:"###"},{name:"预占号码",url:"###"}]},{name:"短信管理",url:"###"},{name:"财务管理",url:"###"}],menu=new ez.Menu({data:data});$("#sidebar_menu").html(menu.render_menu())</script>
+<script>var data=[{name:"首页",ctrl:"index",action:"index"},{name:"机构管理"},{name:"所有机构",child:[{name:"我跟进的机构"},{name:"我维护的机构"},{name:"实名审核"},{name:"已开产品"}]},{name:"短信管理"},{name:"财务管理",child:[{name:"财务总览"},{name:"订单管理"},{name:"流水",child:[{name:"充值明细"},{name:"消费明细"}]},{name:"认款"}]}],menu=new ez.Menu({data:data})</script>

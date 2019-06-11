@@ -2,9 +2,8 @@
     $header_height: 50px;
     $sidebar_width: 220px;
     &.header {
-        background-color: color($common-color, 'base');
+        background-color: color('light-blue', 'base');
         height: $header_height;
-        box-shadow: 0 0 6px color($common-color, 'base');
         position: fixed;
         top: 0;
         right: 0;
@@ -20,7 +19,7 @@
     }
     &.sidebar {
         width: $sidebar_width;
-        background-color: color($common-color, 'l5');
+        background-color: color('grey', 'd4');
         position: fixed;
         top: $header_height;
         bottom: 0;
@@ -30,7 +29,7 @@
     &.main {
         overflow: auto;
         margin: $header_height 0 0 $sidebar_width;
-        background-color: color('blue-grey', 'l5');
+        background-color: color('grey', 'l5');
         //position: absolute;
         //top: 0;
         //right: 0;

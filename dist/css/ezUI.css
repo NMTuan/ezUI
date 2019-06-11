@@ -2913,9 +2913,8 @@ body {
 }
 
 .ez.header {
-  background-color: #9e9e9e;
+  background-color: #03a9f4;
   height: 50px;
-  box-shadow: 0 0 6px #9e9e9e;
   position: fixed;
   top: 0;
   right: 0;
@@ -2933,7 +2932,7 @@ body {
 
 .ez.sidebar {
   width: 220px;
-  background-color: #fafafa;
+  background-color: #212121;
   position: fixed;
   top: 50px;
   bottom: 0;
@@ -2944,7 +2943,7 @@ body {
 .ez.main {
   overflow: auto;
   margin: 50px 0 0 220px;
-  background-color: #eceff1;
+  background-color: #fafafa;
 }
 
 .ez.sidebar-container {
@@ -2958,24 +2957,32 @@ body {
   margin-right: -100px;
   padding: 0;
   overflow: auto;
+}
+
+.ez.sidebar-menu ul, .ez.sidebar-menu li {
   list-style-type: none;
 }
 
-.ez.sidebar-menu > li {
+.ez.sidebar-menu > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.ez.sidebar-menu > ul > li {
   margin: 0;
   padding: 0;
   line-height: 46px;
   font-size: 14px;
 }
 
-.ez.sidebar-menu > li > a {
-  color: #000000;
+.ez.sidebar-menu > ul > li > a {
+  color: #FFFFFF;
   text-decoration: none;
   display: block;
 }
 
-.ez.sidebar-menu > li > a:hover {
-  background-color: #424242;
+.ez.sidebar-menu > ul > li ul li {
+  line-height: 32px;
 }
 
 .ez.header-tabs {
