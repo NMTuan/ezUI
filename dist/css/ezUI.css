@@ -2912,117 +2912,70 @@ body {
   border-color: #FFCDD2;
 }
 
-.ez.header {
-  background-color: #03a9f4;
-  height: 50px;
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 20;
-}
-
-.ez.header-logo {
-  width: 220px;
-  height: 50px;
-  color: #FFFFFF;
-  line-height: 50px;
-  text-align: center;
-}
-
-.ez.sidebar {
-  width: 220px;
+.eza.nav {
+  width: 64px;
+  height: 100%;
+  overflow: hidden;
   background-color: #212121;
   position: fixed;
-  top: 50px;
+  top: 0;
   bottom: 0;
   left: 0;
-  z-index: 10;
 }
 
-.ez.main {
+.eza.sub-nav {
+  width: 220px;
+  height: 100%;
+  overflow: hidden;
+  background-color: #424242;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 64px;
+}
+
+.eza.scroll-box {
+  height: 100%;
+  margin-right: -100px;
   overflow: auto;
-  margin: 50px 0 0 220px;
+}
+
+.eza.main {
+  overflow: auto;
+  margin: 0 0 0 284px;
   background-color: #fafafa;
 }
 
-.ez.sidebar-container {
-  height: 100%;
-  overflow: hidden;
-}
-
-.ez.sidebar-menu {
-  height: 100%;
-  margin: 0;
-  margin-right: -100px;
+.eza.nav ul {
   padding: 0;
-  overflow: auto;
-}
-
-.ez.sidebar-menu ul, .ez.sidebar-menu li {
+  margin: 0;
   list-style-type: none;
 }
 
-.ez.sidebar-menu > ul {
-  margin: 0;
-  padding: 0;
-}
-
-.ez.sidebar-menu > ul > li {
-  margin: 0;
-  padding: 0;
-  line-height: 46px;
-  font-size: 14px;
-}
-
-.ez.sidebar-menu > ul > li > a {
-  color: #FFFFFF;
-  text-decoration: none;
+.eza.nav li {
   display: block;
 }
 
-.ez.sidebar-menu > ul > li ul li {
-  line-height: 32px;
+.eza.nav li a {
+  display: block;
+  color: #fff;
+  line-height: 64px;
 }
 
-.ez.header-tabs {
-  list-style-type: none;
-  margin: 0;
+.eza.sub-nav ul {
   padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
-.ez.header-tabs-item {
-  float: left;
-  margin: 12px 1px 0 0;
-  padding: 0 18px;
-  height: 38px;
-  line-height: 38px;
-  font-size: 14px;
-  background-color: #757575;
-  color: #eeeeee;
-}
-
-.ez.header-tabs-item:hover {
-  background-color: #616161;
-}
-
-.ez.header-tabs-item.current {
-  margin: 0 1px 0 0;
-  height: 50px;
-  line-height: 50px;
-  background-color: #eceff1;
-  font-size: 16px;
-  color: #424242;
-}
-
-.ez.main_tabs {
+.eza.main_tabs {
   margin: 0;
   padding: 12px 0 0 0;
   border-bottom: 1px solid #9e9e9e;
   font-size: 0;
 }
 
-.ez.main_tabs li {
+.eza.main_tabs li {
   margin: 0;
   padding: 8px;
   display: inline-block;

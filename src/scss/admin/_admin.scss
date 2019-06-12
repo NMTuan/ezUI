@@ -1,43 +1,37 @@
-.ez {
-    $header_height: 50px;
-    $sidebar_width: 220px;
-    &.header {
-        background-color: color('light-blue', 'base');
-        height: $header_height;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 20;
-        &-logo {
-            width: $sidebar_width;
-            height: $header_height;
-            color: color('shades', 'white');
-            line-height: $header_height;
-            text-align: center;
-        }
-    }
-    &.sidebar {
-        width: $sidebar_width;
+.eza {
+    $nav-width: 64px;
+    $sub-nav-width: 220px;
+    &.nav {
+        width: $nav-width;
+        height: 100%;
+        overflow: hidden;
         background-color: color('grey', 'd4');
         position: fixed;
-        top: $header_height;
+        top: 0;
         bottom: 0;
         left: 0;
-        z-index: 10;
+    }
+    &.sub-nav {
+        width: $sub-nav-width;
+        height: 100%;
+        overflow: hidden;
+        background-color: color('grey', 'd3');
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: $nav-width;
+    }
+    &.scroll-box {
+        height: 100%;
+        margin-right: -100px;
+        overflow: auto;
     }
     &.main {
         overflow: auto;
-        margin: $header_height 0 0 $sidebar_width;
+        margin: 0 0 0 $nav-width+$sub-nav-width;
         background-color: color('grey', 'l5');
-        //position: absolute;
-        //top: 0;
-        //right: 0;
-        //bottom: 0;
-        //left: 0;
     }
 }
-
-@import "./sidebar";
-@import "./header";
-@import "./main";
+@import "nav";
+@import "sub-nav";
+@import "main";

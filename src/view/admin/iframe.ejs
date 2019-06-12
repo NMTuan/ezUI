@@ -1,71 +1,68 @@
 <% title = 'iframe版管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
-<div class="ez header clearfix">
-    <div class="ez header-logo pull-left">
-        管理中心
-    </div>
-    <div class="ez pull-left">
-        <ul class="ez header-tabs">
-            <li class="ez header-tabs-item current">首页啊啊</li>
-            <li class="ez header-tabs-item">栏目一</li>
-            <li class="ez header-tabs-item">哈哈哈哈</li>
-        </ul>
-    </div>
-    <div class="ez pull-right">
-        <ul class="ez header-menu">
-            <li><a href="#">右侧</a></li>
-            <li><a href="#">右侧</a></li>
+<div class="eza nav">
+    <div class="eza scroll-box">
+        <ul>
+            <%['paperclip', 'address-book', 'bookmark', 'chart-pie', 'asterisk'].forEach(function(item, i){%>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <%})%>
         </ul>
     </div>
 </div>
-<div class="ez sidebar">
-    <div id="sidebar_menu" class="ez sidebar-container">
-
-        <div class="ez sidebar-menu">
-            <%
-            var menu = [
-                {name: '首页', ctrl: 'index', action: 'index'},
-                {name: '机构管理'},
-                {
-                    name: '所有机构', child: [
-                        {name: '我跟进的机构'},
-                        {name: '我维护的机构'},
-                        {name: '实名审核'},
-                        {name: '已开产品'}
-                    ]
-                },
-                {name: '短信管理'},
-                {
-                    name: '财务管理', child: [
-                        {name: '财务总览'},
-                        {name: '订单管理'},
-                        {
-                            name: '流水', child: [
-                                {name: '充值明细'},
-                                {name: '消费明细'}
-                            ]
-                        },
-                        {name: '认款'}
-                    ]
-                },
-            ];
-            %>
-            <% var render_menu = function (data) { %>
-                <ul>
-                    <% data.forEach(function(item, i){ %>
-                        <li><a href="#"><%- item.name %></a>
-                            <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
-                                <% render_menu(item.child) %>
-                            <% } %>
-                        </li>
-                    <% }) %>
-                </ul>
-            <% } %>
-            <% render_menu(menu) %>
-        </div>
+<div class="eza sub-nav">
+    <div class="eza scroll-box">
+        <%
+        var menu = [
+            {name: '首页', ctrl: 'index', action: 'index'},
+            {name: '机构管理'},
+            {
+                name: '所有机构', child: [
+                    {name: '我跟进的机构'},
+                    {name: '我维护的机构'},
+                    {name: '实名审核'},
+                    {name: '已开产品'}
+                ]
+            },
+            {name: '短信管理'},
+            {
+                name: '财务管理', child: [
+                    {name: '财务总览'},
+                    {name: '订单管理'},
+                    {
+                        name: '流水', child: [
+                            {name: '充值明细'},
+                            {name: '消费明细'}
+                        ]
+                    },
+                    {name: '认款'}
+                ]
+            },
+        ];
+        %>
+        <% var render_menu = function (data) { %>
+            <ul>
+                <% data.forEach(function(item, i){ %>
+                    <li><a href="#"><%- item.name %></a>
+                        <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
+                            <% render_menu(item.child) %>
+                            <% render_menu(item.child) %>
+                            <% render_menu(item.child) %>
+                            <% render_menu(item.child) %>
+                        <% } %>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+        <% render_menu(menu) %>
     </div>
 </div>
-<div class="ez main">
+<div class="eza main">
     <ul class="ez main_tabs">
         <li>首页 <i class="fa fa-times"></i></li>
         <li>客户管理 <i class="fa fa-times"></i></li>
