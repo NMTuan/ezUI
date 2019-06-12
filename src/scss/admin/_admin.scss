@@ -10,6 +10,7 @@
         top: 0;
         bottom: 0;
         left: 0;
+        @import "nav";
     }
     &.sub-nav {
         width: $sub-nav-width;
@@ -20,8 +21,9 @@
         top: 0;
         bottom: 0;
         left: $nav-width;
+        @import "sub-nav";
     }
-    &.scroll-box {
+    &.scroll-box-v {
         height: 100%;
         margin-right: -100px;
         overflow: auto;
@@ -30,8 +32,6 @@
         overflow: auto;
         margin: 0 0 0 $nav-width+$sub-nav-width;
         background-color: color('grey', 'l5');
+        @import "main";
     }
 }
-@import "nav";
-@import "sub-nav";
-@import "main";

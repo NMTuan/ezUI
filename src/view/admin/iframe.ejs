@@ -1,22 +1,28 @@
 <% title = 'iframe版管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 <div class="eza nav">
-    <div class="eza scroll-box">
+    <div class="eza scroll-box-v">
         <ul>
             <%['paperclip', 'address-book', 'bookmark', 'chart-pie', 'asterisk'].forEach(function(item, i){%>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%>"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
             <%})%>
         </ul>
     </div>
 </div>
 <div class="eza sub-nav">
-    <div class="eza scroll-box">
+    <div class="eza scroll-box-v">
         <%
         var menu = [
             {name: '首页', ctrl: 'index', action: 'index'},
