@@ -1,3 +1,16 @@
+.logo {
+    width: $nav-width;
+    height: 100px;
+    background-color: color('grey', 'd4');
+    border-bottom: 1px solid color('grey', 'd3');
+    text-align: center;
+    color: color('shades', 'white');
+    line-height: 100px;
+    position: fixed;
+    &-placeholder {
+        height: 100px; 
+    }
+}
 ul {
     padding: 0;
     margin: 0;
@@ -6,9 +19,21 @@ ul {
 li {
     display: block;
     width: $nav-width;
+    $padding: 8px;
     a {
         display: block;
-        color: color('grey', 'l3');
+        margin: $padding;
+        border-radius: 3px;
+        color: color('grey', 'base');
         text-align: center;
+        line-height: 64px - $padding*2;
+        &:hover {
+            color: color('grey', 'l3');
+        }
+        &.current {
+            background-color: color('grey', 'd3');
+            color: color($base-color, 'l1');
+        }
     }
+
 }

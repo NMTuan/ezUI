@@ -2,21 +2,15 @@
 <%- include('../compoents/default/_header.ejs'); %>
 <div class="eza nav">
     <div class="eza scroll-box-v">
+        <div class="eza logo">
+            LOGO
+        </div>
+        <div class="eza logo-placeholder"></div>
         <ul>
-            <%['paperclip', 'address-book', 'bookmark', 'chart-pie', 'asterisk'].forEach(function(item, i){%>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#"><i class="fa fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <%['address-book', 'comments', 'bookmark', 'envelope', 'map', 'chart-bar'].forEach(function(item, i){%>
+            <li><a href="#" class="<%-i==1 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#" class="<%-i==2 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
+            <li><a href="#" class="<%-i==3 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
             <%})%>
         </ul>
     </div>
@@ -56,9 +50,6 @@
                 <% data.forEach(function(item, i){ %>
                     <li><a href="#"><%- item.name %></a>
                         <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
-                            <% render_menu(item.child) %>
-                            <% render_menu(item.child) %>
-                            <% render_menu(item.child) %>
                             <% render_menu(item.child) %>
                         <% } %>
                     </li>

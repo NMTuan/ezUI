@@ -1,6 +1,7 @@
 //公共，通用
 $types: ('primary', 'secondary', 'success', 'warning', 'danger', 'link', 'disabled');
 $common-color: 'grey';
+$base-color: 'orange';
 @import '../../node_modules/normalize.css/normalize';
 @import './common/common';
 @import './color/color';
@@ -25,18 +26,18 @@ body {
 }
 
 //文字颜色
-@import './color/text';
+//@import './color/text';
 //背景颜色
-@import './color/background';
+//@import './color/background';
 
 //栅格
-@import './layout/grid';
+//@import './layout/grid';
 
 //按钮
-@import './button/button';
+//@import './button/button';
 
 //表格
-@import './table/table';
+//@import './table/table';
 
 //admin
 @import "./admin/admin";
