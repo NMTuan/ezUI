@@ -426,10 +426,14 @@ body {
   left: 64px;
 }
 
-.eza.sub-nav .eza.sub-nav ul {
+.eza.sub-nav ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
+}
+
+.eza.sub-nav a {
+  color: #fafafa;
 }
 
 .eza.scroll-box-v {
@@ -444,14 +448,14 @@ body {
   background-color: #fafafa;
 }
 
-.eza.main .eza.main_tabs {
+.eza.main_tabs {
   margin: 0;
   padding: 12px 0 0 0;
   border-bottom: 1px solid #9e9e9e;
   font-size: 0;
 }
 
-.eza.main .eza.main_tabs li {
+.eza.main_tabs li {
   margin: 0;
   padding: 8px;
   display: inline-block;

@@ -1,17 +1,15 @@
-.eza.main {
-    &_tabs {
-        margin: 0;
-        padding: 12px 0 0 0;
-        border-bottom: 1px solid color($common-color, 'base');
-        font-size: 0;
+&_tabs {
+    margin: 0;
+    padding: 12px 0 0 0;
+    border-bottom: 1px solid color($common-color, 'base');
+    font-size: 0;
 
-        li {
-            margin: 0;
-            padding: 8px;
-            display: inline-block;
-            border-top: 1px solid color($common-color, 'base');
-            border-right: 1px solid color($common-color, 'base');
-            font-size: 14px;
-        }
+    li {
+        margin: 0;
+        padding: 8px;
+        display: inline-block;
+        border-top: 1px solid color($common-color, 'base');
+        border-right: 1px solid color($common-color, 'base');
+        font-size: 14px;
     }
 }

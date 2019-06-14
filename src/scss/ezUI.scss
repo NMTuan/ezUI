@@ -1,7 +1,6 @@
 //公共，通用
 $types: ('primary', 'secondary', 'success', 'warning', 'danger', 'link', 'disabled');
 $common-color: 'grey';
-$base-color: 'orange';
 @import '../../node_modules/normalize.css/normalize';
 @import './common/common';
 @import './color/color';

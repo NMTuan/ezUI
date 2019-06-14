@@ -1,6 +1,9 @@
+$base-color: 'orange';
+
 .eza {
     $nav-width: 64px;
     $sub-nav-width: 220px;
+
     &.nav {
         width: $nav-width;
         height: 100%;
@@ -12,6 +15,7 @@
         left: 0;
         @import "nav";
     }
+
     &.sub-nav {
         width: $sub-nav-width;
         height: 100%;
@@ -23,11 +27,13 @@
         left: $nav-width;
         @import "sub-nav";
     }
+
     &.scroll-box-v {
         height: 100%;
         margin-right: -100px;
         overflow: auto;
     }
+
     &.main {
         overflow: auto;
         margin: 0 0 0 $nav-width+$sub-nav-width;
@@ -35,3 +41,4 @@
         @import "main";
     }
 }
+

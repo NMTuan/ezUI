@@ -7,11 +7,17 @@
         </div>
         <div class="eza logo-placeholder"></div>
         <ul>
-            <%['address-book', 'comments', 'bookmark', 'envelope', 'map', 'chart-bar'].forEach(function(item, i){%>
-            <li><a href="#" class="<%-i==1 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#" class="<%-i==2 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <li><a href="#" class="<%-i==3 ? 'current' : ''%>"><i class="far fa-<%-item%> fa-fw fa-lg"></i> </a></li>
-            <%})%>
+            <% ['address-book', 'comments', 'bookmark', 'envelope', 'map', 'chart-bar'].forEach(function(item, i){ %>
+                <li><a href="#" class="<%- i == 1 ? 'current' : '' %>"><i class="far fa-<%- item %> fa-fw fa-lg"></i>
+                    </a>
+                </li>
+                <li><a href="#" class="<%- i == 2 ? 'current' : '' %>"><i class="far fa-<%- item %> fa-fw fa-lg"></i>
+                    </a>
+                </li>
+                <li><a href="#" class="<%- i == 3 ? 'current' : '' %>"><i class="far fa-<%- item %> fa-fw fa-lg"></i>
+                    </a>
+                </li>
+            <% }) %>
         </ul>
     </div>
 </div>

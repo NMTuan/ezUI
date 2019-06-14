@@ -7,19 +7,23 @@
     color: color('shades', 'white');
     line-height: 100px;
     position: fixed;
+
     &-placeholder {
-        height: 100px; 
+        height: 100px;
     }
 }
+
 ul {
     padding: 0;
     margin: 0;
     list-style-type: none;
 }
+
 li {
     display: block;
     width: $nav-width;
     $padding: 8px;
+
     a {
         display: block;
         margin: $padding;
@@ -27,9 +31,11 @@ li {
         color: color('grey', 'base');
         text-align: center;
         line-height: 64px - $padding*2;
+
         &:hover {
             color: color('grey', 'l3');
         }
+
         &.current {
             background-color: color('grey', 'd3');
             color: color($base-color, 'l1');
