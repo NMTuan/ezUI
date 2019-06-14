@@ -2,15 +2,10 @@
     width: $nav-width;
     height: 100px;
     background-color: color('grey', 'd4');
-    border-bottom: 1px solid color('grey', 'd3');
-    text-align: center;
     color: color('shades', 'white');
+    text-align: center;
     line-height: 100px;
-    position: fixed;
-
-    &-placeholder {
-        height: 100px;
-    }
+    border-bottom: 1px solid color('grey', 'd3');
 }
 
 ul {

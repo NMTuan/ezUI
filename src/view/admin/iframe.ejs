@@ -3,9 +3,10 @@
 <div class="eza nav">
     <div class="eza scroll-box-v">
         <div class="eza logo">
-            LOGO
+            <div class="eza logo fixed">
+                LOGO
+            </div>
         </div>
-        <div class="eza logo-placeholder"></div>
         <ul>
             <% ['address-book', 'comments', 'bookmark', 'envelope', 'map', 'chart-bar'].forEach(function(item, i){ %>
                 <li><a href="#" class="<%- i == 1 ? 'current' : '' %>"><i class="far fa-<%- item %> fa-fw fa-lg"></i>
@@ -48,21 +49,47 @@
                     },
                     {name: '认款'}
                 ]
-            },
+            }
         ];
         %>
-        <% var render_menu = function (data) { %>
-            <ul>
+        <% var render_menu = function (data, root) { %>
+            <% if(typeof root != 'undefined' && root == true){ %>
                 <% data.forEach(function(item, i){ %>
-                    <li><a href="#"><%- item.name %></a>
-                        <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
-                            <% render_menu(item.child) %>
-                        <% } %>
-                    </li>
+                    <dl>
+                        <dt><a href="#"><%- item.name %></a></dt>
+                        <dd>
+                            <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
+                                <% render_menu(item.child) %>
+                            <% } %>
+                        </dd>
+                    </dl>
                 <% }) %>
-            </ul>
+            <% } else { %>
+                <% data.forEach(function(item, i){ %>
+                    <ul>
+                        <li><a href="#"><%- item.name %></a>
+                            <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
+                                <% render_menu(item.child) %>
+                            <% } %>
+                        </li>
+                    </ul>
+                <% }) %>
+            <% } %>
+
         <% } %>
-        <% render_menu(menu) %>
+        <div class="eza sub-nav-box">
+            <div class="eza sub-nav-header">
+                <div class="eza sub-nav-header fixed">
+                    <div class="eza sub-nav-title">
+                        <i class="fa fa-pen fa-fw"></i> 企业管理
+                    </div>
+                </div>
+            </div>
+            <div class="eza sub-nav-body">
+                <% render_menu(menu, true) %>
+                <% render_menu(menu, true) %>
+            </div>
+        </div>
     </div>
 </div>
 <div class="eza main">

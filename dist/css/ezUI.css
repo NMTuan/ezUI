@@ -337,7 +337,9 @@ template {
   display: none;
 }
 
-.ez.clearfix:after, .ez.clearfix:before {
+.ez.clearfix:after,
+.eza.clearfix:after, .ez.clearfix:before,
+.eza.clearfix:before {
   content: '';
   display: block;
   clear: both;
@@ -352,12 +354,19 @@ body {
   background-color: #FFFFFF;
 }
 
-.ez.pull-right {
+.ez.pull-right,
+.eza.pull-right {
   float: right;
 }
 
-.ez.pull-left {
+.ez.pull-left,
+.eza.pull-left {
   float: left;
+}
+
+.ez.fixed,
+.eza.fixed {
+  position: fixed;
 }
 
 .eza.nav {
@@ -375,15 +384,10 @@ body {
   width: 64px;
   height: 100px;
   background-color: #212121;
-  border-bottom: 1px solid #424242;
-  text-align: center;
   color: #FFFFFF;
+  text-align: center;
   line-height: 100px;
-  position: fixed;
-}
-
-.eza.nav .logo-placeholder {
-  height: 100px;
+  border-bottom: 1px solid #424242;
 }
 
 .eza.nav ul {
@@ -426,10 +430,41 @@ body {
   left: 64px;
 }
 
+.eza.sub-nav-header {
+  width: 220px;
+  height: 64px;
+  background-color: #424242;
+}
+
+.eza.sub-nav-title {
+  color: #FFFFFF;
+  font-size: 20px;
+  line-height: 22px;
+  padding: 21px;
+}
+
+.eza.sub-nav-body {
+  width: 220px;
+}
+
+.eza.sub-nav-body dl {
+  font-size: 14px;
+  margin: 6px;
+}
+
+.eza.sub-nav-body dl dt a {
+  display: block;
+  border-radius: 3px;
+  padding: 7px;
+  text-decoration: none;
+}
+
+.eza.sub-nav-body dl dt a:hover {
+  background-color: #616161;
+}
+
 .eza.sub-nav ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
+  border: 1px solid #0d0;
 }
 
 .eza.sub-nav a {

@@ -5,22 +5,33 @@ $common-color: 'grey';
 @import './common/common';
 @import './color/color';
 
+* {
+    box-sizing: border-box;
+}
+
 html,
 body {
     background-color: color('shades', 'white');
 }
 
-.ez {
+.ez,
+.eza {
     &.pull {
         &-right {
             float: right;
         }
+
         &-left {
             float: left;
         }
     }
+
     &.clearfix {
         @extend %clear;
+    }
+
+    &.fixed {
+        position: fixed;
     }
 }
 
