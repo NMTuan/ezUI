@@ -38,24 +38,33 @@
             },
             {name: '短信管理'},
             {
-                name: '财务管理', child: [
+                name: '财务管理', current: true, child: [
                     {name: '财务总览'},
-                    {name: '订单管理'},
+                    {name: '订单管理', current: true},
                     {
                         name: '流水', child: [
-                            {name: '充值明细'},
+                            {name: '充值明细充值明细充值明细充值明细充值明细'},
                             {name: '消费明细'}
                         ]
                     },
                     {name: '认款'}
                 ]
-            }
+            },
+            {
+                name: '一级栏目', child: [
+                    {name: '二级栏目'},
+                    {name: '二级栏目'},
+                    {name: '二级栏目'},
+                    {name: '二级栏目'}
+                ]
+            },
+
         ];
         %>
         <% var render_menu = function (data, root) { %>
             <% if(typeof root != 'undefined' && root == true){ %>
                 <% data.forEach(function(item, i){ %>
-                    <dl>
+                    <dl <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>>
                         <dt><a href="#"><%- item.name %></a></dt>
                         <dd>
                             <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
@@ -65,15 +74,16 @@
                     </dl>
                 <% }) %>
             <% } else { %>
-                <% data.forEach(function(item, i){ %>
-                    <ul>
-                        <li><a href="#"><%- item.name %></a>
+                <ul>
+                    <% data.forEach(function(item, i){ %>
+                        <li>
+                            <a href="#" <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>><%- item.name %></a>
                             <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
                                 <% render_menu(item.child) %>
                             <% } %>
                         </li>
-                    </ul>
-                <% }) %>
+                    <% }) %>
+                </ul>
             <% } %>
 
         <% } %>
@@ -86,7 +96,6 @@
                 </div>
             </div>
             <div class="eza sub-nav-body">
-                <% render_menu(menu, true) %>
                 <% render_menu(menu, true) %>
             </div>
         </div>

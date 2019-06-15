@@ -420,7 +420,7 @@ body {
 }
 
 .eza.sub-nav {
-  width: 220px;
+  width: 200px;
   height: 100%;
   overflow: hidden;
   background-color: #424242;
@@ -431,20 +431,30 @@ body {
 }
 
 .eza.sub-nav-header {
-  width: 220px;
+  width: 200px;
   height: 64px;
   background-color: #424242;
 }
 
 .eza.sub-nav-title {
   color: #FFFFFF;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 22px;
   padding: 21px;
 }
 
+.eza.sub-nav dl, .eza.sub-nav dt, .eza.sub-nav dd, .eza.sub-nav ul, .eza.sub-nav li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.eza.sub-nav a {
+  text-decoration: none;
+}
+
 .eza.sub-nav-body {
-  width: 220px;
+  width: 200px;
 }
 
 .eza.sub-nav-body dl {
@@ -452,23 +462,54 @@ body {
   margin: 6px;
 }
 
-.eza.sub-nav-body dl dt a {
-  display: block;
-  border-radius: 3px;
-  padding: 7px;
-  text-decoration: none;
-}
-
-.eza.sub-nav-body dl dt a:hover {
+.eza.sub-nav-body dl:hover {
   background-color: #616161;
+  border-radius: 3px;
 }
 
-.eza.sub-nav ul {
-  border: 1px solid #0d0;
-}
-
-.eza.sub-nav a {
+.eza.sub-nav-body dt a {
+  display: block;
+  padding: 10px 12px;
   color: #fafafa;
+}
+
+.eza.sub-nav-body dd {
+  overflow: hidden;
+  display: none;
+  padding: 0 0 10px;
+}
+
+.eza.sub-nav-body ul {
+  margin: 0 0 0 16px;
+  font-size: 13px;
+}
+
+.eza.sub-nav-body li {
+  overflow: hidden;
+}
+
+.eza.sub-nav-body li a {
+  display: inline-block;
+  padding: 3px 6px;
+  line-height: 1.6;
+  color: #bdbdbd;
+}
+
+.eza.sub-nav-body li a:hover {
+  color: #ffb74d;
+}
+
+.eza.sub-nav-body li a.current {
+  color: #ffb74d;
+}
+
+.eza.sub-nav-body dl.current {
+  background-color: #616161;
+  border-radius: 3px;
+}
+
+.eza.sub-nav-body dl.current dd {
+  display: block;
 }
 
 .eza.scroll-box-v {
@@ -479,7 +520,7 @@ body {
 
 .eza.main {
   overflow: auto;
-  margin: 0 0 0 284px;
+  margin: 0 0 0 264px;
   background-color: #fafafa;
 }
 
