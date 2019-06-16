@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var del = require('del');
 var rename = require('gulp-rename');
 var plumber = require('gulp-plumber');
+var gulpsync = require('gulp-sync')(gulp);
+var sync = gulpsync.sync;
 
 //css
 var sass = require('gulp-sass');
@@ -152,9 +154,9 @@ gulp.task('watch', function () {
         notify: false
     });
 
-    gulp.watch(config.srcPath + 'scss/**/*.scss', gulp.series('css'));
-    gulp.watch(config.srcPath + 'js/**/*.js', gulp.series('babel', 'js'));
-    gulp.watch(config.srcPath + '**/*.ejs', gulp.series('html'));
+    gulp.watch(config.srcPath + 'scss/**/*.scss', ['css']);
+    gulp.watch(config.srcPath + 'js/**/*.js', sync(['babel', 'js']));
+    gulp.watch(config.srcPath + '**/*.ejs', ['html']);
 });
 
-gulp.task('serve', gulp.series('del', 'css', 'babel', 'js', 'html', 'static', 'watch'));
+gulp.task('serve', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'watch']));
