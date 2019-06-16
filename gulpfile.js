@@ -136,7 +136,7 @@ gulp.task('html', function () {
 //static
 gulp.task('static', function () {
     var task = gulp.src(config.srcPath + '/static/**/*.*')
-        .pipe(gulp.dest(config.distPath + '/static'));
+        .pipe(gulp.dest(config.distPath + 'static/'));
     return task;
 });
 
