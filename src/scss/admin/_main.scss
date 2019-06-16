@@ -1,15 +1,21 @@
-&_tabs {
+&-tabs {
     margin: 0;
-    padding: 12px 0 0 0;
-    border-bottom: 1px solid color($common-color, 'base');
+    padding: 0;
+    border-bottom: 1px solid color('grey', 'l2');
     font-size: 0;
+    list-style-type: none;
+    background-color: color('shades', 'white');
 
     li {
         margin: 0;
-        padding: 8px;
+        padding: 14px;
         display: inline-block;
-        border-top: 1px solid color($common-color, 'base');
-        border-right: 1px solid color($common-color, 'base');
         font-size: 14px;
+        color: color('grey', 'd2');
+
+        &.current {
+            color: color('grey', 'd3');
+            background-color: color($base-color, 'l2');
+        }
     }
 }
