@@ -1,4 +1,6 @@
 &-tabs {
+    width: 100%;
+    height: 45px;
     margin: 0;
     padding: 0;
     border-bottom: 1px solid color('grey', 'l2');
@@ -12,10 +14,40 @@
         display: inline-block;
         font-size: 14px;
         color: color('grey', 'd2');
+        cursor: pointer;
+
+        &:hover {
+            background-color: color($base-color, 'l4');
+
+            .fa-times {
+                color: color($base-color, 'l2');
+
+            }
+        }
+
 
         &.current {
             color: color('grey', 'd3');
             background-color: color($base-color, 'l2');
+
+            .fa-times {
+                color: color($base-color, 'l4');
+            }
         }
+
+        .fa-times {
+            color: color('grey', 'l2');
+
+            &:hover {
+                color: color($base-color, 'd4');
+            }
+        }
+
+
     }
+}
+
+iframe {
+    display: block;
+    width: 100%;
 }

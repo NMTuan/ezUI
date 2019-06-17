@@ -102,15 +102,20 @@
     </div>
 </div>
 <div class="eza main">
-    <ul class="eza main-tabs">
-        <li><i class="fa fa-home fa-lg"></i></li>
-        <li class="current">客户管理 <i class="fa fa-times"></i></li>
-        <li>代理商管理 <i class="fa fa-times"></i></li>
-        <li>充值明细 <i class="fa fa-times"></i></li>
-    </ul>
-    <% for(var i = 0; i < 100; i++){ %>
-        <p><%- i %> test</p>
-    <% } %>
+    <div class="eza main-tabs">
+        <ul class="eza main-tabs fixed">
+            <li><i class="fa fa-home fa-fw fa-lg"></i></li>
+            <li class="current">客户管理 <i class="fa fa-times"></i></li>
+            <li>代理商管理 <i class="fa fa-times"></i></li>
+            <li>充值明细 <i class="fa fa-times"></i></li>
+        </ul>
+    </div>
+    <div class="eza notice">
+        <p>检测到您到账号近期登录异常，请尽快前往安全中心<a href="#">修改密码</a>。</p>
+    </div>
+    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>
+
+
 </div>
 <%- include('../compoents/default/_footer.ejs'); %>
 

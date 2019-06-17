@@ -1,3 +1,6 @@
 <% title = '管理端布局'; %>
-<%-include('../compoents/default/_header.ejs');%>
-<%-include('../compoents/default/_footer.ejs');%>
+<%- include('../compoents/default/_header.ejs'); %>
+<% for(var i = 0; i < 100; i++){ %>
+    <p><%- i %> test</p>
+<% } %>
+<%- include('../compoents/default/_footer.ejs'); %>

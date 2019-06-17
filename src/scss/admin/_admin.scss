@@ -35,7 +35,8 @@ $base-color: 'orange';
     }
 
     &.main {
-        overflow: auto;
+        overflow: hidden;
+        height: 100%;
         margin: 0 0 0 $nav-width+$sub-nav-width;
         background-color: color('grey', 'l4');
         @import "main";
