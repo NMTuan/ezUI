@@ -10,7 +10,7 @@
         <ul>
             <% ['home', 'mail', 'flag', 'pie-chart', 'message-2', 'bank-card'].forEach(function(item, i){ %>
                 <li>
-                    <a href="#" class="<%- i == 1 ? 'current' : '' %>">
+                    <a href="#sub-nav-<%- i %>" class="<%- i == 1 ? 'current' : '' %>">
                         <i class="remixicon-<%- item %>-line"></i>
                     </a>
                 </li>
@@ -83,7 +83,7 @@
             <% } %>
 
         <% } %>
-        <div class="eza sub-nav-box">
+        <div id="sub-nav-0" class="eza sub-nav-box">
             <div class="eza sub-nav-header">
                 <div class="eza sub-nav-header fixed">
                     <div class="eza sub-nav-title">
@@ -95,8 +95,18 @@
                 <% render_menu(menu, true) %>
             </div>
         </div>
+        <div id="sub-nav-1">111</div>
+        <div id="sub-nav-2">222</div>
+        <div id="sub-nav-3">333</div>
+        <div id="sub-nav-4">444</div>
+        <div id="sub-nav-5">555</div>
+        <div id="sub-nav-6">666</div>
     </div>
 </div>
+<script>
+    // eza.tabs($('.nav li a'));
+    $('.nav li a').tabs();
+</script>
 <div class="eza main">
     <div class="eza main-tabs">
         <ul class="eza main-tabs fixed">

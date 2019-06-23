@@ -1413,6 +1413,10 @@ var _renderHeight = {
     });
   },
   renderHeight: function renderHeight(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
     _renderHeight.el = el;
     _renderHeight.params = $.extend({}, _renderHeight.defaults, params);
 
@@ -1444,8 +1448,9 @@ $.extend({
 global.eza = {};
 eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
-}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9734e027.js","/")
-},{"./admin/renderHeight":5,"./log/log":7,"Xy56Sy":4,"buffer":1}],7:[function(require,module,exports){
+eza.tabs = require('./tabs/tabs');
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_119777bf.js","/")
+},{"./admin/renderHeight":5,"./log/log":7,"./tabs/tabs":8,"Xy56Sy":4,"buffer":1}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1463,4 +1468,66 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
+},{"Xy56Sy":4,"buffer":1}],8:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _tabs = {
+  defaults: {
+    currentClass: 'current'
+  },
+  contents: [],
+  //所有容器
+  init: function init() {
+    //找到所有容器
+    $.each(_tabs.el, function (i, item) {
+      var id = $(item).attr('href');
+
+      if (id) {
+        _tabs.contents.push(id);
+      }
+    });
+  },
+  change: function change(clickObj) {
+    var id = clickObj.attr('href');
+
+    if (!id) {
+      return;
+    }
+
+    _tabs.el.removeClass(_tabs.params.currentClass);
+
+    $.each(_tabs.contents, function (i, item) {
+      if (id === item) {
+        clickObj.addClass(_tabs.params.currentClass);
+        $(id).show();
+      } else {
+        $(item).hide();
+      }
+    });
+  },
+  tabs: function tabs(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
+    _tabs.el = el;
+    _tabs.params = $.extend({}, _tabs.defaults, params);
+
+    _tabs.init();
+
+    el.on('click', function () {
+      _tabs.change($(this));
+    });
+  }
+};
+$.fn.extend({
+  tabs: function tabs(params) {
+    _tabs.tabs(this, params);
+
+    return this;
+  }
+});
+module.exports = _tabs.tabs;
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
 },{"Xy56Sy":4,"buffer":1}]},{},[6])
