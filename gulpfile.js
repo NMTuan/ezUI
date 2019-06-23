@@ -11,10 +11,7 @@ var cssmin = require('gulp-clean-css');
 
 //js
 var babel = require('gulp-babel');
-// var sourcemaps = require('gulp-sourcemaps');
-// var buffer = require('vinyl-buffer');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
+var browserify = require('gulp-browserify');
 
 //html
 var ejs = require('gulp-ejs');
@@ -72,20 +69,16 @@ gulp.task('babel', function () {
 
 //require
 gulp.task('js', function () {
-    var b = browserify({
-        entries: config.tmpPath + 'js/ezUI.js'
-    });
-
-    return b.bundle()
-        .pipe(source('ezUI.js'))
-        .pipe(plumber())
-        // .pipe(buffer())
-        // .pipe(sourcemaps.init())
-        // .pipe(sourcemaps.write("."))
+    var task = gulp.src(config.tmpPath + 'js/*.js')
+        .pipe(browserify({
+            insertGlobals: true
+        }))
         .pipe(gulp.dest(config.distPath + 'js/'))
         .pipe(reload({
             stream: true
         }));
+    return task;
+
 });
 
 //html
