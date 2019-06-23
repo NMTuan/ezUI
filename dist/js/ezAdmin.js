@@ -1398,70 +1398,41 @@ process.chdir = function (dir) {
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
-var _Common2 = _interopRequireDefault(require("../common/Common"));
+var _renderHeight = {
+  defaults: {
+    correct: 0 //修正高度
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  },
+  render: function render() {
+    var winHeight = $(window).height();
+    $.each(_renderHeight.el, function () {
+      //涉及到el，都要循环，兼容jquery
+      var height = winHeight - $(this).offset().top + _renderHeight.params.correct;
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+      $(this).height(height);
+    });
+  },
+  renderHeight: function renderHeight(el, params) {
+    _renderHeight.el = el;
+    _renderHeight.params = $.extend({}, _renderHeight.defaults, params);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    _renderHeight.render();
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var RenderHeight =
-/*#__PURE__*/
-function (_Common) {
-  _inherits(RenderHeight, _Common);
-
-  function RenderHeight() {
-    _classCallCheck(this, RenderHeight);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RenderHeight).apply(this, arguments));
+    $(window).on('resize', function () {
+      _renderHeight.render();
+    });
   }
+};
 
-  return RenderHeight;
-}(_Common2.default);
+$.fn.renderHeight = function (params) {
+  _renderHeight.renderHeight(this, params);
 
-module.exports = new RenderHeight();
+  return this;
+};
+
+module.exports = _renderHeight.renderHeight;
 }).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\renderHeight.js","/admin")
-},{"../common/Common":6,"Xy56Sy":4,"buffer":1}],6:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Common =
-/*#__PURE__*/
-function () {
-  function Common() {
-    _classCallCheck(this, Common);
-  }
-
-  _createClass(Common, [{
-    key: "log",
-    value: function log() {
-      console.log.apply(this, arguments);
-    }
-  }]);
-
-  return Common;
-}();
-
-module.exports = Common;
-}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/common\\Common.js","/common")
-},{"Xy56Sy":4,"buffer":1}],7:[function(require,module,exports){
+},{"Xy56Sy":4,"buffer":1}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1471,5 +1442,5 @@ module.exports = Common;
 // import Menu from './menu/Menu'; //菜单
 global.eza = {};
 eza.renderHeight = require('./admin/renderHeight');
-}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ac8a368f.js","/")
-},{"./admin/renderHeight":5,"Xy56Sy":4,"buffer":1}]},{},[7])
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f3d8a2f0.js","/")
+},{"./admin/renderHeight":5,"Xy56Sy":4,"buffer":1}]},{},[6])

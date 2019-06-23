@@ -120,34 +120,6 @@
 <%- include('../compoents/default/_footer.ejs'); %>
 
 <script>
-    var data = [
-        {name: '首页', ctrl: 'index', action: 'index'},
-        {name: '机构管理'},
-        {
-            name: '所有机构', child: [
-                {name: '我跟进的机构'},
-                {name: '我维护的机构'},
-                {name: '实名审核'},
-                {name: '已开产品'}
-            ]
-        },
-        {name: '短信管理'},
-        {
-            name: '财务管理', child: [
-                {name: '财务总览'},
-                {name: '订单管理'},
-                {
-                    name: '流水', child: [
-                        {name: '充值明细'},
-                        {name: '消费明细'}
-                    ]
-                },
-                {name: '认款'}
-            ]
-        },
-    ];
-    var menu = new ez.Menu({
-        data: data,
-    });
-    // $('#sidebar_menu').html(menu.render_menu());
+    // eza.calHeight($('#iframe'));
+    $('#iframe').renderHeight();
 </script>
