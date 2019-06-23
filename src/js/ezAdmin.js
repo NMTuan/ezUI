@@ -1,12 +1,10 @@
-// import test from './test/test';
-
-// global.test = test;
-
-// test();
-
-
-// import Menu from './menu/Menu'; //菜单
+$.extend({
+    ezaConfig: {
+        debug: false
+    }
+});
 
 global.eza = {};
 
+eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');

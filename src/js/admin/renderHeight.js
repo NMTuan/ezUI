@@ -10,6 +10,7 @@ var renderHeight = {
         });
     },
     renderHeight: function (el, params) {
+        
         renderHeight.el = el;
         renderHeight.params = $.extend({}, renderHeight.defaults, params);
 

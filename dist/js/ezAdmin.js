@@ -1436,11 +1436,31 @@ module.exports = _renderHeight.renderHeight;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
-// import test from './test/test';
-// global.test = test;
-// test();
-// import Menu from './menu/Menu'; //菜单
+$.extend({
+  ezaConfig: {
+    debug: false
+  }
+});
 global.eza = {};
+eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
-}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f3d8a2f0.js","/")
-},{"./admin/renderHeight":5,"Xy56Sy":4,"buffer":1}]},{},[6])
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_91e3388d.js","/")
+},{"./admin/renderHeight":5,"./log/log":7,"Xy56Sy":4,"buffer":1}],7:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _log = {
+  log: function log() {
+    if ($.ezaConfig && $.ezaConfig.debug) {
+      console.log.apply(this, arguments);
+    }
+  }
+};
+$.extend({
+  log: function log() {
+    _log.log.apply(this, arguments);
+  }
+});
+module.exports = _log.log;
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
+},{"Xy56Sy":4,"buffer":1}]},{},[6])
