@@ -17,7 +17,7 @@ ul {
 li {
     display: block;
     width: $nav-width;
-    $padding: 8px;
+    $padding: 6px;
 
     a {
         display: block;
@@ -25,7 +25,8 @@ li {
         border-radius: 3px;
         color: color('grey', 'base');
         text-align: center;
-        line-height: 64px - $padding*2;
+        line-height: $nav-width - $padding*2;
+        text-decoration: none;
 
         &:hover {
             color: color('grey', 'l3');
@@ -35,6 +36,11 @@ li {
             background-color: color('grey', 'd3');
             color: color($base-color, 'l1');
         }
+    }
+
+    i {
+        font-size: 20px;
+        display: block;
     }
 
 }
