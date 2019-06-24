@@ -1449,7 +1449,7 @@ global.eza = {};
 eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
-}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_119777bf.js","/")
+}).call(this,require("Xy56Sy"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4979bc07.js","/")
 },{"./admin/renderHeight":5,"./log/log":7,"./tabs/tabs":8,"Xy56Sy":4,"buffer":1}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -1474,7 +1474,10 @@ module.exports = _log.log;
 
 var _tabs = {
   defaults: {
-    currentClass: 'current'
+    currentClass: 'current',
+    //高亮的class
+    defaultHide: true //默认隐藏
+
   },
   contents: [],
   //所有容器
@@ -1486,12 +1489,16 @@ var _tabs = {
       if (id) {
         _tabs.contents.push(id);
       }
+
+      if (_tabs.params.defaultHide && !$(item).hasClass(_tabs.params.currentClass)) {
+        $(id).hide();
+      }
     });
   },
   change: function change(clickObj) {
     var id = clickObj.attr('href');
 
-    if (!id) {
+    if ($(id).length <= 0) {
       return;
     }
 

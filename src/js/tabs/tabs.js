@@ -1,6 +1,7 @@
 var tabs = {
     defaults: {
-        currentClass: 'current'
+        currentClass: 'current',    //高亮的class
+        defaultHide: true   //默认隐藏
     },
     contents: [],   //所有容器
     init: function () {
@@ -10,11 +11,14 @@ var tabs = {
             if (id) {
                 tabs.contents.push(id);
             }
+            if (tabs.params.defaultHide && !$(item).hasClass(tabs.params.currentClass)) {
+                $(id).hide();
+            }
         });
     },
     change: function (clickObj) {
         var id = clickObj.attr('href');
-        if (!id) {
+        if ($(id).length <= 0) {
             return;
         }
         tabs.el.removeClass(tabs.params.currentClass);
