@@ -19,7 +19,6 @@
         "@babel/preset-env": "^7.4.2",
         "browser-sync": "^2.26.3",
         "del": "^4.1.0",
-        "gulp": "^3.9.1",
         "gulp-babel": "^8.0.0",
         "gulp-browserify": "^0.5.1",
         "gulp-clean-css": "^4.0.0",
@@ -28,9 +27,11 @@
         "gulp-htmlmin": "^5.0.1",
         "gulp-plumber": "^1.2.1",
         "gulp-rename": "^1.4.0",
-        "gulp-sass": "^4.0.2"
+        "gulp-sass": "^4.0.2",
+        "gulp-sync": "^0.1.4"
     },
     "dependencies": {
+        "gulp": "^3.9.1",
         "normalize.css": "^8.0.1"
     }
 }
