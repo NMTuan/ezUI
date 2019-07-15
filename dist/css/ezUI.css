@@ -373,6 +373,7 @@ body {
   width: 50px;
   height: 100%;
   overflow: hidden;
+  padding-top: 45px;
   background-color: #212121;
   position: fixed;
   top: 0;
@@ -417,7 +418,7 @@ body {
 
 .eza.nav li a.current {
   background-color: #424242;
-  color: #ffa726;
+  color: #78909c;
 }
 
 .eza.nav li i {
@@ -426,27 +427,15 @@ body {
 }
 
 .eza.sub-nav {
-  width: 190px;
+  width: 170px;
   height: 100%;
   overflow: hidden;
+  padding-top: 45px;
   background-color: #424242;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 50px;
-}
-
-.eza.sub-nav-header {
-  width: 190px;
-  height: 64px;
-  background-color: #424242;
-}
-
-.eza.sub-nav-title {
-  color: #FFFFFF;
-  font-size: 18px;
-  line-height: 22px;
-  padding: 21px;
 }
 
 .eza.sub-nav dl, .eza.sub-nav dt, .eza.sub-nav dd, .eza.sub-nav ul, .eza.sub-nav li {
@@ -460,7 +449,7 @@ body {
 }
 
 .eza.sub-nav-body {
-  width: 190px;
+  width: 170px;
 }
 
 .eza.sub-nav-body dl {
@@ -502,11 +491,11 @@ body {
 }
 
 .eza.sub-nav-body li a:hover {
-  color: #ffb74d;
+  color: #90a4ae;
 }
 
 .eza.sub-nav-body li a.current {
-  color: #ffb74d;
+  color: #90a4ae;
 }
 
 .eza.sub-nav-body dl.current {
@@ -524,56 +513,102 @@ body {
   overflow: auto;
 }
 
-.eza.main {
-  overflow: hidden;
-  height: 100%;
-  margin: 0 0 0 240px;
-  background-color: #f5f5f5;
+.eza.scroll-box-h {
+  width: 100%;
+  margin-bottom: -100px;
+  overflow: auto;
 }
 
-.eza.main-tabs {
-  width: 100%;
+.eza.header {
   height: 45px;
-  margin: 0;
+  background-color: #607d8b;
+  position: relative;
+  z-index: 1;
+}
+
+.eza.header-logo {
+  float: left;
+  width: 220px;
+  line-height: 45px;
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 18px;
+}
+
+.eza.header-logo a {
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.eza.header-menu {
+  float: right;
+  width: 220px;
+  height: 45px;
+  background-color: red;
+}
+
+.eza.header-tabs {
+  height: 45px;
+  overflow: hidden;
   padding: 0;
-  border-bottom: 1px solid #e0e0e0;
   font-size: 0;
   list-style-type: none;
-  background-color: #FFFFFF;
 }
 
-.eza.main-tabs li {
+.eza.header-tabs ul, .eza.header-tabs li {
   margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.eza.header-tabs ul {
+  background-color: #607d8b;
+  white-space: nowrap;
+}
+
+.eza.header-tabs li {
+  margin: 0;
+  height: 45px;
   padding: 14px;
   display: inline-block;
   font-size: 14px;
-  color: #616161;
+  color: #eceff1;
+  background-color: #607d8b;
   cursor: pointer;
 }
 
-.eza.main-tabs li:hover {
-  background-color: #ffe0b2;
+.eza.header-tabs li:hover {
+  background-color: #455a64;
 }
 
-.eza.main-tabs li:hover .fa-times {
-  color: #ffb74d;
+.eza.header-tabs li:hover .fa-times {
+  color: #90a4ae;
 }
 
-.eza.main-tabs li.current {
+.eza.header-tabs li.current {
   color: #424242;
-  background-color: #ffb74d;
+  background-color: #f5f5f5;
 }
 
-.eza.main-tabs li.current .fa-times {
-  color: #ffe0b2;
+.eza.header-tabs li.current .fa-times {
+  color: #cfd8dc;
 }
 
-.eza.main-tabs li .fa-times {
-  color: #e0e0e0;
+.eza.header-tabs li .fa-times {
+  color: #607d8b;
+  line-height: 1;
 }
 
-.eza.main-tabs li .fa-times:hover {
-  color: #e65100;
+.eza.header-tabs li .fa-times:hover {
+  color: #263238;
+}
+
+.eza.main {
+  clear: both;
+  overflow: hidden;
+  height: 100%;
+  margin: 0 0 0 220px;
+  background-color: #f5f5f5;
 }
 
 .eza.main iframe {

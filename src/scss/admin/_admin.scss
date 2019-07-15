@@ -1,13 +1,15 @@
-$base-color: 'orange';
+$base-color: 'blue-grey';
 
 .eza {
     $nav-width: 50px;
-    $sub-nav-width: 190px;
+    $sub-nav-width: 170px;
+    $header-height: 45px;
 
     &.nav {
         width: $nav-width;
         height: 100%;
         overflow: hidden;
+        padding-top: $header-height;
         background-color: color('grey', 'd4');
         position: fixed;
         top: 0;
@@ -20,6 +22,7 @@ $base-color: 'orange';
         width: $sub-nav-width;
         height: 100%;
         overflow: hidden;
+        padding-top: $header-height;
         background-color: color('grey', 'd3');
         position: fixed;
         top: 0;
@@ -33,8 +36,22 @@ $base-color: 'orange';
         margin-right: -100px;
         overflow: auto;
     }
+    &.scroll-box-h {
+        width: 100%;
+        margin-bottom: -100px;
+        overflow: auto;
+    }
+
+    &.header {
+        height: $header-height;
+        background-color: color($base-color, 'base');
+        position: relative;
+        z-index: 1;
+        @import "header";
+    }
 
     &.main {
+        clear: both;
         overflow: hidden;
         height: 100%;
         margin: 0 0 0 $nav-width+$sub-nav-width;

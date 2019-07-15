@@ -1,6 +1,12 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
+<style>
+    html, body {
+        background-color: #f5f5f5;
+    }
+</style>
 <% for(var i = 0; i < 100; i++){ %>
     <p><%- i %> test</p>
+    <div style="margin: 20px; background-color: #fff;">容器</div>
 <% } %>
 <%- include('../compoents/default/_footer.ejs'); %>
