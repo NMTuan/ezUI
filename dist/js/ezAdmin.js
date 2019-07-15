@@ -1398,6 +1398,147 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var _iframeTabs = {
+  defaults: {
+    el: '',
+    //菜单元素，不是容器，jquery选择器
+    parentEl: '',
+    //父级菜单元素，不是容器，jquery选择器
+    headerEl: '',
+    //页签容器，jquery选择器
+    contentEl: '' //内容容器，jquery选择器
+
+  },
+  urls: [],
+  //记录所有打开url
+  //打开新页面
+  open: function open(url, title) {
+    //先检测是否打开
+    var isCreated = _iframeTabs.checkCreated(url);
+
+    if (!isCreated) {
+      _iframeTabs.create(url, title);
+    }
+
+    _iframeTabs.switch(url);
+  },
+  //创建页面
+  create: function create(url, title) {
+    _iframeTabs.urls.push(url); //记录已打开页面
+    //构建标签头
+
+
+    var tabHeader = $('<li>');
+    tabHeader.data('url', url);
+    tabHeader.html(title);
+
+    _iframeTabs.params.headerEl.append(tabHeader); //构建标签内容
+
+
+    var tabContent = $('<iframe>');
+    tabContent.attr('src', url);
+    tabContent.attr('frameborder', '0');
+
+    _iframeTabs.params.contentEl.append(tabContent);
+  },
+  //切换到页面
+  switch: function _switch(url, highLightParent) {
+    var index = $.inArray(url, _iframeTabs.urls);
+
+    _iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
+
+    var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
+
+    iframe.show().siblings().hide();
+    iframe.renderHeight();
+
+    _iframeTabs.highLight(url, highLightParent);
+  },
+  //高亮当前菜单
+  highLight: function highLight(url, highLightParent) {
+    _iframeTabs.params.el.filter('.current').removeClass('current');
+
+    _iframeTabs.params.el.each(function (i, item) {
+      if ($(item).data('url') === url) {
+        $(item).addClass('current');
+
+        if (highLightParent) {
+          var parentId = $(item).closest('.sub-nav-item').attr('id');
+
+          _iframeTabs.highLightParent(parentId);
+        }
+
+        return false;
+      }
+    });
+  },
+  //高亮父级菜单，只有在点击tabs的时候才会需要。
+  highLightParent: function highLightParent(id) {
+    console.log(id);
+
+    var current = _iframeTabs.params.parentEl.filter('.current');
+
+    if (current.attr('href') !== '#' + id) {
+      //判断当前高亮是否为已高亮。
+      current.removeClass('current');
+
+      _iframeTabs.params.parentEl.each(function (i, item) {
+        if ($(item).attr('href') === '#' + id) {
+          $(item).click();
+          return false;
+        }
+      });
+    }
+  },
+  //关闭页面
+  //刷新页面
+  //监测是否已经创建
+  checkCreated: function checkCreated(url) {
+    return $.inArray(url, _iframeTabs.urls) < 0 ? false : true;
+  },
+  //初始化，绑定事件
+  iframeTabs: function iframeTabs(el, params) {
+    if (el.length < 0) {
+      return;
+    }
+
+    _iframeTabs.params = $.extend({}, _iframeTabs.defaults, params);
+    _iframeTabs.params.el = el;
+    console.log(_iframeTabs); //菜单绑定
+
+    el.on('click', function () {
+      var url = $(this).data('url') || '';
+      var title = $(this).data('title') || $.trim($(this).text());
+
+      if (url !== '#' && url !== '###' && url !== '') {
+        _iframeTabs.open(url, title);
+      }
+    }); //tabs绑定
+
+    _iframeTabs.params.headerEl.on('click', 'li', function () {
+      if ($(this).hasClass('current')) {
+        return;
+      }
+
+      var url = $(this).data('url');
+
+      _iframeTabs.switch(url, true);
+    });
+  }
+};
+
+$.fn.iframeTabs = function (params) {
+  _iframeTabs.iframeTabs(this, params);
+
+  return this;
+};
+
+module.exports = _iframeTabs.iframeTabs;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\iframeTabs.js","/admin")
+},{"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 var _renderHeight = {
   defaults: {
     correct: 0 //修正高度
@@ -1436,7 +1577,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\renderHeight.js","/admin")
-},{"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1449,8 +1590,9 @@ global.eza = {};
 eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d2894c92.js","/")
-},{"./admin/renderHeight":5,"./log/log":7,"./tabs/tabs":8,"XJF/FV":3,"buffer":2}],7:[function(require,module,exports){
+eza.iframeTabs = require('./admin/iframeTabs');
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7184892.js","/")
+},{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./log/log":8,"./tabs/tabs":9,"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1468,7 +1610,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1537,4 +1679,4 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":3,"buffer":2}]},{},[6])
+},{"XJF/FV":3,"buffer":2}]},{},[7])

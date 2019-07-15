@@ -1,7 +1,7 @@
 <% title = 'iframe版管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 <div class="eza nav">
-    <div class="eza scroll-box-v">
+    <div id="parentMenu" class="eza scroll-box-v">
         <ul>
             <% ['home', 'mail', 'flag', 'pie-chart', 'message-2', 'bank-card'].forEach(function(item, i){ %>
                 <li>
@@ -16,7 +16,7 @@
 <div class="eza sub-nav">
     <div class="eza scroll-box-v">
         <%
-        var menu = [
+        var menu1 = [
             {name: '首页', ctrl: 'index', action: 'index'},
             {name: '机构管理'},
             {
@@ -30,8 +30,8 @@
             {name: '短信管理'},
             {
                 name: '财务管理', current: true, child: [
-                    {name: '财务总览'},
-                    {name: '订单管理', current: true},
+                    {name: '财务总览', url: './index.html'},
+                    {name: '订单管理', url: '../button/button.html', current: true},
                     {
                         name: '流水', child: [
                             {name: '充值明细充值明细充值明细充值明细充值明细'},
@@ -51,6 +51,14 @@
             },
 
         ];
+        var menu2 = [
+            {
+                name: '流水', current: true, child: [
+                    {name: '充值明细充值明细充值明细充值明细充值明细', url: '../color/text.html'},
+                    {name: '消费明细', url: '../color/background.html'}
+                ]
+            },
+        ];
         %>
         <% var render_menu = function (data, root) { %>
             <% if(typeof root != 'undefined' && root == true){ %>
@@ -68,7 +76,7 @@
                 <ul>
                     <% data.forEach(function(item, i){ %>
                         <li>
-                            <a href="#" <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>><%- item.name %></a>
+                            <a data-url="<%- typeof item.url != 'undefined' ? item.url :'#'%>" <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>><%- item.name %></a>
                             <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
                                 <% render_menu(item.child) %>
                             <% } %>
@@ -78,23 +86,20 @@
             <% } %>
 
         <% } %>
-        <div id="sub-nav-0" class="eza sub-nav-box">
-<!--            <div class="eza sub-nav-header">-->
-<!--                <div class="eza sub-nav-header fixed">-->
-<!--                    <div class="eza sub-nav-title">-->
-<!--                        <i class="fa fa-pen fa-fw"></i> 企业管理-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+        <div id="sub-nav-0" class="sub-nav-item">
             <div class="eza sub-nav-body">
-                <% render_menu(menu, true) %>
+                <% render_menu(menu1, true) %>
             </div>
         </div>
-        <div id="sub-nav-1">111</div>
-        <div id="sub-nav-2">222</div>
-        <div id="sub-nav-3">333</div>
-        <div id="sub-nav-4">444</div>
-        <div id="sub-nav-5">555</div>
+        <div id="sub-nav-1" class="sub-nav-item">
+            <div class="eza sub-nav-body">
+                <% render_menu(menu2, true) %>
+            </div>
+        </div>
+        <div id="sub-nav-2" class="sub-nav-item">222</div>
+        <div id="sub-nav-3" class="sub-nav-item">333</div>
+        <div id="sub-nav-4" class="sub-nav-item">444</div>
+        <div id="sub-nav-5" class="sub-nav-item">555</div>
     </div>
 </div>
 <div class="eza header">
@@ -106,31 +111,27 @@
     </div>
     <div class="eza header-tabs">
         <div class="eza scroll-box-h">
-            <ul class="eza">
-                <li><i class="fa fa-home fa-fw fa-lg"></i></li>
-                <li class="current">客户管理 <i class="fa fa-times"></i></li>
-                <%for(var i = 0; i < 1; i++){%>
-                    <li>一二三 <i class="fa fa-times"></i></li>
-                    <li>一二三四 <i class="fa fa-times"></i></li>
-                    <li>一二三四五 <i class="fa fa-times"></i></li>
-                    <li>一二三四五六 <i class="fa fa-times"></i></li>
-                    <li>代理商管理 <i class="fa fa-times"></i></li>
-                    <li>充值明细 <i class="fa fa-times"></i></li>
-                <%}%>
+            <ul id="iframeTabsHeader" class="eza">
+<!--                <li><i class="fa fa-home fa-fw fa-lg"></i></li>-->
+<!--                <li class="current">客户管理 <i class="fa fa-times"></i></li>-->
+<!--                <li>一二三 <i class="fa fa-times"></i></li>-->
             </ul>
         </div>
     </div>
 </div>
-<script>
-    // eza.tabs($('.nav li a'));
-    $('.nav li a').tabs();
-</script>
-<div class="eza main">
-    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>
+<div id="iframeTabsContent" class="eza main">
+<!--    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>-->
 </div>
 <%- include('../compoents/default/_footer.ejs'); %>
 
 <script>
+    // eza.tabs($('.nav li a'));
+    $('.nav li a').tabs();  //一级菜单切换
+    $('.sub-nav-item a').iframeTabs({    //初始化多标签
+        parentEl: $('#parentMenu a'),
+        headerEl: $('#iframeTabsHeader'),
+        contentEl: $('#iframeTabsContent')
+    });
     // eza.calHeight($('#iframe'));
-    $('#iframe').renderHeight();
+    // $('#iframe').renderHeight();    //处理高度
 </script>
