@@ -30,6 +30,13 @@ var iframeTabs = {
         tabContent.attr('src', url);
         tabContent.attr('frameborder', '0');
         iframeTabs.params.contentEl.append(tabContent);
+
+        // if(typeof NProgress !== 'undefined'){
+        //     NProgress.start();
+        //     tabContent[0].onload = function () {
+        //         NProgress.done();
+        //     };
+        // }
     },
     //切换到页面
     switch: function(url, highLightParent){

@@ -1439,7 +1439,13 @@ var _iframeTabs = {
     tabContent.attr('src', url);
     tabContent.attr('frameborder', '0');
 
-    _iframeTabs.params.contentEl.append(tabContent);
+    _iframeTabs.params.contentEl.append(tabContent); // if(typeof NProgress !== 'undefined'){
+    //     NProgress.start();
+    //     tabContent[0].onload = function () {
+    //         NProgress.done();
+    //     };
+    // }
+
   },
   //切换到页面
   switch: function _switch(url, highLightParent) {
@@ -1591,7 +1597,7 @@ eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7184892.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ac125e2b.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./log/log":8,"./tabs/tabs":9,"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
