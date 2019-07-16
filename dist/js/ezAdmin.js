@@ -1439,13 +1439,18 @@ var _iframeTabs = {
     tabContent.attr('src', url);
     tabContent.attr('frameborder', '0');
 
-    _iframeTabs.params.contentEl.append(tabContent); // if(typeof NProgress !== 'undefined'){
-    //     NProgress.start();
-    //     tabContent[0].onload = function () {
-    //         NProgress.done();
-    //     };
-    // }
+    _iframeTabs.params.contentEl.append(tabContent);
 
+    if (typeof NProgress !== 'undefined') {
+      NProgress.configure({
+        parent: '#iframeTabsContent'
+      });
+      NProgress.start();
+
+      tabContent[0].onload = function () {
+        NProgress.done();
+      };
+    }
   },
   //切换到页面
   switch: function _switch(url, highLightParent) {
@@ -1455,7 +1460,7 @@ var _iframeTabs = {
 
     var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
 
-    iframe.show().siblings().hide();
+    iframe.show().siblings('iframe').hide();
     iframe.renderHeight();
 
     _iframeTabs.highLight(url, highLightParent);
@@ -1469,6 +1474,7 @@ var _iframeTabs = {
         $(item).addClass('current');
 
         if (highLightParent) {
+          //高亮父级菜单，一般只有在点击tabs的时候才会处理
           var parentId = $(item).closest('.sub-nav-item').attr('id');
 
           _iframeTabs.highLightParent(parentId);
@@ -1480,8 +1486,6 @@ var _iframeTabs = {
   },
   //高亮父级菜单，只有在点击tabs的时候才会需要。
   highLightParent: function highLightParent(id) {
-    console.log(id);
-
     var current = _iframeTabs.params.parentEl.filter('.current');
 
     if (current.attr('href') !== '#' + id) {
@@ -1509,8 +1513,7 @@ var _iframeTabs = {
     }
 
     _iframeTabs.params = $.extend({}, _iframeTabs.defaults, params);
-    _iframeTabs.params.el = el;
-    console.log(_iframeTabs); //菜单绑定
+    _iframeTabs.params.el = el; //菜单绑定
 
     el.on('click', function () {
       var url = $(this).data('url') || '';
@@ -1597,7 +1600,7 @@ eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ac125e2b.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f1c416d9.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./log/log":8,"./tabs/tabs":9,"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

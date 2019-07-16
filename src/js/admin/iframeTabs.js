@@ -31,19 +31,21 @@ var iframeTabs = {
         tabContent.attr('frameborder', '0');
         iframeTabs.params.contentEl.append(tabContent);
 
-        // if(typeof NProgress !== 'undefined'){
-        //     NProgress.start();
-        //     tabContent[0].onload = function () {
-        //         NProgress.done();
-        //     };
-        // }
+        if(typeof NProgress !== 'undefined'){
+            NProgress.configure({ parent: '#iframeTabsContent' });
+            NProgress.start();
+            tabContent[0].onload = function () {
+                NProgress.done();
+            };
+        }
     },
     //切换到页面
     switch: function(url, highLightParent){
         var index = $.inArray(url, iframeTabs.urls);
         iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
+
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
-        iframe.show().siblings().hide();
+        iframe.show().siblings('iframe').hide();
         iframe.renderHeight();
 
         iframeTabs.highLight(url, highLightParent);
@@ -54,7 +56,7 @@ var iframeTabs = {
         iframeTabs.params.el.each(function (i, item) {
             if($(item).data('url') === url){
                 $(item).addClass('current');
-                if(highLightParent){
+                if(highLightParent){    //高亮父级菜单，一般只有在点击tabs的时候才会处理
                     var parentId = $(item).closest('.sub-nav-item').attr('id');
                     iframeTabs.highLightParent(parentId);
                 }
@@ -64,7 +66,6 @@ var iframeTabs = {
     },
     //高亮父级菜单，只有在点击tabs的时候才会需要。
     highLightParent: function(id){
-        console.log(id);
         var current = iframeTabs.params.parentEl.filter('.current');
         if(current.attr('href') !== '#' + id){   //判断当前高亮是否为已高亮。
             current.removeClass('current');
@@ -90,8 +91,6 @@ var iframeTabs = {
         }
         iframeTabs.params = $.extend({}, iframeTabs.defaults, params);
         iframeTabs.params.el = el;
-
-        console.log(iframeTabs);
 
         //菜单绑定
         el.on('click', function () {
