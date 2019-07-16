@@ -5,25 +5,36 @@ var iframeTabs = {
         headerEl: '', //页签容器，jquery选择器
         contentEl: ''  //内容容器，jquery选择器
     },
-    closeBtn: $('<i>').attr('class', 'fa fa-times'),//<i class="fa fa-times"></i>',
+    index: 0,   //计数器
+    closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
     urls: [],   //记录所有打开url
     //打开新页面
-    open: function(url, title){
+    open: function (url, title, backgroundModel) {
+        //如果内页使用，需要提升
+        if (window.top !== window) {
+            window.top.eza.iframeTabs.open(url, title, backgroundModel);
+            return;
+        }
         //先检测是否打开
         var isCreated = iframeTabs.checkCreated(url);
-        if(!isCreated){
+        if (!isCreated) { //如果没创建，先创建
             iframeTabs.create(url, title);
+            if (!backgroundModel) {   //非后台模式，切换过去
+                iframeTabs.switch(url);
+            }
+        } else {    //如果已创建，则切换过去，不考虑是否为后台模式
+            iframeTabs.switch(url);
         }
-        iframeTabs.switch(url);
     },
     //创建页面
-    create: function(url, title){
+    create: function (url, title) {
         iframeTabs.urls.push(url);  //记录已打开页面
+        iframeTabs.index++;
 
         //构建标签头
         var tabHeader = $('<li>');
         tabHeader.data('url', url);
-        tabHeader.html(title);
+        tabHeader.html(title || '新开窗口' + iframeTabs.index);
         iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
         iframeTabs.params.headerEl.append(tabHeader);
 
@@ -31,10 +42,11 @@ var iframeTabs = {
         var tabContent = $('<iframe>');
         tabContent.attr('src', url);
         tabContent.attr('frameborder', '0');
+        tabContent.attr('name', url);
         iframeTabs.params.contentEl.append(tabContent);
 
-        if(typeof NProgress !== 'undefined'){
-            NProgress.configure({ parent: '#iframeTabsContent' });
+        if (typeof NProgress !== 'undefined') {
+            NProgress.configure({parent: '#iframeTabsContent'});
             NProgress.start();
             tabContent[0].onload = function () {
                 NProgress.done();
@@ -42,7 +54,7 @@ var iframeTabs = {
         }
     },
     //切换到页面
-    switch: function(url){
+    switch: function (url) {
         var index = $.inArray(url, iframeTabs.urls);
         iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
 
@@ -53,31 +65,31 @@ var iframeTabs = {
         iframeTabs.highLight(url);
     },
     //高亮当前菜单
-    highLight: function(url){
+    highLight: function (url) {
         iframeTabs.params.el.filter('.current').removeClass('current');
         iframeTabs.params.el.each(function (i, item) {
-            if($(item).data('url') === url){
+            if ($(item).data('url') === url) {
                 $(item).addClass('current');
                 return false;
             }
         });
     },
     //高亮父级菜单，只有在点击tabs的时候才会需要。
-    highLightParent: function(url){
+    highLightParent: function (url) {
         iframeTabs.params.el.each(function (i, item) {
-            if($(item).data('url') === url){
+            if ($(item).data('url') === url) {
                 //父级
                 var dl = $(item).closest('dl');
-                if(!dl.hasClass('current')){
+                if (!dl.hasClass('current')) {
                     dl.addClass('current').siblings('dl').removeClass('current');
                 }
                 //顶级
                 var id = $(item).closest('.sub-nav-item').attr('id');
                 var current = iframeTabs.params.parentEl.filter('.current');
-                if(current.attr('href') !== '#' + id){   //判断当前高亮是否为已高亮。
+                if (current.attr('href') !== '#' + id) {   //判断当前高亮是否为已高亮。
                     current.removeClass('current');
                     iframeTabs.params.parentEl.each(function (i, item) {
-                        if($(item).attr('href') === '#' + id){
+                        if ($(item).attr('href') === '#' + id) {
                             $(item).click();
                             return false;
                         }
@@ -88,40 +100,49 @@ var iframeTabs = {
         });
     },
     //关闭页面
-    closeTab: function(url, index){
-        if(!url){
+    close: function (url, index) {
+        //如果内页使用，需要提升
+        if (window.top !== window && window.name) {
+            url = url || window.name;   //如果没url，则关闭当前iframe。
+            window.top.eza.iframeTabs.close(url);
             return;
         }
-        if($.inArray(url, iframeTabs.urls) < 0){
+        if (!url) {
+            return;
+        }
+        if ($.inArray(url, iframeTabs.urls) < 0) {
             return;
         }
         //没下标，先找下标
-        if(typeof index !== 'undefined'){
-            iframeTabs.params.headerEl.each(function (i, item) {
-                if($(item).data('url') === url){
+        if (typeof index === 'undefined') {
+            iframeTabs.params.headerEl.find('li').each(function (i, item) {
+                if ($(item).data('url') === url) {
                     index = i;
                     return false;
                 }
             });
+        }
+        if (typeof index === 'undefined') {
+            return;
         }
         var li = iframeTabs.params.headerEl.find('li').eq(index);
         li.remove();
         iframeTabs.params.contentEl.find('iframe').eq(index).remove();
         iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
         //如果关闭高亮标签，则高亮上一个
-        if(li.hasClass('current')){
+        if (li.hasClass('current')) {
             var prev = index === 0 ? 0 : index - 1;
             iframeTabs.params.headerEl.find('li').eq(prev).click();
         }
     },
     //刷新页面
     //监测是否已经创建
-    checkCreated: function(url){
+    checkCreated: function (url) {
         return $.inArray(url, iframeTabs.urls) < 0 ? false : true;
     },
     //初始化，绑定事件
     iframeTabs: function (el, params) {
-        if(el.length < 0){
+        if (el.length < 0) {
             return;
         }
         iframeTabs.params = $.extend({}, iframeTabs.defaults, params);
@@ -131,14 +152,14 @@ var iframeTabs = {
         el.on('click', function () {
             var url = $(this).data('url') || '';
             var title = $(this).data('title') || $.trim($(this).text());
-            if(url !== '#' && url !== '###' && url !== ''){
+            if (url !== '#' && url !== '###' && url !== '') {
                 iframeTabs.open(url, title);
             }
         });
 
         //tabs绑定
         iframeTabs.params.headerEl.on('click', 'li', function () {
-            if($(this).hasClass('current')){
+            if ($(this).hasClass('current')) {
                 return;
             }
             var url = $(this).data('url');
@@ -149,14 +170,18 @@ var iframeTabs = {
         //close
         iframeTabs.closeBtn.on('click', function () {
             var li = $(this).closest('li');
-            iframeTabs.closeTab(li.data('url'), li.index());
+            iframeTabs.close(li.data('url'), li.index());
         });
     }
 };
 
-$.fn.iframeTabs = function(params){
+$.fn.iframeTabs = function (params) {
     iframeTabs.iframeTabs(this, params);
     return this;
 };
 
-module.exports = iframeTabs.iframeTabs;
+module.exports = {
+    iframeTabs: iframeTabs.iframeTabs,
+    open: iframeTabs.open,
+    close: iframeTabs.close
+};

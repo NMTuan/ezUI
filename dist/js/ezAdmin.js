@@ -1409,30 +1409,46 @@ var _iframeTabs = {
     contentEl: '' //内容容器，jquery选择器
 
   },
+  index: 0,
+  //计数器
   closeBtn: $('<i>').attr('class', 'fa fa-times'),
-  //<i class="fa fa-times"></i>',
+  //关闭按钮
   urls: [],
   //记录所有打开url
   //打开新页面
-  open: function open(url, title) {
-    //先检测是否打开
+  open: function open(url, title, backgroundModel) {
+    //如果内页使用，需要提升
+    if (window.top !== window) {
+      window.top.eza.iframeTabs.open(url, title, backgroundModel);
+      return;
+    } //先检测是否打开
+
+
     var isCreated = _iframeTabs.checkCreated(url);
 
     if (!isCreated) {
+      //如果没创建，先创建
       _iframeTabs.create(url, title);
-    }
 
-    _iframeTabs.switch(url);
+      if (!backgroundModel) {
+        //非后台模式，切换过去
+        _iframeTabs.switch(url);
+      }
+    } else {
+      //如果已创建，则切换过去，不考虑是否为后台模式
+      _iframeTabs.switch(url);
+    }
   },
   //创建页面
   create: function create(url, title) {
     _iframeTabs.urls.push(url); //记录已打开页面
-    //构建标签头
 
+
+    _iframeTabs.index++; //构建标签头
 
     var tabHeader = $('<li>');
     tabHeader.data('url', url);
-    tabHeader.html(title);
+    tabHeader.html(title || '新开窗口' + _iframeTabs.index);
 
     _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
 
@@ -1442,6 +1458,7 @@ var _iframeTabs = {
     var tabContent = $('<iframe>');
     tabContent.attr('src', url);
     tabContent.attr('frameborder', '0');
+    tabContent.attr('name', url);
 
     _iframeTabs.params.contentEl.append(tabContent);
 
@@ -1513,7 +1530,15 @@ var _iframeTabs = {
     });
   },
   //关闭页面
-  closeTab: function closeTab(url, index) {
+  close: function close(url, index) {
+    //如果内页使用，需要提升
+    if (window.top !== window && window.name) {
+      url = url || window.name; //如果没url，则关闭当前iframe。
+
+      window.top.eza.iframeTabs.close(url);
+      return;
+    }
+
     if (!url) {
       return;
     }
@@ -1523,13 +1548,17 @@ var _iframeTabs = {
     } //没下标，先找下标
 
 
-    if (typeof index !== 'undefined') {
-      _iframeTabs.params.headerEl.each(function (i, item) {
+    if (typeof index === 'undefined') {
+      _iframeTabs.params.headerEl.find('li').each(function (i, item) {
         if ($(item).data('url') === url) {
           index = i;
           return false;
         }
       });
+    }
+
+    if (typeof index === 'undefined') {
+      return;
     }
 
     var li = _iframeTabs.params.headerEl.find('li').eq(index);
@@ -1587,7 +1616,7 @@ var _iframeTabs = {
     _iframeTabs.closeBtn.on('click', function () {
       var li = $(this).closest('li');
 
-      _iframeTabs.closeTab(li.data('url'), li.index());
+      _iframeTabs.close(li.data('url'), li.index());
     });
   }
 };
@@ -1598,7 +1627,11 @@ $.fn.iframeTabs = function (params) {
   return this;
 };
 
-module.exports = _iframeTabs.iframeTabs;
+module.exports = {
+  iframeTabs: _iframeTabs.iframeTabs,
+  open: _iframeTabs.open,
+  close: _iframeTabs.close
+};
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\iframeTabs.js","/admin")
 },{"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
@@ -1712,7 +1745,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e10084b2.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_57d84bdf.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

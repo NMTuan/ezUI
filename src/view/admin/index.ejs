@@ -5,8 +5,12 @@
         background-color: #f5f5f5;
     }
 </style>
+<button class="ez btn btn-primary" onclick="eza.iframeTabs.close()">关闭当前窗口</button>
+<button class="ez btn btn-primary" onclick="eza.iframeTabs.open('../test/index.html',)">新开标签</button>
+<button class="ez btn btn-primary" onclick="eza.iframeTabs.open('../table/table.html', '', true)">后台打开</button>
 <% for(var i = 0; i < 100; i++){ %>
     <p><%- i %> test</p>
     <div style="margin: 20px; background-color: #fff;">容器</div>
 <% } %>
 <%- include('../compoents/default/_footer.ejs'); %>
+
