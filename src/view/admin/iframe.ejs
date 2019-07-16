@@ -125,13 +125,11 @@
 <%- include('../compoents/default/_footer.ejs'); %>
 
 <script>
-    // eza.tabs($('.nav li a'));
     $('.nav li a').tabs();  //一级菜单切换
+    $('.sub-nav dt a').subNav();  //二级菜单切换
     $('.sub-nav-item a').iframeTabs({    //初始化多标签
         parentEl: $('#parentMenu a'),
         headerEl: $('#iframeTabsHeader'),
         contentEl: $('#iframeTabsContent')
     });
-    // eza.calHeight($('#iframe'));
-    // $('#iframe').renderHeight();    //处理高度
 </script>

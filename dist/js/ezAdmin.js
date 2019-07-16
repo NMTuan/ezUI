@@ -1590,18 +1590,74 @@ module.exports = _renderHeight.renderHeight;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var _subNav = {
+  defaults: {},
+  switch: function _switch(el) {
+    _subNav.el.each(function (i, item) {
+      var dl = $(item).closest('dl');
+
+      if (dl.hasClass('current')) {
+        dl.removeClass('current');
+      }
+    });
+
+    el.closest('dl').addClass('current');
+  },
+  init: function init() {
+    //清理一下空dd容器。
+    _subNav.el.each(function (i, item) {
+      var dd = $(item).closest('dl').find('dd');
+
+      if ($.trim(dd.html()) == '') {
+        dd.remove();
+      }
+    });
+  },
+  subNav: function subNav(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
+    _subNav.el = el;
+    _subNav.params = $.extend({}, _subNav.defaults, params);
+
+    _subNav.init();
+
+    el.on('click', function () {
+      var state = $(this).closest('dl').hasClass('current');
+
+      if (!state) {
+        _subNav.switch($(this));
+      }
+    });
+  }
+};
+$.fn.extend({
+  subNav: function subNav(params) {
+    _subNav.subNav(this, params);
+
+    return this;
+  }
+});
+module.exports = _subNav.subNav;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\subNav.js","/admin")
+},{"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 $.extend({
   ezaConfig: {
-    debug: false
+    debug: true
   }
 });
 global.eza = {};
 eza.log = require('./log/log');
 eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
+eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f1c416d9.js","/")
-},{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./log/log":8,"./tabs/tabs":9,"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_93bd48ec.js","/")
+},{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1619,7 +1675,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1688,4 +1744,4 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":3,"buffer":2}]},{},[7])
+},{"XJF/FV":3,"buffer":2}]},{},[8])
