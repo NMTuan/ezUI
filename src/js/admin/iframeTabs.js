@@ -5,6 +5,7 @@ var iframeTabs = {
         headerEl: '', //页签容器，jquery选择器
         contentEl: ''  //内容容器，jquery选择器
     },
+    closeBtn: $('<i>').attr('class', 'fa fa-times'),//<i class="fa fa-times"></i>',
     urls: [],   //记录所有打开url
     //打开新页面
     open: function(url, title){
@@ -23,6 +24,7 @@ var iframeTabs = {
         var tabHeader = $('<li>');
         tabHeader.data('url', url);
         tabHeader.html(title);
+        iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
         iframeTabs.params.headerEl.append(tabHeader);
 
         //构建标签内容
@@ -86,12 +88,37 @@ var iframeTabs = {
         });
     },
     //关闭页面
+    closeTab: function(url, index){
+        if(!url){
+            return;
+        }
+        if($.inArray(url, iframeTabs.urls) < 0){
+            return;
+        }
+        //没下标，先找下标
+        if(typeof index !== 'undefined'){
+            iframeTabs.params.headerEl.each(function (i, item) {
+                if($(item).data('url') === url){
+                    index = i;
+                    return false;
+                }
+            });
+        }
+        var li = iframeTabs.params.headerEl.find('li').eq(index);
+        li.remove();
+        iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+        iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
+        //如果关闭高亮标签，则高亮上一个
+        if(li.hasClass('current')){
+            var prev = index === 0 ? 0 : index - 1;
+            iframeTabs.params.headerEl.find('li').eq(prev).click();
+        }
+    },
     //刷新页面
     //监测是否已经创建
     checkCreated: function(url){
         return $.inArray(url, iframeTabs.urls) < 0 ? false : true;
     },
-
     //初始化，绑定事件
     iframeTabs: function (el, params) {
         if(el.length < 0){
@@ -117,6 +144,12 @@ var iframeTabs = {
             var url = $(this).data('url');
             iframeTabs.switch(url);
             iframeTabs.highLightParent(url);
+        });
+
+        //close
+        iframeTabs.closeBtn.on('click', function () {
+            var li = $(this).closest('li');
+            iframeTabs.closeTab(li.data('url'), li.index());
         });
     }
 };

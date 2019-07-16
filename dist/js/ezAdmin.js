@@ -1409,6 +1409,8 @@ var _iframeTabs = {
     contentEl: '' //内容容器，jquery选择器
 
   },
+  closeBtn: $('<i>').attr('class', 'fa fa-times'),
+  //<i class="fa fa-times"></i>',
   urls: [],
   //记录所有打开url
   //打开新页面
@@ -1431,6 +1433,8 @@ var _iframeTabs = {
     var tabHeader = $('<li>');
     tabHeader.data('url', url);
     tabHeader.html(title);
+
+    _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
 
     _iframeTabs.params.headerEl.append(tabHeader); //构建标签内容
 
@@ -1509,6 +1513,41 @@ var _iframeTabs = {
     });
   },
   //关闭页面
+  closeTab: function closeTab(url, index) {
+    if (!url) {
+      return;
+    }
+
+    if ($.inArray(url, _iframeTabs.urls) < 0) {
+      return;
+    } //没下标，先找下标
+
+
+    if (typeof index !== 'undefined') {
+      _iframeTabs.params.headerEl.each(function (i, item) {
+        if ($(item).data('url') === url) {
+          index = i;
+          return false;
+        }
+      });
+    }
+
+    var li = _iframeTabs.params.headerEl.find('li').eq(index);
+
+    li.remove();
+
+    _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+
+    _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
+    //如果关闭高亮标签，则高亮上一个
+
+
+    if (li.hasClass('current')) {
+      var prev = index === 0 ? 0 : index - 1;
+
+      _iframeTabs.params.headerEl.find('li').eq(prev).click();
+    }
+  },
   //刷新页面
   //监测是否已经创建
   checkCreated: function checkCreated(url) {
@@ -1542,6 +1581,13 @@ var _iframeTabs = {
       _iframeTabs.switch(url);
 
       _iframeTabs.highLightParent(url);
+    }); //close
+
+
+    _iframeTabs.closeBtn.on('click', function () {
+      var li = $(this).closest('li');
+
+      _iframeTabs.closeTab(li.data('url'), li.index());
     });
   }
 };
@@ -1666,7 +1712,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_afebde99.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e10084b2.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

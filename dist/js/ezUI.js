@@ -1408,7 +1408,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //菜单
 global.ez = {};
 ez.Menu = _Menu.default;
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_74c35f9a.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1c573b91.js","/")
 },{"./menu/Menu":6,"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

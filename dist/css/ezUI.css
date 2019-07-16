@@ -3151,6 +3151,7 @@ body {
 .eza.header-tabs li .fa-times {
   color: #607d8b;
   line-height: 1;
+  margin-left: 3px;
 }
 
 .eza.header-tabs li .fa-times:hover {
