@@ -5,7 +5,8 @@ var iframeTabs = {
         headerEl: '', //页签容器，jquery选择器
         contentEl: '',  //内容容器，jquery选择器
         leftArrow: '',  //左滚按钮
-        rightArrow: ''  //右滚按钮
+        rightArrow: '',  //右滚按钮
+        refreshEl: ''   //刷新按钮
     },
     index: 0,   //计数器
     closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
@@ -149,6 +150,19 @@ var iframeTabs = {
         }
     },
     //刷新页面
+    refresh: function(){
+        var index = iframeTabs.params.headerEl.find('li.current').index();
+        var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
+        iframe.attr('src', iframe.attr('src'));
+
+        if (typeof NProgress !== 'undefined') {
+            NProgress.configure({parent: '#iframeTabsContent'});
+            NProgress.start();
+            iframe[0].onload = function () {
+                NProgress.done();
+            };
+        }
+    },
     //监测是否已经创建
     checkCreated: function (url) {
         return $.inArray(url, iframeTabs.urls) < 0 ? false : true;
@@ -196,6 +210,11 @@ var iframeTabs = {
         iframeTabs.params.rightArrow.on('click', function () {
             var step = scrollBox.scrollLeft() + 200;
             iframeTabs.scrollTabs(step);
+        });
+
+        //刷新
+        iframeTabs.params.refreshEl.on('click', function () {
+            iframeTabs.refresh();
         });
     },
     //滚动tabs
