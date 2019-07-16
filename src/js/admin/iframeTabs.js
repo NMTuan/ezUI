@@ -3,7 +3,9 @@ var iframeTabs = {
         el: '', //菜单元素，不是容器，jquery选择器
         parentEl: '',   //父级菜单元素，不是容器，jquery选择器
         headerEl: '', //页签容器，jquery选择器
-        contentEl: ''  //内容容器，jquery选择器
+        contentEl: '',  //内容容器，jquery选择器
+        leftArrow: '',  //左滚按钮
+        rightArrow: ''  //右滚按钮
     },
     index: 0,   //计数器
     closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
@@ -56,7 +58,18 @@ var iframeTabs = {
     //切换到页面
     switch: function (url) {
         var index = $.inArray(url, iframeTabs.urls);
-        iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
+        var tabs = iframeTabs.params.headerEl;
+        var current = tabs.find('li').eq(index);
+        current.addClass('current').siblings().removeClass('current');
+        //滚动到合适位置，显示出高亮的tabs
+        //高亮元素左边+元素宽度，大于，可视区域宽度+已滚动区域
+        if(current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()){
+            iframeTabs.scrollTabs(current.position().left + current.width());
+        }
+        //高亮元素左侧，小于，已滚动区域
+        if(current.position().left < tabs.parent().scrollLeft()){
+            iframeTabs.scrollTabs(tabs.parent().scrollLeft() + current.position().left);
+        }
 
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
         iframe.show().siblings('iframe').hide();
@@ -172,6 +185,24 @@ var iframeTabs = {
             var li = $(this).closest('li');
             iframeTabs.close(li.data('url'), li.index());
         });
+
+        //arrow
+        var ul = iframeTabs.params.headerEl;
+        var scrollBox = ul.parent();
+        iframeTabs.params.leftArrow.on('click', function () {
+            var step = scrollBox.scrollLeft() -200;
+            iframeTabs.scrollTabs(step);
+        });
+        iframeTabs.params.rightArrow.on('click', function () {
+            var step = scrollBox.scrollLeft() + 200;
+            iframeTabs.scrollTabs(step);
+        });
+    },
+    //滚动tabs
+    scrollTabs: function (step) {
+        iframeTabs.params.headerEl.parent().animate({
+            scrollLeft: step
+        }, 150);
     }
 };
 

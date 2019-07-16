@@ -1406,7 +1406,11 @@ var _iframeTabs = {
     //父级菜单元素，不是容器，jquery选择器
     headerEl: '',
     //页签容器，jquery选择器
-    contentEl: '' //内容容器，jquery选择器
+    contentEl: '',
+    //内容容器，jquery选择器
+    leftArrow: '',
+    //左滚按钮
+    rightArrow: '' //右滚按钮
 
   },
   index: 0,
@@ -1476,8 +1480,19 @@ var _iframeTabs = {
   //切换到页面
   switch: function _switch(url) {
     var index = $.inArray(url, _iframeTabs.urls);
+    var tabs = _iframeTabs.params.headerEl;
+    var current = tabs.find('li').eq(index);
+    current.addClass('current').siblings().removeClass('current'); //滚动到合适位置，显示出高亮的tabs
+    //高亮元素左边+元素宽度，大于，可视区域宽度+已滚动区域
 
-    _iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
+    if (current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()) {
+      _iframeTabs.scrollTabs(current.position().left + current.width());
+    } //高亮元素左侧，小于，已滚动区域
+
+
+    if (current.position().left < tabs.parent().scrollLeft()) {
+      _iframeTabs.scrollTabs(tabs.parent().scrollLeft() + current.position().left);
+    }
 
     var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
 
@@ -1617,7 +1632,29 @@ var _iframeTabs = {
       var li = $(this).closest('li');
 
       _iframeTabs.close(li.data('url'), li.index());
+    }); //arrow
+
+
+    var ul = _iframeTabs.params.headerEl;
+    var scrollBox = ul.parent();
+
+    _iframeTabs.params.leftArrow.on('click', function () {
+      var step = scrollBox.scrollLeft() - 200;
+
+      _iframeTabs.scrollTabs(step);
     });
+
+    _iframeTabs.params.rightArrow.on('click', function () {
+      var step = scrollBox.scrollLeft() + 200;
+
+      _iframeTabs.scrollTabs(step);
+    });
+  },
+  //滚动tabs
+  scrollTabs: function scrollTabs(step) {
+    _iframeTabs.params.headerEl.parent().animate({
+      scrollLeft: step
+    }, 150);
   }
 };
 
@@ -1745,7 +1782,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_57d84bdf.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_94cf9274.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

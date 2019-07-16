@@ -1,5 +1,4 @@
 &-logo {
-    float: left;
     width: $nav-width + $sub-nav-width;
     line-height: $header-height;
     text-align: center;
@@ -10,26 +9,37 @@
         color: color('shades', 'white');
     }
 }
+//右侧菜单区域
 &-menu {
-    float: right;
     width: $nav-width + $sub-nav-width;
     height: $header-height;
     background-color: red;
 }
+//左右箭头
+&-arrow {
+    height: $header-height;
+    line-height: $header-height;
+    color: color($base-color, 'l5');
+    padding: 0 10px;
+    cursor: pointer;
+    &:hover {
+        background-color: color($base-color, 'd2');
+    }
+}
+
 &-tabs {
     height: $header-height;
     overflow: hidden;
     padding: 0;
-    //border-bottom: 1px solid color('grey', 'l2');
     font-size: 0;
     list-style-type: none;
-    //background-color: color('shades', 'white');
     ul,li {
         margin: 0;
         padding: 0;
         list-style-type: none;
     }
     ul {
+        float: left;
         background-color: color($base-color, 'base');
         white-space: nowrap;
     }
@@ -54,7 +64,7 @@
 
         &.current {
             color: color('grey', 'd3');
-            background-color: color('grey', 'l4');
+            background-color: color($base-color, 'l5');
 
             .fa-times {
                 color: color($base-color, 'l4');
@@ -64,7 +74,7 @@
         .fa-times {
             color: color($base-color, 'base');
             line-height: 1;
-            margin-left: 3px;
+            margin-left: 12px;
             //position: absolute;
             //top: 2px;
             //right: 0px;

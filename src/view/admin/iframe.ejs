@@ -103,18 +103,17 @@
     </div>
 </div>
 <div class="eza header">
-    <div class="eza header-logo">
+    <div class="eza header-logo pull-left">
         <a href="#">系统管理中心</a>
     </div>
-    <div class="eza header-menu">
+    <div class="eza header-menu pull-right">
         右侧菜单1
     </div>
+    <i id="header-arrow-left" class="eza header-arrow pull-left remixicon-arrow-left-s-line"></i>
+    <i id="header-arrow-right" class="eza header-arrow pull-right remixicon-arrow-right-s-line"></i>
     <div class="eza header-tabs">
         <div class="eza scroll-box-h">
-            <ul id="iframeTabsHeader" class="eza">
-<!--                <li><i class="fa fa-home fa-fw fa-lg"></i></li>-->
-<!--                <li class="current">客户管理 <i class="fa fa-times"></i></li>-->
-<!--                <li>一二三 <i class="fa fa-times"></i></li>-->
+            <ul id="iframeTabsHeader">
             </ul>
         </div>
     </div>
@@ -130,6 +129,8 @@
     $('.sub-nav-item a').iframeTabs({    //初始化多标签
         parentEl: $('#parentMenu a'),
         headerEl: $('#iframeTabsHeader'),
-        contentEl: $('#iframeTabsContent')
+        contentEl: $('#iframeTabsContent'),
+        leftArrow: $('#header-arrow-left'),
+        rightArrow: $('#header-arrow-right'),
     });
 </script>

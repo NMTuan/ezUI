@@ -1,5 +1,8 @@
 $base-color: 'blue-grey';
 
+html, body {
+    background-color: color($base-color, 'l5');
+}
 .eza {
     $nav-width: 50px;
     $sub-nav-width: 170px;
@@ -35,11 +38,13 @@ $base-color: 'blue-grey';
         height: 100%;
         margin-right: -100px;
         overflow: auto;
+        position: relative;
     }
     &.scroll-box-h {
         width: 100%;
         margin-bottom: -100px;
         overflow: auto;
+        position: relative;
     }
 
     &.header {
