@@ -2930,7 +2930,7 @@ body {
   width: 50px;
   height: 100%;
   overflow: hidden;
-  padding-top: 45px;
+  padding-top: 55px;
   background-color: #212121;
   position: fixed;
   top: 0;
@@ -2987,7 +2987,7 @@ body {
   width: 170px;
   height: 100%;
   overflow: hidden;
-  padding-top: 45px;
+  padding-top: 55px;
   background-color: #424242;
   position: fixed;
   top: 0;
@@ -3081,7 +3081,7 @@ body {
 }
 
 .eza.header {
-  height: 45px;
+  height: 55px;
   background-color: #607d8b;
   position: relative;
   z-index: 1;
@@ -3089,7 +3089,7 @@ body {
 
 .eza.header-logo {
   width: 220px;
-  line-height: 45px;
+  line-height: 55px;
   text-align: center;
   color: #FFFFFF;
   font-size: 18px;
@@ -3101,15 +3101,17 @@ body {
 }
 
 .eza.header-menu {
-  width: 220px;
-  height: 45px;
-  background-color: red;
+  text-align: right;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
 }
 
 .eza.header-arrow {
-  height: 45px;
-  line-height: 45px;
+  height: 30px;
+  line-height: 30px;
   color: #eceff1;
+  background-color: #546e7a;
   padding: 0 10px;
   cursor: pointer;
 }
@@ -3119,8 +3121,9 @@ body {
 }
 
 .eza.header-tabs {
-  height: 45px;
+  height: 30px;
   overflow: hidden;
+  background-color: #546e7a;
   padding: 0;
   font-size: 0;
   list-style-type: none;
@@ -3140,12 +3143,13 @@ body {
 
 .eza.header-tabs li {
   margin: 0;
-  height: 45px;
-  padding: 14px;
+  height: 30px;
+  padding: 0 14px;
+  line-height: 30px;
   display: inline-block;
   font-size: 14px;
   color: #eceff1;
-  background-color: #607d8b;
+  background-color: #546e7a;
   cursor: pointer;
 }
 
