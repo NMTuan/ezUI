@@ -1453,7 +1453,7 @@ var _iframeTabs = {
     }
   },
   //切换到页面
-  switch: function _switch(url, highLightParent) {
+  switch: function _switch(url) {
     var index = $.inArray(url, _iframeTabs.urls);
 
     _iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
@@ -1463,42 +1463,50 @@ var _iframeTabs = {
     iframe.show().siblings('iframe').hide();
     iframe.renderHeight();
 
-    _iframeTabs.highLight(url, highLightParent);
+    _iframeTabs.highLight(url);
   },
   //高亮当前菜单
-  highLight: function highLight(url, highLightParent) {
+  highLight: function highLight(url) {
     _iframeTabs.params.el.filter('.current').removeClass('current');
 
     _iframeTabs.params.el.each(function (i, item) {
       if ($(item).data('url') === url) {
         $(item).addClass('current');
-
-        if (highLightParent) {
-          //高亮父级菜单，一般只有在点击tabs的时候才会处理
-          var parentId = $(item).closest('.sub-nav-item').attr('id');
-
-          _iframeTabs.highLightParent(parentId);
-        }
-
         return false;
       }
     });
   },
   //高亮父级菜单，只有在点击tabs的时候才会需要。
-  highLightParent: function highLightParent(id) {
-    var current = _iframeTabs.params.parentEl.filter('.current');
+  highLightParent: function highLightParent(url) {
+    _iframeTabs.params.el.each(function (i, item) {
+      if ($(item).data('url') === url) {
+        //父级
+        var dl = $(item).closest('dl');
 
-    if (current.attr('href') !== '#' + id) {
-      //判断当前高亮是否为已高亮。
-      current.removeClass('current');
+        if (!dl.hasClass('current')) {
+          dl.addClass('current').siblings('dl').removeClass('current');
+        } //顶级
 
-      _iframeTabs.params.parentEl.each(function (i, item) {
-        if ($(item).attr('href') === '#' + id) {
-          $(item).click();
-          return false;
+
+        var id = $(item).closest('.sub-nav-item').attr('id');
+
+        var current = _iframeTabs.params.parentEl.filter('.current');
+
+        if (current.attr('href') !== '#' + id) {
+          //判断当前高亮是否为已高亮。
+          current.removeClass('current');
+
+          _iframeTabs.params.parentEl.each(function (i, item) {
+            if ($(item).attr('href') === '#' + id) {
+              $(item).click();
+              return false;
+            }
+          });
         }
-      });
-    }
+
+        return false;
+      }
+    });
   },
   //关闭页面
   //刷新页面
@@ -1531,7 +1539,9 @@ var _iframeTabs = {
 
       var url = $(this).data('url');
 
-      _iframeTabs.switch(url, true);
+      _iframeTabs.switch(url);
+
+      _iframeTabs.highLightParent(url);
     });
   }
 };
@@ -1656,7 +1666,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_93bd48ec.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_afebde99.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

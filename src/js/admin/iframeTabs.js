@@ -40,7 +40,7 @@ var iframeTabs = {
         }
     },
     //切换到页面
-    switch: function(url, highLightParent){
+    switch: function(url){
         var index = $.inArray(url, iframeTabs.urls);
         iframeTabs.params.headerEl.find('li').eq(index).addClass('current').siblings().removeClass('current');
 
@@ -48,34 +48,42 @@ var iframeTabs = {
         iframe.show().siblings('iframe').hide();
         iframe.renderHeight();
 
-        iframeTabs.highLight(url, highLightParent);
+        iframeTabs.highLight(url);
     },
     //高亮当前菜单
-    highLight: function(url, highLightParent){
+    highLight: function(url){
         iframeTabs.params.el.filter('.current').removeClass('current');
         iframeTabs.params.el.each(function (i, item) {
             if($(item).data('url') === url){
                 $(item).addClass('current');
-                if(highLightParent){    //高亮父级菜单，一般只有在点击tabs的时候才会处理
-                    var parentId = $(item).closest('.sub-nav-item').attr('id');
-                    iframeTabs.highLightParent(parentId);
-                }
                 return false;
             }
         });
     },
     //高亮父级菜单，只有在点击tabs的时候才会需要。
-    highLightParent: function(id){
-        var current = iframeTabs.params.parentEl.filter('.current');
-        if(current.attr('href') !== '#' + id){   //判断当前高亮是否为已高亮。
-            current.removeClass('current');
-            iframeTabs.params.parentEl.each(function (i, item) {
-                if($(item).attr('href') === '#' + id){
-                    $(item).click();
-                    return false;
+    highLightParent: function(url){
+        iframeTabs.params.el.each(function (i, item) {
+            if($(item).data('url') === url){
+                //父级
+                var dl = $(item).closest('dl');
+                if(!dl.hasClass('current')){
+                    dl.addClass('current').siblings('dl').removeClass('current');
                 }
-            });
-        }
+                //顶级
+                var id = $(item).closest('.sub-nav-item').attr('id');
+                var current = iframeTabs.params.parentEl.filter('.current');
+                if(current.attr('href') !== '#' + id){   //判断当前高亮是否为已高亮。
+                    current.removeClass('current');
+                    iframeTabs.params.parentEl.each(function (i, item) {
+                        if($(item).attr('href') === '#' + id){
+                            $(item).click();
+                            return false;
+                        }
+                    });
+                }
+                return false;
+            }
+        });
     },
     //关闭页面
     //刷新页面
@@ -107,7 +115,8 @@ var iframeTabs = {
                 return;
             }
             var url = $(this).data('url');
-            iframeTabs.switch(url, true);
+            iframeTabs.switch(url);
+            iframeTabs.highLightParent(url);
         });
     }
 };
