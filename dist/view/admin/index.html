@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="/static/remixicon/1.2.2/remixicon.css">
     <link rel="stylesheet" href="/static/animate/3.7.2/animate.min.css">
     <link rel="stylesheet" href="/static/nprogress/0.2.0/nprogress.css">
+    <link rel="stylesheet" href="/static/photoviewer/3.3.0/photoviewer.min.css">
     <link rel="stylesheet" href="/css/ezUI.css">
     <script src="/static/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/nprogress/0.2.0/nprogress.js"></script>
+    <script src="/static/photoviewer/3.3.0/photoviewer.min.js"></script>
     <script src="/js/ezUI.js"></script>
     <script src="/js/ezAdmin.js"></script>
 </head>
@@ -22,6 +24,9 @@
     <button class="ez btn btn-primary" onclick="eza.iframeTabs.close()">关闭当前窗口</button>
     <button class="ez btn btn-primary" onclick="eza.iframeTabs.open('../test/index.html',)">新开标签</button>
     <button class="ez btn btn-primary" onclick='eza.iframeTabs.open("../table/table.html","",!0)'>后台打开</button>
+    <br>
+    <br>
+    <button id="imageView" class="ez btn btn-primary">看图</button>
     <p>0 test</p>
     <div style="margin:20px;background-color:#fff">容器</div>
     <p>1 test</p>
@@ -225,3 +230,4 @@
 </body>
 
 </html>
+<script>var data=[{title:"这是樱花",src:"http://b.hiphotos.baidu.com/image/pic/item/f7246b600c3387447a8bb1975f0fd9f9d62aa08b.jpg"},{title:"小姐姐",src:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563340699608&di=0e4b27f9541d3a29f2729607f685504c&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fdcc451da81cb39dbf308d5bdde160924aa183014.jpg"},{title:"雨伞",src:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563340699603&di=6a7303bb4b1090205a6485c08f1cb95a&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F622762d0f703918f44cf34225f3d269759eec438.jpg"}],cfg={keyboard:!1,headToolbar:["close"],fixedModalPos:!0,fixedContent:!1,footToolbar:["zoomIn","zoomOut","prev","next","rotateRight"]};$("#imageView").on("click",function(){new top.PhotoViewer(data,cfg)})</script>
