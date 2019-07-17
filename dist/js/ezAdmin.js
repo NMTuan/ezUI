@@ -1704,10 +1704,15 @@ var _renderHeight = {
     correct: 0 //修正高度
 
   },
-  render: function render() {
+  render: function render(el) {
     var winHeight = $(window).height();
-    $.each(_renderHeight.el, function () {
+    $.each(el, function () {
       //涉及到el，都要循环，兼容jquery
+      if ($(this).is(':hidden')) {
+        //隐藏元素，无需处理
+        return;
+      }
+
       var height = winHeight - $(this).offset().top + _renderHeight.params.correct;
 
       $(this).height(height);
@@ -1718,13 +1723,20 @@ var _renderHeight = {
       return;
     }
 
-    _renderHeight.el = el;
+    if (el.data('renderHeight')) {
+      //防止重复执行。
+      _renderHeight.render(el);
+
+      return;
+    }
+
+    el.data('renderHeight', 'true');
     _renderHeight.params = $.extend({}, _renderHeight.defaults, params);
 
-    _renderHeight.render();
+    _renderHeight.render(el);
 
     $(window).on('resize', function () {
-      _renderHeight.render();
+      _renderHeight.render(el);
     });
   }
 };
@@ -1807,7 +1819,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_df810594.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_10c9dbca.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
