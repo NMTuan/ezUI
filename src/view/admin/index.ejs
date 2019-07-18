@@ -1,10 +1,5 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
-<style>
-    html, body {
-        background-color: #f5f5f5;
-    }
-</style>
 <button class="ez btn btn-primary" onclick="eza.iframeTabs.close()">关闭当前窗口</button>
 <button class="ez btn btn-primary" onclick="eza.iframeTabs.open('../test/index.html',)">新开标签</button>
 <button class="ez btn btn-primary" onclick="eza.iframeTabs.open('../table/table.html', '', true)">后台打开</button>
@@ -12,16 +7,18 @@
 <br>
 <button id="imageView" class="ez btn btn-primary">看图</button>
 
-<% for(var i = 0; i < 100; i++){ %>
+<% for(var i = 0; i < 1; i++){ %>
     <p><%- i %> test</p>
     <div style="margin: 20px; background-color: #fff;">容器</div>
 <% } %>
 <%- include('../compoents/default/_footer.ejs'); %>
 <script>
     var data = [
-        {title: '这是樱花', src: 'http://b.hiphotos.baidu.com/image/pic/item/f7246b600c3387447a8bb1975f0fd9f9d62aa08b.jpg'},
-        {title: '小姐姐', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563340699608&di=0e4b27f9541d3a29f2729607f685504c&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fdcc451da81cb39dbf308d5bdde160924aa183014.jpg'},
-        {title: '雨伞', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563340699603&di=6a7303bb4b1090205a6485c08f1cb95a&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F622762d0f703918f44cf34225f3d269759eec438.jpg'},
+        {title: '这是樱花', src: 'https://hbimg.huabanimg.com/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7412b18-FTUAiR_fw658'},
+        {title: 'aaa', src: 'https://hbimg.huabanimg.com/041ece85a1ced2afc7d9017c4e270861a1252d562c553-MXPCEN_fw658'},
+        {title: 'bbb', src: 'https://hbimg.huabanimg.com/ae6d81cd174f79ed50c54403fcb42098cfd196d215986-yoqOrw_fw658'},
+        {title: '小姐姐', src: 'https://hbimg.huabanimg.com/60ae102b32d9a3d9c8fb7903c4e9498629964da87758a-NcCCQ2_fw658'},
+        {title: '雨伞', src: 'https://hbimg.huabanimg.com/6e9296d567acf17600a2408e9860a53daf9e172fd9eb5-aqRXKD_fw658'},
     ];
     var cfg = {
         keyboard: false,
@@ -31,6 +28,7 @@
         footToolbar: ['zoomIn', 'zoomOut', 'prev', 'next', 'rotateRight'],
     }
     $('#imageView').on('click', function () {
-        new top.PhotoViewer(data, cfg);
+        // new top.PhotoViewer(data, cfg);
+        top.ez.imageView(data, {index: 3})
     });
 </script>

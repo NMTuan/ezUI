@@ -1,0 +1,22 @@
+.ez.image-view {
+    border: 1px solid color('grey', 'd4');
+    padding: 1px;
+    background-color: #fff;
+    position: absolute;
+    //left: 50%;
+    //top: 50%;
+    user-select:none;
+    img {
+        display: block;
+    }
+    //&-head {
+    //    height: 32px;
+    //    background-color: #eee;
+    //}
+    //&-body {
+    //}
+    //&-foot {
+    //    height: 32px;
+    //    background-color: #ddd;
+    //}
+}

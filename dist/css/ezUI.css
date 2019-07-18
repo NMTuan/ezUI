@@ -2921,6 +2921,18 @@ body {
   border-color: #FFCDD2;
 }
 
+.ez.image-view {
+  border: 1px solid #212121;
+  padding: 1px;
+  background-color: #fff;
+  position: absolute;
+  user-select: none;
+}
+
+.ez.image-view img {
+  display: block;
+}
+
 html,
 body {
   background-color: #eceff1;
