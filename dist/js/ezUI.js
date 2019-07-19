@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7eaa5dc9.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_67cb62c4.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13849,6 +13849,15 @@ var imageView = {
     if (scale <= 0) {
       scale = 0.1;
     }
+
+    if (scale <= 1) {
+      //如果缩放小于等于原比例
+      var body = obj.closest('.image-view-body');
+      body.css({
+        top: 0,
+        left: 0
+      });
+    } else {}
 
     obj.data('scale', scale.toFixed(1));
     imageView.transform(obj);

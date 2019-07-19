@@ -87,6 +87,11 @@ var imageView = {
         if (scale <= 0) {
             scale = 0.1;
         }
+        if(scale <= 1){ //如果缩放小于等于原比例
+            var body = obj.closest('.image-view-body');
+            body.css({top: 0, left: 0});
+        } else {
+        }
         obj.data('scale', scale.toFixed(1));
         imageView.transform(obj);
     },
