@@ -1,6 +1,6 @@
 .ez.image-view {
+    overflow: hidden;
     border: 1px solid color('grey', 'd4');
-    padding: 1px;
     background-color: #fff;
     position: absolute;
     //left: 50%;
@@ -9,12 +9,32 @@
     img {
         display: block;
     }
-    //&-head {
-    //    height: 32px;
-    //    background-color: #eee;
-    //}
-    //&-body {
-    //}
+    $size: 26px;
+    &-icon {
+        width: $size;
+        height: $size;
+        //display: block;
+        background-color: color('grey', 'base');
+        line-height: $size;
+        text-align: center;
+        margin: 0 auto;
+        font-size: $size;
+        position: relative;
+        z-index: 10;
+    }
+    &-head {
+        height: 32px;
+        background-color: #eee;
+        position: relative;
+        z-index: 10;
+    }
+    &-body {
+        position: relative;
+        display: block;
+        img {
+            display: block;
+        }
+    }
     //&-foot {
     //    height: 32px;
     //    background-color: #ddd;
