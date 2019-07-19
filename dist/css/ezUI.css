@@ -2925,7 +2925,7 @@ body {
   overflow: hidden;
   border: 1px solid #212121;
   background-color: #fff;
-  position: absolute;
+  position: fixed;
   user-select: none;
 }
 

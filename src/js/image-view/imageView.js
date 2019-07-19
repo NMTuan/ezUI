@@ -14,8 +14,8 @@ var imageView = {
         var el = $('<div>').attr('class', 'ez image-view');
         var html = '' +
             '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' +
-            '<i class="ez image-view-rotate-left image-view-icon remixicon-anticlockwise-line"></i>' +
-            '<i class="ez image-view-rotate-right image-view-icon remixicon-clockwise-line"></i>' +
+            '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' +
+            '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' +
             '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' +
             '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' +
             '<div class="ez image-view-head"></div>' +
@@ -50,14 +50,19 @@ var imageView = {
         var el = imageView.windowTpl();
         el.css({zIndex: params.zIndex + 1});
         $('body').append(el);
-        imageView.createImage(data[params.index].src, function (img) {
-            el.find('.image-view-body').append(img);
-            imageView.imageResize(img, params);
-        });
         return el;
     },
     closeView: function (el) {
         el.remove();
+    },
+    //插入图片
+    imageInsert: function(el, src, params){
+        imageView.createImage(src, function (img) {
+            el.find('img').remove();
+            el.find('.image-view-body').append(img);
+            el.find('.image-view-body').css({top: 0, left: 0});
+            imageView.imageResize(img, params);
+        });
     },
     //重置大小
     imageResize: function (img, params) {
@@ -140,49 +145,58 @@ var imageView = {
         }
         if (data[params.index] && data[params.index].src) {
             var el = imageView.createView(data, params);
-            //滚动缩放
-            el.find('img').mousewheel(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                imageView.scale($(this), e.deltaY > 0 ? 0.1 : -0.1);
-            });
+            el.data('index', params.index);
+            imageView.imageInsert(el, data[params.index].src, params);
+
             //窗口拖拽
             el.draggabilly({
-                handle: '.image-view-head'
+                handle: '.image-view-head',
+                containment: 'html'
             });
+
+            //初始位置
+            el.draggabilly('setPosition', 100, 100);
+
             //图片拖拽
             el.find('.image-view-body').draggabilly({
                 contrainment: true
             });
-            el.draggabilly('setPosition', 100, 100);    //初始位置
-            el.on('mousedown pointerDown', function () {    //鼠标按下，调整当前窗口层级。
+
+            //鼠标按下，调整当前窗口在其它窗口上面
+            el.on('mousedown pointerDown', function () {
                 $('.image-view').css('z-index', params.zIndex);
                 $(this).css('z-index', params.zIndex + 1);
             });
-            // el.on('pointerDown', function () {
-            //     $('.image-view').css('z-index', params.zIndex);
-            //     $(this).css('z-index', params.zIndex+1);
-            // });
 
             //关闭
             el.find('.image-view-close').on('click', function () {
                 imageView.closeView(el);
             });
-            //旋转
-            el.find('.image-view-rotate-right').on('click', function () {
-                imageView.rotate(el.find('img'), 'right');
+
+            //滚动缩放
+            el.on('mousewheel', 'img', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                imageView.scale($(this), e.deltaY > 0 ? 0.1 : -0.1);
             });
-            el.find('.image-view-rotate-left').on('click', function () {
-                imageView.rotate(el.find('img'), 'left');
+
+            //旋转
+            el.find('.image-view-rotate').on('click', function () {
+                var dir = $(this).data('dir') ? $(this).data('rotate-dir') : 'right';
+                imageView.rotate(el.find('img'), dir);
             });
             //翻页
-            el.find('.image-view-next').on('click', function () {
-                imageView.createImage(data[params.index + 1].src, function (img) {
-                    el.find('img').remove();
-                    el.find('.image-view-body').append(img);
-                    el.find('.image-view-body').draggabilly('setPosition', 0, 0);
-                    imageView.imageResize(img, params);
-                });
+            el.find('.image-view-next, .image-view-prev').on('click', function () {
+                var index = el.data('index');
+                if($(this).hasClass('image-view-next')){
+                    index++;
+                } else {
+                    index--;
+                    index = index + data.length;
+                }
+                index = index % data.length;
+                el.data('index', index);
+                imageView.imageInsert(el, data[index].src, params);
             });
         }
     }
