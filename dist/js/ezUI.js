@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_85acac30.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4e1e6d2c.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13874,7 +13874,14 @@ var imageView = {
     }
   },
   //插入图片
-  imageInsert: function imageInsert(el, src, params) {
+  imageInsert: function imageInsert(el, imgObj, params) {
+    var src = imgObj.src || '';
+    var title = imgObj.title || '';
+
+    if (!src) {
+      return;
+    }
+
     imageView.imageCreate(src, function (img) {
       el.find('img').remove();
       el.find('.image-view-body td').append(img);
@@ -13883,6 +13890,12 @@ var imageView = {
         left: 0
       });
       imageView.imageResize(el, img);
+
+      if (!title) {
+        return;
+      }
+
+      el.find('.image-view-head').html(title);
     });
   },
   //重置大小
@@ -13992,7 +14005,7 @@ var imageView = {
 
     var el = imageView.viewCreate(data, params);
     el.data('index', params.index);
-    imageView.imageInsert(el, data[params.index].src, params); //窗口拖拽
+    imageView.imageInsert(el, data[params.index], params); //窗口拖拽
 
     el.draggabilly({
       handle: '.image-view-head',
@@ -14044,7 +14057,7 @@ var imageView = {
 
       index = index % data.length;
       el.data('index', index);
-      imageView.imageInsert(el, data[index].src, params);
+      imageView.imageInsert(el, data[index], params);
     }); //缩放窗口
 
     imageView.viewResizeDrag(el);

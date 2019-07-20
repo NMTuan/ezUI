@@ -121,12 +121,21 @@ var imageView = {
         }
     },
     //插入图片
-    imageInsert: function (el, src, params) {
+    imageInsert: function (el, imgObj, params) {
+        var src = imgObj.src || '';
+        var title = imgObj.title || '';
+        if(!src){
+            return;
+        }
         imageView.imageCreate(src, function (img) {
             el.find('img').remove();
             el.find('.image-view-body td').append(img);
             el.find('.image-view-body').css({top: 0, left: 0});
             imageView.imageResize(el, img);
+            if(!title){
+                return;
+            }
+            el.find('.image-view-head').html(title);
         });
     },
     //重置大小
@@ -215,7 +224,7 @@ var imageView = {
         }
         var el = imageView.viewCreate(data, params);
         el.data('index', params.index);
-        imageView.imageInsert(el, data[params.index].src, params);
+        imageView.imageInsert(el, data[params.index], params);
 
         //窗口拖拽
         el.draggabilly({
@@ -272,7 +281,7 @@ var imageView = {
             }
             index = index % data.length;
             el.data('index', index);
-            imageView.imageInsert(el, data[index].src, params);
+            imageView.imageInsert(el, data[index], params);
         });
 
         //缩放窗口
