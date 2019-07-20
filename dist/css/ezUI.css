@@ -2923,7 +2923,7 @@ body {
 
 .ez.image-view {
   overflow: hidden;
-  border: 1px solid #212121;
+  border: 1px solid #9e9e9e;
   background-color: #fff;
   position: fixed;
   user-select: none;
@@ -2931,6 +2931,7 @@ body {
 
 .ez.image-view img {
   display: block;
+  margin: 0 auto;
 }
 
 .ez.image-view-icon {
@@ -2953,12 +2954,53 @@ body {
 }
 
 .ez.image-view-body {
-  position: relative;
-  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-collapse: collapse;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ez.image-view-body td {
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .ez.image-view-body img {
   display: block;
+}
+
+.ez.image-view-foot {
+  width: 0;
+  height: 0;
+  border: 7px solid #9e9e9e;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+.ez.image-view-resize {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border: 6px solid #FFFFFF;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  cursor: nw-resize;
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+}
+
+.ez.image-view-resize:hover {
+  border-right-color: #9e9e9e;
+  border-bottom-color: #9e9e9e;
 }
 
 html,

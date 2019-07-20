@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_67cb62c4.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_25e69c9.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13773,8 +13773,7 @@ var imageView = {
   },
   windowTpl: function windowTpl() {
     var el = $('<div>').attr('class', 'ez image-view');
-    var html = '' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '<div class="ez image-view-head"></div>' + '<div class="ez image-view-body"></div>' + // '<div class="ez image-view-foot"></div>' +
-    '';
+    var html = '' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '<div class="ez image-view-head"></div>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
     el.append(html);
     return el;
   },
@@ -13783,8 +13782,53 @@ var imageView = {
     params = $.extend({}, imageView.defaults, params);
     new imageView.ImageView(data, params);
   },
+  //创建窗口
+  viewCreate: function viewCreate(data, params) {
+    var el = imageView.windowTpl();
+    el.css({
+      width: params.width,
+      height: params.height,
+      zIndex: params.zIndex + 1
+    });
+    $('body').append(el);
+    return el;
+  },
+  //设置窗口大小
+  viewResizeDrag: function viewResizeDrag(el) {
+    var resizeBtn = el.find('.image-view-resize');
+    resizeBtn.draggabilly();
+    var width, height, right, bottom;
+    resizeBtn.on('dragStart', function (e, pointer, moveVector) {
+      width = el.width();
+      height = el.height();
+      right = $(this).css('right');
+      bottom = $(this).css('bottom');
+    });
+    resizeBtn.on('dragMove', function (e, pointer, moveVector) {
+      $(this).css('display', 'none');
+      imageView.viewResize(el, width + moveVector.x, height + moveVector.y);
+    });
+    resizeBtn.on('dragEnd', function (e, pointer, moveVector) {
+      resizeBtn.css({
+        display: 'block',
+        top: '',
+        right: right,
+        bottom: bottom,
+        left: ''
+      });
+    });
+  },
+  viewResize: function viewResize(el, width, height) {
+    el.css({
+      width: width,
+      height: height
+    });
+  },
+  viewClose: function viewClose(el) {
+    el.remove();
+  },
   //异步加载图片
-  createImage: function createImage(src, callback) {
+  imageCreate: function imageCreate(src, callback) {
     callback = callback || function (img) {
       $.log(img);
     };
@@ -13800,23 +13844,11 @@ var imageView = {
       };
     }
   },
-  //创建窗口
-  createView: function createView(data, params) {
-    var el = imageView.windowTpl();
-    el.css({
-      zIndex: params.zIndex + 1
-    });
-    $('body').append(el);
-    return el;
-  },
-  closeView: function closeView(el) {
-    el.remove();
-  },
   //插入图片
   imageInsert: function imageInsert(el, src, params) {
-    imageView.createImage(src, function (img) {
+    imageView.imageCreate(src, function (img) {
       el.find('img').remove();
-      el.find('.image-view-body').append(img);
+      el.find('.image-view-body td').append(img);
       el.find('.image-view-body').css({
         top: 0,
         left: 0
@@ -13850,6 +13882,8 @@ var imageView = {
       scale = 0.1;
     }
 
+    obj.data('scale', scale.toFixed(1));
+
     if (scale <= 1) {
       //如果缩放小于等于原比例
       var body = obj.closest('.image-view-body');
@@ -13859,7 +13893,6 @@ var imageView = {
       });
     } else {}
 
-    obj.data('scale', scale.toFixed(1));
     imageView.transform(obj);
   },
   //【rotate旋转】
@@ -13923,57 +13956,61 @@ var imageView = {
       return;
     }
 
-    if (data[params.index] && data[params.index].src) {
-      var el = imageView.createView(data, params);
-      el.data('index', params.index);
-      imageView.imageInsert(el, data[params.index].src, params); //窗口拖拽
-
-      el.draggabilly({
-        handle: '.image-view-head',
-        containment: 'html'
-      }); //初始位置
-
-      el.draggabilly('setPosition', 100, 100); //图片拖拽
-
-      el.find('.image-view-body').draggabilly({
-        contrainment: true
-      }); //鼠标按下，调整当前窗口在其它窗口上面
-
-      el.on('mousedown pointerDown', function () {
-        $('.image-view').css('z-index', params.zIndex);
-        $(this).css('z-index', params.zIndex + 1);
-      }); //关闭
-
-      el.find('.image-view-close').on('click', function () {
-        imageView.closeView(el);
-      }); //滚动缩放
-
-      el.on('mousewheel', 'img', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        imageView.scale($(this), e.deltaY > 0 ? 0.1 : -0.1);
-      }); //旋转
-
-      el.find('.image-view-rotate').on('click', function () {
-        var dir = $(this).data('dir') ? $(this).data('rotate-dir') : 'right';
-        imageView.rotate(el.find('img'), dir);
-      }); //翻页
-
-      el.find('.image-view-next, .image-view-prev').on('click', function () {
-        var index = el.data('index');
-
-        if ($(this).hasClass('image-view-next')) {
-          index++;
-        } else {
-          index--;
-          index = index + data.length;
-        }
-
-        index = index % data.length;
-        el.data('index', index);
-        imageView.imageInsert(el, data[index].src, params);
-      });
+    if (!data[params.index] || !data[params.index].src) {
+      return;
     }
+
+    var el = imageView.viewCreate(data, params);
+    el.data('index', params.index);
+    imageView.imageInsert(el, data[params.index].src, params); //窗口拖拽
+
+    el.draggabilly({
+      handle: '.image-view-head',
+      containment: 'html'
+    }); //初始位置
+
+    el.draggabilly('setPosition', 100, 100); //图片拖拽
+
+    el.find('.image-view-body').draggabilly({
+      contrainment: true
+    }); //鼠标按下，调整当前窗口在其它窗口上面
+
+    el.on('mousedown pointerDown', function () {
+      $('.image-view').css('z-index', params.zIndex);
+      $(this).css('z-index', params.zIndex + 1);
+    }); //关闭
+
+    el.find('.image-view-close').on('click', function () {
+      imageView.viewClose(el);
+    }); //滚动缩放
+
+    el.on('mousewheel', 'img', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      imageView.scale($(this), e.deltaY > 0 ? 0.2 : -0.2);
+    }); //旋转
+
+    el.find('.image-view-rotate').on('click', function () {
+      var dir = $(this).data('dir') ? $(this).data('rotate-dir') : 'right';
+      imageView.rotate(el.find('img'), dir);
+    }); //翻页
+
+    el.find('.image-view-next, .image-view-prev').on('click', function () {
+      var index = el.data('index');
+
+      if ($(this).hasClass('image-view-next')) {
+        index++;
+      } else {
+        index--;
+        index = index + data.length;
+      }
+
+      index = index % data.length;
+      el.data('index', index);
+      imageView.imageInsert(el, data[index].src, params);
+    }); //缩放窗口
+
+    imageView.viewResizeDrag(el);
   }
 };
 module.exports = imageView.create;
