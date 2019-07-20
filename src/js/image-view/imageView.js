@@ -13,12 +13,14 @@ var imageView = {
     windowTpl: function () {
         var el = $('<div>').attr('class', 'ez image-view');
         var html = '' +
+            '<div class="ez image-view-head"></div>' +
             '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' +
+            '<div class="ez image-view-bar">' +
+            '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' +
             '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' +
             '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' +
-            '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' +
             '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' +
-            '<div class="ez image-view-head"></div>' +
+            '</div>' +
             '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' +
             '<div class="ez image-view-foot">' +
             '<i class="ez image-view-resize"></i>' +
@@ -35,9 +37,18 @@ var imageView = {
     //创建窗口
     viewCreate: function (data, params) {
         var el = imageView.windowTpl();
+        var width, height;
+        width = params.width;
+        height = params.height;
+        if(localStorage){
+            width = localStorage.getItem('resize.width');
+            height = localStorage.getItem('resize.height');
+            width = width < 100 ? params.width : width;
+            height = height < 100 ? params.height : height;
+        }
         el.css({
-            width: params.width,
-            height: params.height,
+            width: width,
+            height: height,
             zIndex: params.zIndex + 1
         });
         $('body').append(el);
@@ -73,6 +84,10 @@ var imageView = {
             width: width,
             height: height
         });
+        if(localStorage){
+            localStorage.setItem('resize.width', width);
+            localStorage.setItem('resize.height', height);
+        }
     },
     viewClose: function (el) {
         el.remove();
@@ -98,23 +113,20 @@ var imageView = {
             el.find('img').remove();
             el.find('.image-view-body td').append(img);
             el.find('.image-view-body').css({top: 0, left: 0});
-            imageView.imageResize(img, params);
+            imageView.imageResize(el, img);
         });
     },
     //重置大小
-    imageResize: function (img, params) {
-        var p1 = params.width / params.height;
+    imageResize: function (el, img) {
+        var viewSize = {width: el.width(), height: el.height()};
+        var p1 = viewSize.width / viewSize.height;
         var p2 = img.width / img.height;
         if (p1 > p2) {
-            img.width = p2 * params.height;
+            img.width = p2 * viewSize.height;
         } else {
-            img.width = params.width;
+            img.width = viewSize.width;
         }
         $(img).data('width', img.width);
-        // $(img).parent().css({
-        //     marginTop: -$(img).height()/2,
-        //     marginLeft: -$(img).width()/2
-        // });
     },
     //【scale缩放x=a,y=d】
     scale: function (obj, step) {

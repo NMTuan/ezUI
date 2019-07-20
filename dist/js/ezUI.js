@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_25e69c9.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6c6d0476.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13773,7 +13773,7 @@ var imageView = {
   },
   windowTpl: function windowTpl() {
     var el = $('<div>').attr('class', 'ez image-view');
-    var html = '' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '<div class="ez image-view-head"></div>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
+    var html = '' + '<div class="ez image-view-head"></div>' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<div class="ez image-view-bar">' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
     el.append(html);
     return el;
   },
@@ -13785,9 +13785,20 @@ var imageView = {
   //创建窗口
   viewCreate: function viewCreate(data, params) {
     var el = imageView.windowTpl();
+    var width, height;
+    width = params.width;
+    height = params.height;
+
+    if (localStorage) {
+      width = localStorage.getItem('resize.width');
+      height = localStorage.getItem('resize.height');
+      width = width < 100 ? params.width : width;
+      height = height < 100 ? params.height : height;
+    }
+
     el.css({
-      width: params.width,
-      height: params.height,
+      width: width,
+      height: height,
       zIndex: params.zIndex + 1
     });
     $('body').append(el);
@@ -13823,6 +13834,11 @@ var imageView = {
       width: width,
       height: height
     });
+
+    if (localStorage) {
+      localStorage.setItem('resize.width', width);
+      localStorage.setItem('resize.height', height);
+    }
   },
   viewClose: function viewClose(el) {
     el.remove();
@@ -13853,24 +13869,25 @@ var imageView = {
         top: 0,
         left: 0
       });
-      imageView.imageResize(img, params);
+      imageView.imageResize(el, img);
     });
   },
   //重置大小
-  imageResize: function imageResize(img, params) {
-    var p1 = params.width / params.height;
+  imageResize: function imageResize(el, img) {
+    var viewSize = {
+      width: el.width(),
+      height: el.height()
+    };
+    var p1 = viewSize.width / viewSize.height;
     var p2 = img.width / img.height;
 
     if (p1 > p2) {
-      img.width = p2 * params.height;
+      img.width = p2 * viewSize.height;
     } else {
-      img.width = params.width;
+      img.width = viewSize.width;
     }
 
-    $(img).data('width', img.width); // $(img).parent().css({
-    //     marginTop: -$(img).height()/2,
-    //     marginLeft: -$(img).width()/2
-    // });
+    $(img).data('width', img.width);
   },
   //【scale缩放x=a,y=d】
   scale: function scale(obj, step) {
