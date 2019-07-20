@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6c6d0476.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_85acac30.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13776,6 +13776,19 @@ var imageView = {
     var html = '' + '<div class="ez image-view-head"></div>' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<div class="ez image-view-bar">' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
     el.append(html);
     return el;
+  },
+  //在iframe元素上面进行拖动，会明显卡顿，遮一层透明元素就没问题了。
+  fixedIframe: function fixedIframe() {
+    var html = $('<div>');
+    html.css({
+      position: 'fixed',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 5
+    });
+    return html;
   },
   //实例化
   create: function create(data, params) {
@@ -13809,7 +13822,7 @@ var imageView = {
     var resizeBtn = el.find('.image-view-resize');
     resizeBtn.draggabilly();
     var width, height, right, bottom;
-    resizeBtn.on('dragStart', function (e, pointer, moveVector) {
+    resizeBtn.on('dragStart', function () {
       width = el.width();
       height = el.height();
       right = $(this).css('right');
@@ -13819,7 +13832,7 @@ var imageView = {
       $(this).css('display', 'none');
       imageView.viewResize(el, width + moveVector.x, height + moveVector.y);
     });
-    resizeBtn.on('dragEnd', function (e, pointer, moveVector) {
+    resizeBtn.on('dragEnd', function () {
       resizeBtn.css({
         display: 'block',
         top: '',
@@ -13984,6 +13997,13 @@ var imageView = {
     el.draggabilly({
       handle: '.image-view-head',
       containment: 'html'
+    });
+    var fixed = imageView.fixedIframe();
+    el.on('dragStart', function () {
+      fixed.appendTo('body');
+    });
+    el.on('dragEnd', function () {
+      fixed.remove();
     }); //初始位置
 
     el.draggabilly('setPosition', 100, 100); //图片拖拽

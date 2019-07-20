@@ -29,6 +29,19 @@ var imageView = {
         el.append(html);
         return el;
     },
+    //在iframe元素上面进行拖动，会明显卡顿，遮一层透明元素就没问题了。
+    fixedIframe: function(){
+        var html = $('<div>');
+        html.css({
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            zIndex: 5
+        });
+        return html;
+    },
     //实例化
     create: function (data, params) {
         params = $.extend({}, imageView.defaults, params);
@@ -59,7 +72,7 @@ var imageView = {
         var resizeBtn = el.find('.image-view-resize');
         resizeBtn.draggabilly();
         var width, height, right, bottom;
-        resizeBtn.on('dragStart', function (e, pointer, moveVector) {
+        resizeBtn.on('dragStart', function () {
             width = el.width();
             height = el.height();
             right = $(this).css('right');
@@ -69,7 +82,7 @@ var imageView = {
             $(this).css('display', 'none');
             imageView.viewResize(el, width + moveVector.x, height+moveVector.y);
         });
-        resizeBtn.on('dragEnd', function (e, pointer, moveVector) {
+        resizeBtn.on('dragEnd', function () {
             resizeBtn.css({
                 display: 'block',
                 top: '',
@@ -208,6 +221,13 @@ var imageView = {
         el.draggabilly({
             handle: '.image-view-head',
             containment: 'html'
+        });
+        var fixed = imageView.fixedIframe();
+        el.on('dragStart', function () {
+            fixed.appendTo('body');
+        });
+        el.on('dragEnd', function () {
+            fixed.remove();
         });
 
         //初始位置
