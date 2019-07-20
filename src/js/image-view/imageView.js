@@ -93,6 +93,8 @@ var imageView = {
         });
     },
     viewResize: function(el, width, height){
+        width = width < 200 ? 200 : width;
+        height = height < 200 ? 200 : height;
         el.css({
             width: width,
             height: height
