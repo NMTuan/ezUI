@@ -170,7 +170,7 @@ var imageView = {
     rotate: function (obj, dir) {
         var rotate = obj.data('rotate') || 0;
         rotate = parseInt(rotate);
-        if (dir === 'right') {
+        if (dir === 'left') {
             rotate = rotate + 90;
         } else {
             rotate = rotate - 90;
@@ -267,7 +267,8 @@ var imageView = {
 
         //旋转
         el.find('.image-view-rotate').on('click', function () {
-            var dir = $(this).data('dir') ? $(this).data('rotate-dir') : 'right';
+            var dir = $(this).data('dir') ? $(this).data('dir') : 'right';
+            console.log(dir);
             imageView.rotate(el.find('img'), dir);
         });
         //翻页

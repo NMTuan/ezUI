@@ -13747,7 +13747,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./image-view/imageView');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4e1e6d2c.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_edbe6c88.js","/")
 },{"./image-view/imageView":14,"./menu/Menu":15,"XJF/FV":6,"buffer":5}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13943,7 +13943,7 @@ var imageView = {
     var rotate = obj.data('rotate') || 0;
     rotate = parseInt(rotate);
 
-    if (dir === 'right') {
+    if (dir === 'left') {
       rotate = rotate + 90;
     } else {
       rotate = rotate - 90;
@@ -14041,7 +14041,8 @@ var imageView = {
     }); //旋转
 
     el.find('.image-view-rotate').on('click', function () {
-      var dir = $(this).data('dir') ? $(this).data('rotate-dir') : 'right';
+      var dir = $(this).data('dir') ? $(this).data('dir') : 'right';
+      console.log(dir);
       imageView.rotate(el.find('img'), dir);
     }); //翻页
 
