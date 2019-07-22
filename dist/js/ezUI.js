@@ -13757,12 +13757,26 @@ var audioPlayer = {
   //播放器
   template: function template() {
     var el = $("<div>");
-    var html = '' + '<div class="ez audio-player">' + '<div class="ez audio-player-header layui-clear">' + '<div id="audio_title" class="ez audio-player-title">播放器</div>' + '</div>' + '<table class="ez audio-player-wave">' + '<tr>' + '<td width="12"></td>' + '<td class="waveform"></td>' + '<td width="12"></td>' + '</tr>' + '</table>' + '<div class="ez audio-player-ctrl">' + '<div id="audio_play" class="ez audio-player-play"><i class="fa fa-play"></i></div>' + '<div id="audio_pause" class="ez audio-player-pause"><i class="fa fa-pause"></i></div>' + '<div id="audio_refresh" class="ez audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' + '<div id="audio_loading" class="ez audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' + '<div id="audio_volume" class="ez audio-player-volume">' + '<i class="fa fa-volume-down"></i>' + '<span>100%</span>' + '<i class="fa fa-volume-up"></i>' + '</div>' + // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
+    el.attr('class', 'ez audio-player');
+    var html = '' + '<div class="ez audio-player-header layui-clear">' + '<div id="audio_title" class="ez audio-player-title">播放器</div>' + '</div>' + '<table class="ez audio-player-wave">' + '<tr>' + '<td width="12"></td>' + '<td class="waveform"></td>' + '<td width="12"></td>' + '</tr>' + '</table>' + '<div class="ez audio-player-ctrl">' + '<div id="audio_play" class="ez audio-player-play"><i class="fa fa-play"></i></div>' + '<div id="audio_pause" class="ez audio-player-pause"><i class="fa fa-pause"></i></div>' + '<div id="audio_refresh" class="ez audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' + '<div id="audio_loading" class="ez audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' + '<div id="audio_volume" class="ez audio-player-volume">' + '<i class="fa fa-volume-down"></i>' + '<span>100%</span>' + '<i class="fa fa-volume-up"></i>' + '</div>' + // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
     // '<div id="audio_volume-bar" class="ez audio-player-volume-bar demo-slider"></div>' +
-    '<div class="ez audio-player-time">' + '<span id="audio_time_current" class="ez audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez audio-player-time_duration">00:00</span>' + '</div>' + '</div>' + '<i id="audio_close" class="ez audio-player-close remixicon-close-line"></i>' + '</div>' + '' + '';
+    '<div class="ez audio-player-time">' + '<span id="audio_time_current" class="ez audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez audio-player-time_duration">00:00</span>' + '</div>' + '</div>' + '<i id="audio_close" class="ez audio-player-close remixicon-close-line"></i>' + '' + '';
     el.append(html);
     audioPlayer.player = el;
     return el;
+  },
+  //在iframe元素上面进行拖动，会明显卡顿，遮一层透明元素就没问题了。
+  fixedIframe: function fixedIframe() {
+    var html = $('<div>');
+    html.css({
+      position: 'fixed',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 5
+    });
+    return html;
   },
   //格式化时间
   formatTime: function formatTime(second) {
@@ -13778,13 +13792,22 @@ var audioPlayer = {
     //没播放器，生成并插入，初始化频谱，绑定事件
     if (audioPlayer.showState === false) {
       audioPlayer.showState = true;
-      $('body').append(audioPlayer.template());
-      audioPlayer.player.draggabilly({
-        handle: '.audio-player-header' // containment: 'html'
+      $('body').append(audioPlayer.template()); //拖拽
 
+      audioPlayer.player.draggabilly({
+        handle: '.audio-player-header',
+        containment: 'html'
       }); //初始位置
 
       audioPlayer.player.draggabilly('setPosition', 100, 100);
+      var fixed = audioPlayer.fixedIframe();
+      audioPlayer.player.on('dragStart', function () {
+        fixed.appendTo('body');
+      });
+      audioPlayer.player.on('dragEnd', function () {
+        fixed.remove();
+      }); //播放器
+
       audioPlayer.waveInit();
       audioPlayer.waveEvent();
     }
@@ -13955,7 +13978,7 @@ global.ez = {};
 ez.Menu = _Menu.default;
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d18c5900.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_17390cbd.js","/")
 },{"./audioPlayer/audioPlay":14,"./imageView/imageView":16,"./menu/Menu":17,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

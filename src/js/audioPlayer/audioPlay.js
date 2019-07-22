@@ -8,8 +8,8 @@ var audioPlayer = {
     player: null,   //播放器
     template: function () {
         var el = $("<div>");
+        el.attr('class', 'ez audio-player');
         var html = '' +
-            '<div class="ez audio-player">' +
             '<div class="ez audio-player-header layui-clear">' +
             '<div id="audio_title" class="ez audio-player-title">播放器</div>' +
             '</div>' +
@@ -37,12 +37,24 @@ var audioPlayer = {
             '</div>' +
             '</div>' +
             '<i id="audio_close" class="ez audio-player-close remixicon-close-line"></i>' +
-            '</div>' +
             '' +
             '';
         el.append(html);
         audioPlayer.player = el;
         return el;
+    },
+    //在iframe元素上面进行拖动，会明显卡顿，遮一层透明元素就没问题了。
+    fixedIframe: function(){
+        var html = $('<div>');
+        html.css({
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            zIndex: 5
+        });
+        return html;
     },
     //格式化时间
     formatTime: function (second) {
@@ -59,13 +71,21 @@ var audioPlayer = {
         if (audioPlayer.showState === false) {
             audioPlayer.showState = true;
             $('body').append(audioPlayer.template());
+            //拖拽
             audioPlayer.player.draggabilly({
                 handle: '.audio-player-header',
-                // containment: 'html'
+                containment: 'html'
             });
             //初始位置
             audioPlayer.player.draggabilly('setPosition', 100, 100);
-
+            var fixed = audioPlayer.fixedIframe();
+            audioPlayer.player.on('dragStart', function () {
+                fixed.appendTo('body');
+            });
+            audioPlayer.player.on('dragEnd', function () {
+                fixed.remove();
+            });
+            //播放器
             audioPlayer.waveInit();
             audioPlayer.waveEvent();
         }
