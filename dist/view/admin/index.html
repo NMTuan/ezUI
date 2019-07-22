@@ -10,11 +10,10 @@
     <link rel="stylesheet" href="/static/remixicon/1.2.2/remixicon.css">
     <link rel="stylesheet" href="/static/animate/3.7.2/animate.min.css">
     <link rel="stylesheet" href="/static/nprogress/0.2.0/nprogress.css">
-    <link rel="stylesheet" href="/static/photoviewer/3.3.0/photoviewer.min.css">
     <link rel="stylesheet" href="/css/ezUI.css">
     <script src="/static/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/nprogress/0.2.0/nprogress.js"></script>
-    <script src="/static/photoviewer/3.3.0/photoviewer.min.js"></script>
+    <script src="/static/wavesurfer/3.0.0/wavesurfer.min.js"></script>
     <script src="/js/ezUI.js"></script>
     <script src="/js/ezAdmin.js"></script>
 </head>
@@ -26,27 +25,12 @@
     <br>
     <br>
     <button id="imageView" class="ez btn btn-primary">看图</button>
+    <br>
+    <br>
+    <button id="play" class="ez btn btn-primary" data-src="/static/media/intro.mp3" data-title="这里是标题">播放</button>
     <p>0 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>1 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>2 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>3 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>4 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>5 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>6 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>7 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>8 test</p>
-    <div style="margin:20px;background-color:#fff">容器</div>
-    <p>9 test</p>
     <div style="margin:20px;background-color:#fff">容器</div>
 </body>
 
 </html>
-<script>var data=[{title:"瓶子",src:"https://hbimg.huabanimg.com/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7412b18-FTUAiR_fw658"},{title:"瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫",src:"https://hbimg.huabanimg.com/041ece85a1ced2afc7d9017c4e270861a1252d562c553-MXPCEN_fw658"},{title:"女人",src:"https://hbimg.huabanimg.com/ae6d81cd174f79ed50c54403fcb42098cfd196d215986-yoqOrw_fw658"},{title:"猫",src:"https://hbimg.huabanimg.com/60ae102b32d9a3d9c8fb7903c4e9498629964da87758a-NcCCQ2_fw658"},{title:"动漫",src:"https://hbimg.huabanimg.com/6e9296d567acf17600a2408e9860a53daf9e172fd9eb5-aqRXKD_fw658"}],cfg={keyboard:!1,headToolbar:["close"],fixedModalPos:!0,fixedContent:!1,footToolbar:["zoomIn","zoomOut","prev","next","rotateRight"]};$("#imageView").on("click",function(){top.ez.imageView(data)}),top.ez.imageView(data,{index:1})</script>
+<script>var data=[{title:"瓶子",src:"https://hbimg.huabanimg.com/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7412b18-FTUAiR_fw658"},{title:"瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫瞪眼猫",src:"https://hbimg.huabanimg.com/041ece85a1ced2afc7d9017c4e270861a1252d562c553-MXPCEN_fw658"},{title:"女人",src:"https://hbimg.huabanimg.com/ae6d81cd174f79ed50c54403fcb42098cfd196d215986-yoqOrw_fw658"},{title:"猫",src:"https://hbimg.huabanimg.com/60ae102b32d9a3d9c8fb7903c4e9498629964da87758a-NcCCQ2_fw658"},{title:"动漫",src:"https://hbimg.huabanimg.com/6e9296d567acf17600a2408e9860a53daf9e172fd9eb5-aqRXKD_fw658"}],cfg={keyboard:!1,headToolbar:["close"],fixedModalPos:!0,fixedContent:!1,footToolbar:["zoomIn","zoomOut","prev","next","rotateRight"]};$("#imageView").on("click",function(){top.ez.imageView(data)}),$("#play").audioPlayer()</script>

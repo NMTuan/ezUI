@@ -1,0 +1,147 @@
+.ez.audio-player {
+    $color: #1e88e5;
+    background-color: #383c48;
+    width: 500px;
+    height: 138px;
+    overflow: hidden;
+    position: fixed;
+    //top: 0;
+    //left: 0;
+    z-index: 100;
+    font-size: 12px;
+
+    &-header {
+        color: #c1c2c6;
+        height: 28px;
+        line-height: 28px;
+        padding: 0 0 0 12px;
+        border-bottom: 1px solid #2d313c;
+        box-shadow: 0 0 100px #434959;
+        cursor: move;
+    }
+
+    &-wave {
+        border-top: 1px solid #434959;
+        height: 80px;
+        width: 100%;
+        //margin: 0 20px;
+        wave {
+            cursor: pointer;
+        }
+    }
+
+    &-ctrl {
+        //padding: 12px;
+        height: 28px;
+        background-color: #2d313c;
+        box-shadow: 0 0 100px #000;
+        border-top: 1px solid #303440;
+        position: relative;
+        text-align: center;
+    }
+
+    &-play,
+    &-pause,
+    &-loading,
+    &-refresh {
+        display: block;
+        padding: 12px;
+        background-color: $color;
+        border-radius: 100%;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+        position: absolute;
+        top: -19px;
+        left: (500px - 38)/2;
+        z-index: 100;
+
+        &:hover {
+            background-color: $color;
+        }
+        .fa {
+            width: 14px;
+            height: 14px;
+            overflow: hidden;
+            display: block;
+            line-height: 1;
+        }
+    }
+
+    &-volume {
+        border: 1px solid #434959;
+        //background-color: #434959;
+        border-radius: 2px;
+        line-height: 18px;
+        color: #93959b;
+        position: absolute;
+        top: 3px;
+        left: 12px;
+        i, span {
+            float: left;
+            line-height: 18px;
+        }
+
+        i {
+            font-size: 12px;
+            padding: 0 4px;
+            cursor: pointer;
+            &:hover {
+                //background-color: #434959;
+                color: $color;
+            }
+        }
+        span {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #434959;
+            border-width: 0 1px;
+        }
+        //&-bar {
+        //    position: absolute;
+        //    width: 100px;
+        //    top: 12px;
+        //    left: 40px;
+        //
+        //    .layui-slider {
+        //        background-color: #93959b;
+        //    }
+        //
+        //    .layui-slider-wrap-btn {
+        //        width: 6px;
+        //        height: 6px;
+        //        background-color: $color;
+        //    }
+        //}
+    }
+
+    &-time {
+        position: absolute;
+        top: 6px;
+        right: 12px;
+        color: #93959b;
+    }
+
+    &-close {
+        cursor: pointer;
+        padding: 5px;
+        color: #93959b;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        &:hover {
+            color: $color;
+        }
+    }
+
+}
+
+
+//.layui-layer.audio {
+//    overflow: hidden;
+//
+//    .layui-layer-content {
+//        overflow: hidden;
+//    }
+//}

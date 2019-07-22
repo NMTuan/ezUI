@@ -9,4 +9,5 @@ import Menu from './menu/Menu'; //菜单
 
 global.ez = {};
 ez.Menu = Menu;
-ez.imageView = require('./image-view/imageView');
+ez.imageView = require('./imageView/imageView');
+ez.audioPlayer = require('./audioPlayer/audioPlay');

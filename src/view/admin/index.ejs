@@ -7,7 +7,11 @@
 <br>
 <button id="imageView" class="ez btn btn-primary">看图</button>
 
-<% for(var i = 0; i < 10; i++){ %>
+<br>
+<br>
+<button id="play" class="ez btn btn-primary" data-src="/static/media/intro.mp3" data-title="这里是标题">播放</button>
+
+<% for(var i = 0; i < 1; i++){ %>
     <p><%- i %> test</p>
     <div style="margin: 20px; background-color: #fff;">容器</div>
 <% } %>
@@ -28,9 +32,17 @@
         footToolbar: ['zoomIn', 'zoomOut', 'prev', 'next', 'rotateRight'],
     }
     $('#imageView').on('click', function () {
-        // new top.PhotoViewer(data, cfg);
         top.ez.imageView(data)
     });
-    top.ez.imageView(data, {index: 1})
+
+    // $('#play').on('click', function () {
+    //     ez.audioPlayer();
+    // });
+    $('#play').audioPlayer();
+    // $('#play').on('click', function () {
+    //     var src = $(this).data('src') || '';
+    //     var title = $(this).data('title') || '';
+    //     top.ez.audioPlayer(src, title);
+    // });
 
 </script>
