@@ -1,4 +1,3 @@
-var mousewheel = require('jquery-mousewheel')($);   //鼠标滚轮
 var jQueryBridget = require('jquery-bridget');
 var Draggabilly = require('draggabilly');   //鼠标拖拽
 jQueryBridget('draggabilly', Draggabilly, $);

@@ -11,6 +11,7 @@ var cssmin = require('gulp-clean-css');
 
 //js
 var babel = require('gulp-babel');
+var uglify = require('gulp-uglify');
 var browserify = require('gulp-browserify');
 
 //html
@@ -21,6 +22,11 @@ var htmlMin = require('gulp-htmlmin');
 //serve
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+
+//release
+var rev = require('gulp-rev');
+var collector = require('gulp-rev-collector');
+var replace = require('gulp-replace');
 
 
 var config = {
@@ -67,11 +73,16 @@ gulp.task('babel', function () {
     return task;
 });
 
-//require
+//js
 gulp.task('js', function () {
     var task = gulp.src(config.tmpPath + 'js/*.js')
         .pipe(browserify({
             insertGlobals: true
+        }))
+        .pipe(gulp.dest(config.distPath + 'js/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
         }))
         .pipe(gulp.dest(config.distPath + 'js/'))
         .pipe(reload({
@@ -152,4 +163,36 @@ gulp.task('watch', function () {
     gulp.watch(config.srcPath + '**/*.ejs', ['html']);
 });
 
+//rev
+gulp.task('rev', sync(['rev:css', 'rev:js']));
+//再处理css, 其中的图片要替换
+gulp.task('rev:css', function () {
+    return gulp.src([
+        config.distPath + '/css/*.min.css'
+    ])
+        .pipe(collector({
+            replaceReved: true
+        }))
+        .pipe(rev())
+        .pipe(gulp.dest(config.distPath + '/css'))
+        .pipe(rev.manifest())
+        .pipe(gulp.dest(config.distPath + '/css'))
+        ;
+});
+//再处理js, 其中的图片要替换
+gulp.task('rev:js', function () {
+    return gulp.src([
+        config.distPath + '/js/*.min.js'
+    ])
+        .pipe(collector({
+            replaceReved: true
+        }))
+        .pipe(rev())
+        .pipe(gulp.dest(config.distPath + '/js'))
+        .pipe(rev.manifest())
+        .pipe(gulp.dest(config.distPath + '/js'))
+        ;
+});
+
 gulp.task('serve', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'watch']));
+gulp.task('release', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'rev']));
