@@ -13744,7 +13744,7 @@ module.exports = audioPlayer.play;
 global.ez = {};
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_98df28bf.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3a5aab60.js","/")
 },{"./audioPlayer/audioPlay":13,"./imageView/imageView":15,"XJF/FV":7,"buffer":6}],15:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

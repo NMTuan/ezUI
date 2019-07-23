@@ -12,6 +12,17 @@
 // "d4": #8b1014,
 // );
 
+$current: ("base": #3c8dbc,
+"l5": #ecf4f8,
+"l4": #c5ddeb,
+"l3": #9ec6de,
+"l2": #7db3d2,
+"l1": #5ca0c7,
+"d1": #357ba5,
+"d2": #2d6a8d,
+"d3": #265876,
+"d4": #1e475e);
+
 $red: ("base": #F44336,
 "l5": #FFEBEE,
 "l4": #FFCDD2,
@@ -289,7 +300,8 @@ $shades: ("black": #000000,
 "white": #FFFFFF,
 "transparent": transparent);
 
-$colors: ("red": $red,
+$colors: ( "current": $current,
+"red": $red,
 "pink": $pink,
 "purple": $purple,
 "deep-purple": $deep-purple,
