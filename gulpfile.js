@@ -175,8 +175,10 @@ gulp.task('rev:css', function () {
         }))
         .pipe(rev())
         .pipe(gulp.dest(config.distPath + '/css'))
+        .pipe(gulp.dest('../octopus/backend/web/static/ezui/css'))
         .pipe(rev.manifest())
         .pipe(gulp.dest(config.distPath + '/css'))
+        .pipe(gulp.dest('../octopus/backend/web/static/ezui/css'))
         ;
 });
 //再处理js, 其中的图片要替换
@@ -189,8 +191,10 @@ gulp.task('rev:js', function () {
         }))
         .pipe(rev())
         .pipe(gulp.dest(config.distPath + '/js'))
+        .pipe(gulp.dest('../octopus/backend/web/static/ezui/js'))
         .pipe(rev.manifest())
         .pipe(gulp.dest(config.distPath + '/js'))
+        .pipe(gulp.dest('../octopus/backend/web/static/ezui/js'))
         ;
 });
 

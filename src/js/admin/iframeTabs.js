@@ -153,6 +153,9 @@ var iframeTabs = {
     refresh: function(){
         var index = iframeTabs.params.headerEl.find('li.current').index();
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
+        if(iframe.length === 0){
+            return;
+        }
         iframe.attr('src', iframe.attr('src'));
 
         if (typeof NProgress !== 'undefined') {

@@ -11,13 +11,14 @@ html, body {
     &.nav {
         width: $nav-width;
         height: 100%;
-        overflow: hidden;
+        //overflow: hidden;
         padding-top: $header-height;
         background-color: color('grey', 'd4');
         position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
+        z-index: 1;
         @import "nav";
     }
 
@@ -51,7 +52,7 @@ html, body {
         height: $header-height;
         background-color: color($base-color, 'base');
         position: relative;
-        z-index: 1;
+        z-index: 2;
         @import "header";
     }
 

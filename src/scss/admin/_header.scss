@@ -18,6 +18,10 @@ $height: 30px;
     line-height: $header-height - $height;
     //background-color: red;
     font-size: 12px;
+    color: color($base-color, 'l5');
+    a {
+        color: color($base-color, 'l5');
+    }
 }
 //左右箭头
 &-arrow {
