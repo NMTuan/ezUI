@@ -1,3 +1,4 @@
+var mousewheel = require('jquery-mousewheel')($);   //鼠标滚轮
 var jQueryBridget = require('jquery-bridget');
 var Draggabilly = require('draggabilly');   //鼠标拖拽
 jQueryBridget('draggabilly', Draggabilly, $);
@@ -29,7 +30,7 @@ var imageView = {
         return el;
     },
     //在iframe元素上面进行拖动，会明显卡顿，遮一层透明元素就没问题了。
-    fixedIframe: function(){
+    fixedIframe: function () {
         var html = $('<div>');
         html.css({
             position: 'fixed',
@@ -52,7 +53,7 @@ var imageView = {
         var width, height;
         width = params.width;
         height = params.height;
-        if(localStorage){
+        if (localStorage) {
             width = localStorage.getItem('resize.width');
             height = localStorage.getItem('resize.height');
             width = width < 100 ? params.width : width;
@@ -79,7 +80,7 @@ var imageView = {
         });
         resizeBtn.on('dragMove', function (e, pointer, moveVector) {
             $(this).css('display', 'none');
-            imageView.viewResize(el, width + moveVector.x, height+moveVector.y);
+            imageView.viewResize(el, width + moveVector.x, height + moveVector.y);
         });
         resizeBtn.on('dragEnd', function () {
             resizeBtn.css({
@@ -91,14 +92,14 @@ var imageView = {
             });
         });
     },
-    viewResize: function(el, width, height){
+    viewResize: function (el, width, height) {
         width = width < 200 ? 200 : width;
         height = height < 200 ? 200 : height;
         el.css({
             width: width,
             height: height
         });
-        if(localStorage){
+        if (localStorage) {
             localStorage.setItem('resize.width', width);
             localStorage.setItem('resize.height', height);
         }
@@ -125,7 +126,7 @@ var imageView = {
     imageInsert: function (el, imgObj, params) {
         var src = imgObj.src || '';
         var title = imgObj.title || '';
-        if(!src){
+        if (!src) {
             return;
         }
         imageView.imageCreate(src, function (img) {
@@ -133,7 +134,7 @@ var imageView = {
             el.find('.image-view-body td').append(img);
             el.find('.image-view-body').css({top: 0, left: 0});
             imageView.imageResize(el, img);
-            if(!title){
+            if (!title) {
                 return;
             }
             el.find('.image-view-head').html(title);
@@ -269,7 +270,6 @@ var imageView = {
         //旋转
         el.find('.image-view-rotate').on('click', function () {
             var dir = $(this).data('dir') ? $(this).data('dir') : 'right';
-            console.log(dir);
             imageView.rotate(el.find('img'), dir);
         });
         //翻页

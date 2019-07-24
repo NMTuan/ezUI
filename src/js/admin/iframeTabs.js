@@ -64,11 +64,11 @@ var iframeTabs = {
         current.addClass('current').siblings().removeClass('current');
         //滚动到合适位置，显示出高亮的tabs
         //高亮元素左边+元素宽度，大于，可视区域宽度+已滚动区域
-        if(current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()){
+        if (current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()) {
             iframeTabs.scrollTabs(current.position().left + current.width());
         }
         //高亮元素左侧，小于，已滚动区域
-        if(current.position().left < tabs.parent().scrollLeft()){
+        if (current.position().left < tabs.parent().scrollLeft()) {
             iframeTabs.scrollTabs(tabs.parent().scrollLeft() + current.position().left);
         }
 
@@ -149,16 +149,21 @@ var iframeTabs = {
                 var prev = index === 0 ? 0 : index - 1;
                 iframeTabs.params.headerEl.find('li').eq(prev).click();
             }
+            //如果有加载条，结束
+            if (typeof NProgress !== 'undefined') {
+                NProgress.done();
+            }
+
         };
-        if(typeof confirm === 'boolean' && confirm === true){
-            if(typeof top.layer !== 'undefined'){
+        if (typeof confirm === 'boolean' && confirm === true) {
+            if (typeof top.layer !== 'undefined') {
                 top.layer.confirm('确定要关闭么？', function (index) {
                     close();
                     top.layer.close(index);
                 });
             } else {
                 var cfm = top.confirm('确定要关闭么');
-                if(cfm){
+                if (cfm) {
                     close();
                 }
             }
@@ -167,10 +172,10 @@ var iframeTabs = {
         }
     },
     //刷新页面
-    refresh: function(){
+    refresh: function () {
         var index = iframeTabs.params.headerEl.find('li.current').index();
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
-        if(iframe.length === 0){
+        if (iframe.length === 0) {
             return;
         }
         var src = iframe[0].contentWindow.document.location.href;
@@ -226,7 +231,7 @@ var iframeTabs = {
         var ul = iframeTabs.params.headerEl;
         var scrollBox = ul.parent();
         iframeTabs.params.leftArrow.on('click', function () {
-            var step = scrollBox.scrollLeft() -200;
+            var step = scrollBox.scrollLeft() - 200;
             iframeTabs.scrollTabs(step);
         });
         iframeTabs.params.rightArrow.on('click', function () {
