@@ -61,7 +61,7 @@ html, body {
         overflow: hidden;
         height: 100%;
         margin: 0 0 0 $nav-width+$sub-nav-width;
-        background-color: color('grey', 'l4');
+        background-color: color($base-color, 'l5');
         @import "main";
     }
 }
