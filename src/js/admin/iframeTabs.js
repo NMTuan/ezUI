@@ -114,11 +114,11 @@ var iframeTabs = {
         });
     },
     //关闭页面
-    close: function (url, index) {
+    close: function (confirm, url, index) {
         //如果内页使用，需要提升
         if (window.top !== window && window.name) {
             url = url || window.name;   //如果没url，则关闭当前iframe。
-            window.top.eza.iframeTabs.close(url);
+            window.top.eza.iframeTabs.close(confirm, url, index);
             return;
         }
         if (!url) {
@@ -127,26 +127,43 @@ var iframeTabs = {
         if ($.inArray(url, iframeTabs.urls) < 0) {
             return;
         }
-        //没下标，先找下标
-        if (typeof index === 'undefined') {
-            iframeTabs.params.headerEl.find('li').each(function (i, item) {
-                if ($(item).data('url') === url) {
-                    index = i;
-                    return false;
+        var close = function () {
+            //没下标，先找下标
+            if (typeof index === 'undefined') {
+                iframeTabs.params.headerEl.find('li').each(function (i, item) {
+                    if ($(item).data('url') === url) {
+                        index = i;
+                        return false;
+                    }
+                });
+            }
+            if (typeof index === 'undefined') {
+                return;
+            }
+            var li = iframeTabs.params.headerEl.find('li').eq(index);
+            li.remove();
+            iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+            iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
+            //如果关闭高亮标签，则高亮上一个
+            if (li.hasClass('current')) {
+                var prev = index === 0 ? 0 : index - 1;
+                iframeTabs.params.headerEl.find('li').eq(prev).click();
+            }
+        };
+        if(typeof confirm === 'boolean' && confirm === true){
+            if(typeof top.layer !== 'undefined'){
+                top.layer.confirm('确定要关闭么？', function (index) {
+                    close();
+                    top.layer.close(index);
+                });
+            } else {
+                var cfm = top.confirm('确定要关闭么');
+                if(cfm){
+                    close();
                 }
-            });
-        }
-        if (typeof index === 'undefined') {
-            return;
-        }
-        var li = iframeTabs.params.headerEl.find('li').eq(index);
-        li.remove();
-        iframeTabs.params.contentEl.find('iframe').eq(index).remove();
-        iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
-        //如果关闭高亮标签，则高亮上一个
-        if (li.hasClass('current')) {
-            var prev = index === 0 ? 0 : index - 1;
-            iframeTabs.params.headerEl.find('li').eq(prev).click();
+            }
+        } else {
+            close();
         }
     },
     //刷新页面
@@ -156,7 +173,9 @@ var iframeTabs = {
         if(iframe.length === 0){
             return;
         }
-        iframe.attr('src', iframe.attr('src'));
+        var src = iframe[0].contentWindow.document.location.href;
+        // var src = iframe.attr('src');
+        iframe.attr('src', src);
 
         if (typeof NProgress !== 'undefined') {
             NProgress.configure({parent: '#iframeTabsContent'});
@@ -200,7 +219,7 @@ var iframeTabs = {
         //close
         iframeTabs.closeBtn.on('click', function () {
             var li = $(this).closest('li');
-            iframeTabs.close(li.data('url'), li.index());
+            iframeTabs.close(false, li.data('url'), li.index());
         });
 
         //arrow

@@ -5,8 +5,8 @@
         overflow: hidden;
     }
 </style>
-<div class="eza nav">
-    <div id="parentMenu" class="eza scroll-box-v">
+<div id="parentMenu" class="eza nav">
+<!--    <div  class="eza scroll-box-v">-->
         <ul>
             <% ['home', 'mail', 'flag', 'pie-chart', 'message-2', 'bank-card'].forEach(function(item, i){ %>
                 <li>
@@ -16,7 +16,7 @@
                 </li>
             <% }) %>
         </ul>
-    </div>
+<!--    </div>-->
 </div>
 <div class="eza sub-nav">
     <div class="eza scroll-box-v">
@@ -39,7 +39,7 @@
                     {name: '订单管理', url: '../button/button.html', current: true},
                     {
                         name: '流水', child: [
-                            {name: '充值明细充值明细充值明细充值明细充值明细'},
+                            {name: 'baidu.com', url: 'http://news.baidu.com/guonei'},
                             {name: '消费明细'}
                         ]
                     },
@@ -92,6 +92,9 @@
 
         <% } %>
         <div id="sub-nav-0" class="sub-nav-item">
+            <div class="eza sub-nav-header">
+                <div class="eza sub-nav-title">标题啊</div>
+            </div>
             <div class="eza sub-nav-body">
                 <% render_menu(menu1, true) %>
             </div>

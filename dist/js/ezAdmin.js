@@ -1547,12 +1547,12 @@ var _iframeTabs = {
     });
   },
   //关闭页面
-  close: function close(url, index) {
+  close: function close(confirm, url, index) {
     //如果内页使用，需要提升
     if (window.top !== window && window.name) {
       url = url || window.name; //如果没url，则关闭当前iframe。
 
-      window.top.eza.iframeTabs.close(url);
+      window.top.eza.iframeTabs.close(confirm, url, index);
       return;
     }
 
@@ -1562,36 +1562,55 @@ var _iframeTabs = {
 
     if ($.inArray(url, _iframeTabs.urls) < 0) {
       return;
-    } //没下标，先找下标
+    }
+
+    var close = function close() {
+      //没下标，先找下标
+      if (typeof index === 'undefined') {
+        _iframeTabs.params.headerEl.find('li').each(function (i, item) {
+          if ($(item).data('url') === url) {
+            index = i;
+            return false;
+          }
+        });
+      }
+
+      if (typeof index === 'undefined') {
+        return;
+      }
+
+      var li = _iframeTabs.params.headerEl.find('li').eq(index);
+
+      li.remove();
+
+      _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+
+      _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
+      //如果关闭高亮标签，则高亮上一个
 
 
-    if (typeof index === 'undefined') {
-      _iframeTabs.params.headerEl.find('li').each(function (i, item) {
-        if ($(item).data('url') === url) {
-          index = i;
-          return false;
+      if (li.hasClass('current')) {
+        var prev = index === 0 ? 0 : index - 1;
+
+        _iframeTabs.params.headerEl.find('li').eq(prev).click();
+      }
+    };
+
+    if (typeof confirm === 'boolean' && confirm === true) {
+      if (typeof top.layer !== 'undefined') {
+        top.layer.confirm('确定要关闭么？', function (index) {
+          close();
+          top.layer.close(index);
+        });
+      } else {
+        var cfm = top.confirm('确定要关闭么');
+
+        if (cfm) {
+          close();
         }
-      });
-    }
-
-    if (typeof index === 'undefined') {
-      return;
-    }
-
-    var li = _iframeTabs.params.headerEl.find('li').eq(index);
-
-    li.remove();
-
-    _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
-
-    _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
-    //如果关闭高亮标签，则高亮上一个
-
-
-    if (li.hasClass('current')) {
-      var prev = index === 0 ? 0 : index - 1;
-
-      _iframeTabs.params.headerEl.find('li').eq(prev).click();
+      }
+    } else {
+      close();
     }
   },
   //刷新页面
@@ -1604,7 +1623,9 @@ var _iframeTabs = {
       return;
     }
 
-    iframe.attr('src', iframe.attr('src'));
+    var src = iframe[0].contentWindow.document.location.href; // var src = iframe.attr('src');
+
+    iframe.attr('src', src);
 
     if (typeof NProgress !== 'undefined') {
       NProgress.configure({
@@ -1655,7 +1676,7 @@ var _iframeTabs = {
     _iframeTabs.closeBtn.on('click', function () {
       var li = $(this).closest('li');
 
-      _iframeTabs.close(li.data('url'), li.index());
+      _iframeTabs.close(false, li.data('url'), li.index());
     }); //arrow
 
 
@@ -1823,7 +1844,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1fb96f59.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_38890408.js","/")
 },{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
