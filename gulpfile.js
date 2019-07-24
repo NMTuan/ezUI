@@ -42,7 +42,7 @@ gulp.task('del', function (callback) {
 });
 
 //css
-gulp.task('css', function () {
+gulp.task('sass', function () {
     var task = gulp.src(config.srcPath + 'scss/*.scss')
         .pipe(plumber())
         .pipe(sass({
@@ -54,11 +54,10 @@ gulp.task('css', function () {
             suffix: '.min'
         }))
         .pipe(gulp.dest(config.distPath + 'css/'))
-        .pipe(reload({
-            stream: true
-        }));
+    ;
     return task;
 });
+gulp.task('css', ['sass'], reload);
 
 //es6 --> es5
 gulp.task('babel', function () {
