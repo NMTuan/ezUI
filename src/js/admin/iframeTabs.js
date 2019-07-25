@@ -84,11 +84,11 @@ var iframeTabs = {
         // log.push('右侧可见：' + rightIn);
         // $.log(log.join('\n'))
         //在右侧，滚到高亮元素的右侧
-        if(currentLeft >= leftSide && !(currentRight <= rightSide)){
+        if (currentLeft >= leftSide && !(currentRight <= rightSide)) {
             iframeTabs.scrollTabs(currentRight - tabs.parent().outerWidth());
         }
         //在左边，滚到高亮元素的左侧
-        if(!(currentLeft >= leftSide) && currentRight <= rightSide){
+        if (!(currentLeft >= leftSide) && currentRight <= rightSide) {
             iframeTabs.scrollTabs(currentLeft);
         }
 
@@ -268,15 +268,23 @@ var iframeTabs = {
             iframeTabs.refresh();
         });
         //鼠标滚轮，滚动
+        var dt;
         iframeTabs.params.headerEl.on('mousewheel', function (e) {
-            // console.log(e.deltaY);
+            if (e.deltaY > 0) {
+                var step = scrollBox.scrollLeft() - 200;
+
+            } else {
+                var step = scrollBox.scrollLeft() + 200;
+            }
+            iframeTabs.scrollTabs(step);
         });
     },
     //滚动tabs
-    scrollTabs: function (step) {
-        iframeTabs.params.headerEl.parent().animate({
+    scrollTabs: function (step, time) {
+        time = time || 100;
+        iframeTabs.params.headerEl.parent().stop(true).animate({
             scrollLeft: step
-        }, 150);
+        }, time);
     }
 };
 
