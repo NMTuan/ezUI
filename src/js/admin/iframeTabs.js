@@ -268,7 +268,6 @@ var iframeTabs = {
             iframeTabs.refresh();
         });
         //鼠标滚轮，滚动
-        var dt;
         iframeTabs.params.headerEl.on('mousewheel', function (e) {
             if (e.deltaY > 0) {
                 var step = scrollBox.scrollLeft() - 200;

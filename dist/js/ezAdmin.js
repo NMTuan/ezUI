@@ -1967,8 +1967,6 @@ var _iframeTabs = {
     }); //鼠标滚轮，滚动
 
 
-    var dt;
-
     _iframeTabs.params.headerEl.on('mousewheel', function (e) {
       if (e.deltaY > 0) {
         var step = scrollBox.scrollLeft() - 200;
@@ -2125,7 +2123,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_cf565e10.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c4651a31.js","/")
 },{"./admin/iframeTabs":6,"./admin/renderHeight":7,"./admin/subNav":8,"./log/log":10,"./tabs/tabs":11,"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
