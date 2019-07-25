@@ -6,52 +6,65 @@
     }
 </style>
 <div id="parentMenu" class="eza nav">
-<!--    <div  class="eza scroll-box-v">-->
-        <ul>
-            <% ['home', 'mail', 'flag', 'pie-chart', 'message-2', 'bank-card'].forEach(function(item, i){ %>
-                <li>
-                    <a href="#sub-nav-<%- i %>" class="<%- i == 0 ? 'current' : '' %>">
-                        <i class="remixicon-<%- item %>-line"></i>
-                    </a>
-                </li>
-            <% }) %>
-        </ul>
-<!--    </div>-->
+    <!--    <div  class="eza scroll-box-v">-->
+    <ul>
+        <% ['home', 'mail', 'flag', 'pie-chart', 'message-2', 'bank-card'].forEach(function(item, i){ %>
+            <li>
+                <a href="#sub-nav-<%- i %>" class="<%- i == 0 ? 'current' : '' %>">
+                    <i class="remixicon-<%- item %>-line"></i>
+                </a>
+            </li>
+        <% }) %>
+    </ul>
+    <!--    </div>-->
 </div>
 <div class="eza sub-nav">
     <div class="eza scroll-box-v">
         <%
         var menu1 = [
-            {name: '首页', ctrl: 'index', action: 'index'},
-            {name: '机构管理'},
             {
-                name: '所有机构', child: [
-                    {name: '我跟进的机构'},
-                    {name: '我维护的机构'},
-                    {name: '实名审核'},
-                    {name: '已开产品'}
+                name: '首页', ctrl: 'index', action: 'index', child: [
+                    {name: '消费明细1', url: './index.html#31'},
+                    {name: '消费明细2', url: './index.html#42'},
+                    {name: '消费明细3', url: './index.html#53'},
+                    {name: '消费明细4', url: './index.html#64'}
                 ]
             },
-            {name: '短信管理'},
+            {
+                name: '机构管理', child: [
+                    {name: '消费明细5', url: './index.html#35'},
+                    {name: '消费明细6', url: './index.html#46'},
+                    {name: '消费明细7', url: './index.html#57'},
+                    {name: '消费明细8', url: './index.html#68'}
+                ]
+            },
+            {
+                name: '所有机构', child: [
+                    {name: '消费明细9', url: './index.html#3'},
+                    {name: '消费明细10', url: './index.html#4'},
+                    {name: '消费明细11', url: './index.html#5'},
+                    {name: '消费明细12', url: './index.html#6'}
+                ]
+            },
             {
                 name: '财务管理', current: true, child: [
-                    {name: '财务总览', url: './index.html'},
-                    {name: '订单管理', url: '../button/button.html', current: true},
+                    {name: '消费明细13', url: './index.html'},
+                    {name: '消费明细14', url: '../button/button.html', current: true},
                     {
                         name: '流水', child: [
-                            {name: 'baidu.com', url: 'http://news.baidu.com/guonei'},
-                            {name: '消费明细'}
+                            {name: '消费明细15.com', url: './index.html#8'},
+                            {name: '消费明细16', url: './index.html#9'}
                         ]
                     },
-                    {name: '认款'}
+                    {name: '17', url: './index.html#10'}
                 ]
             },
             {
                 name: '一级栏目', child: [
-                    {name: '二级栏目'},
-                    {name: '二级栏目'},
-                    {name: '二级栏目'},
-                    {name: '二级栏目'}
+                    {name: '消费明细18', url: './index.html#11'},
+                    {name: '消费明细19', url: './index.html#12'},
+                    {name: '消费明细20', url: './index.html#13'},
+                    {name: '消费明细21', url: './index.html#14'}
                 ]
             },
 
@@ -81,7 +94,7 @@
                 <ul>
                     <% data.forEach(function(item, i){ %>
                         <li>
-                            <a data-url="<%- typeof item.url != 'undefined' ? item.url :'#'%>" <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>><%- item.name %></a>
+                            <a data-url="<%- typeof item.url != 'undefined' ? item.url : '#' %>" <%- typeof item.current != 'undefined' && item.current == true ? ' class="current"' : '' %>><%- item.name %></a>
                             <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
                                 <% render_menu(item.child) %>
                             <% } %>
@@ -131,7 +144,7 @@
     </div>
 </div>
 <div id="iframeTabsContent" class="eza main">
-<!--    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>-->
+    <!--    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>-->
 </div>
 <%- include('../compoents/default/_footer.ejs'); %>
 

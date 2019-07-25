@@ -52,6 +52,7 @@ $height: 30px;
         float: left;
         background-color: color($base-color, 'base');
         white-space: nowrap;
+        position: relative;
     }
     li {
         margin: 0;

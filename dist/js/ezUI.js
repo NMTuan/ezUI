@@ -13969,7 +13969,7 @@ module.exports = audioPlayer.play;
 global.ez = {};
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f21eba89.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_16bcfd15.js","/")
 },{"./audioPlayer/audioPlay":14,"./imageView/imageView":16,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

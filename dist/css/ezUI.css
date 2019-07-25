@@ -859,6 +859,7 @@ body {
   float: left;
   background-color: #3c8dbc;
   white-space: nowrap;
+  position: relative;
 }
 
 .eza.header-tabs li {

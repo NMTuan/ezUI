@@ -1,3 +1,5 @@
+var mousewheel = require('jquery-mousewheel')($);   //鼠标滚轮
+
 var iframeTabs = {
     defaults: {
         el: '', //菜单元素，不是容器，jquery选择器
@@ -59,24 +61,42 @@ var iframeTabs = {
     //切换到页面
     switch: function (url) {
         var index = $.inArray(url, iframeTabs.urls);
-        var tabs = iframeTabs.params.headerEl;
-        var current = tabs.find('li').eq(index);
+        var tabs = iframeTabs.params.headerEl;  //tabs标签区域
+        var current = tabs.find('li').eq(index);    //当前标签
         current.addClass('current').siblings().removeClass('current');
+        iframeTabs.highLight(url);  //高亮侧边相应栏目
         //滚动到合适位置，显示出高亮的tabs
-        //高亮元素左边+元素宽度，大于，可视区域宽度+已滚动区域
-        if (current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()) {
-            iframeTabs.scrollTabs(current.position().left + current.width());
+        // var log = [];
+        // log.push('可视区域宽度：' + tabs.parent().width());
+        // log.push('滚动容器宽度：' + tabs.width());
+        // log.push('高亮元素左上角距离父级：' + current.position().left);
+        // log.push('高亮元素宽度：' + current.width());
+        // log.push('已滚动距离：' + tabs.parent().scrollLeft());
+        var leftSide = tabs.parent().scrollLeft();  //左侧边界
+        var rightSide = tabs.parent().scrollLeft() + tabs.parent().width(); //右侧边界
+        var currentLeft = current.position().left;  //高亮元素左边
+        var currentRight = current.position().left + current.outerWidth();   //高亮元素右边
+        // log.push('当前可视范围：' + leftSide + ' ~ ' + rightSide);
+        // log.push('实际可视宽度：' + (rightSide - leftSide));
+        var leftIn = (currentLeft >= leftSide) && (currentLeft <= rightSide);   //左侧可见
+        var rightIn = (currentRight >= leftSide) && (currentRight <= rightSide);    //右侧可见
+        // log.push('左侧可见：' + leftIn);
+        // log.push('右侧可见：' + rightIn);
+        // $.log(log.join('\n'))
+        //在右侧，滚到高亮元素的右侧
+        if(currentLeft >= leftSide && !(currentRight <= rightSide)){
+            iframeTabs.scrollTabs(currentRight - tabs.parent().outerWidth());
         }
-        //高亮元素左侧，小于，已滚动区域
-        if (current.position().left < tabs.parent().scrollLeft()) {
-            iframeTabs.scrollTabs(tabs.parent().scrollLeft() + current.position().left);
+        //在左边，滚到高亮元素的左侧
+        if(!(currentLeft >= leftSide) && currentRight <= rightSide){
+            iframeTabs.scrollTabs(currentLeft);
         }
 
+        //每次切换，重置当前iframe高度。
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
         iframe.show().siblings('iframe').hide();
         iframe.renderHeight();
 
-        iframeTabs.highLight(url);
     },
     //高亮当前菜单
     highLight: function (url) {
@@ -204,6 +224,10 @@ var iframeTabs = {
 
         //菜单绑定
         el.on('click', function () {
+            //已高亮，退出
+            if ($(this).hasClass('current')) {
+                return;
+            }
             var url = $(this).data('url') || '';
             var title = $(this).data('title') || $.trim($(this).text());
             if (url !== '#' && url !== '###' && url !== '') {
@@ -242,6 +266,10 @@ var iframeTabs = {
         //刷新
         iframeTabs.params.refreshEl.on('click', function () {
             iframeTabs.refresh();
+        });
+        //鼠标滚轮，滚动
+        iframeTabs.params.headerEl.on('mousewheel', function (e) {
+            // console.log(e.deltaY);
         });
     },
     //滚动tabs

@@ -1396,7 +1396,235 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\ieee754\\index.js","/..\\..\\node_modules\\ieee754")
 },{"XJF/FV":3,"buffer":2}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+/*!
+ * jQuery Mousewheel 3.1.13
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license
+ * http://jquery.org/license
+ */
+
+(function (factory) {
+    if ( typeof define === 'function' && define.amd ) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+
+    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
+        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
+                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
+        slice  = Array.prototype.slice,
+        nullLowestDeltaTimeout, lowestDelta;
+
+    if ( $.event.fixHooks ) {
+        for ( var i = toFix.length; i; ) {
+            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+        }
+    }
+
+    var special = $.event.special.mousewheel = {
+        version: '3.1.12',
+
+        setup: function() {
+            if ( this.addEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.addEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+            // Store the line height and page height for this particular element
+            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
+            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
+        },
+
+        teardown: function() {
+            if ( this.removeEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.removeEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+            // Clean up the data we added to the element
+            $.removeData(this, 'mousewheel-line-height');
+            $.removeData(this, 'mousewheel-page-height');
+        },
+
+        getLineHeight: function(elem) {
+            var $elem = $(elem),
+                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+            if (!$parent.length) {
+                $parent = $('body');
+            }
+            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+        },
+
+        getPageHeight: function(elem) {
+            return $(elem).height();
+        },
+
+        settings: {
+            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
+            normalizeOffset: true  // calls getBoundingClientRect for each event
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function(fn) {
+            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
+        },
+
+        unmousewheel: function(fn) {
+            return this.unbind('mousewheel', fn);
+        }
+    });
+
+
+    function handler(event) {
+        var orgEvent   = event || window.event,
+            args       = slice.call(arguments, 1),
+            delta      = 0,
+            deltaX     = 0,
+            deltaY     = 0,
+            absDelta   = 0,
+            offsetX    = 0,
+            offsetY    = 0;
+        event = $.event.fix(orgEvent);
+        event.type = 'mousewheel';
+
+        // Old school scrollwheel delta
+        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
+        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
+        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
+        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
+        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+            deltaX = deltaY * -1;
+            deltaY = 0;
+        }
+
+        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
+        delta = deltaY === 0 ? deltaX : deltaY;
+
+        // New school wheel delta (wheel event)
+        if ( 'deltaY' in orgEvent ) {
+            deltaY = orgEvent.deltaY * -1;
+            delta  = deltaY;
+        }
+        if ( 'deltaX' in orgEvent ) {
+            deltaX = orgEvent.deltaX;
+            if ( deltaY === 0 ) { delta  = deltaX * -1; }
+        }
+
+        // No change actually happened, no reason to go any further
+        if ( deltaY === 0 && deltaX === 0 ) { return; }
+
+        // Need to convert lines and pages to pixels if we aren't already in pixels
+        // There are three delta modes:
+        //   * deltaMode 0 is by pixels, nothing to do
+        //   * deltaMode 1 is by lines
+        //   * deltaMode 2 is by pages
+        if ( orgEvent.deltaMode === 1 ) {
+            var lineHeight = $.data(this, 'mousewheel-line-height');
+            delta  *= lineHeight;
+            deltaY *= lineHeight;
+            deltaX *= lineHeight;
+        } else if ( orgEvent.deltaMode === 2 ) {
+            var pageHeight = $.data(this, 'mousewheel-page-height');
+            delta  *= pageHeight;
+            deltaY *= pageHeight;
+            deltaX *= pageHeight;
+        }
+
+        // Store lowest absolute delta to normalize the delta values
+        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+
+        if ( !lowestDelta || absDelta < lowestDelta ) {
+            lowestDelta = absDelta;
+
+            // Adjust older deltas if necessary
+            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+                lowestDelta /= 40;
+            }
+        }
+
+        // Adjust older deltas if necessary
+        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+            // Divide all the things by 40!
+            delta  /= 40;
+            deltaX /= 40;
+            deltaY /= 40;
+        }
+
+        // Get a whole, normalized value for the deltas
+        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
+        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
+        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+
+        // Normalise offsetX and offsetY properties
+        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
+            var boundingRect = this.getBoundingClientRect();
+            offsetX = event.clientX - boundingRect.left;
+            offsetY = event.clientY - boundingRect.top;
+        }
+
+        // Add information to the event object
+        event.deltaX = deltaX;
+        event.deltaY = deltaY;
+        event.deltaFactor = lowestDelta;
+        event.offsetX = offsetX;
+        event.offsetY = offsetY;
+        // Go ahead and set deltaMode to 0 since we converted to pixels
+        // Although this is a little odd since we overwrite the deltaX/Y
+        // properties with normalized deltas.
+        event.deltaMode = 0;
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        // Clearout lowestDelta after sometime to better
+        // handle multiple device types that give different
+        // a different lowestDelta
+        // Ex: trackpad = 3 and mouse wheel = 120
+        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
+        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
+    }
+
+    function nullLowestDelta() {
+        lowestDelta = null;
+    }
+
+    function shouldAdjustOldDeltas(orgEvent, absDelta) {
+        // If this is an older event and the delta is divisable by 120,
+        // then we are assuming that the browser is treating this as an
+        // older mouse wheel event and that we should divide the deltas
+        // by 40 to try and get a more usable deltaFactor.
+        // Side note, this actually impacts the reported scroll distance
+        // in older browsers and can cause scrolling to be slower than native.
+        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
+        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+    }
+
+}));
+
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\jquery-mousewheel\\jquery.mousewheel.js","/..\\..\\node_modules\\jquery-mousewheel")
+},{"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
+
+var mousewheel = require('jquery-mousewheel')($); //鼠标滚轮
+
 
 var _iframeTabs = {
   defaults: {
@@ -1482,26 +1710,54 @@ var _iframeTabs = {
   //切换到页面
   switch: function _switch(url) {
     var index = $.inArray(url, _iframeTabs.urls);
-    var tabs = _iframeTabs.params.headerEl;
-    var current = tabs.find('li').eq(index);
-    current.addClass('current').siblings().removeClass('current'); //滚动到合适位置，显示出高亮的tabs
-    //高亮元素左边+元素宽度，大于，可视区域宽度+已滚动区域
+    var tabs = _iframeTabs.params.headerEl; //tabs标签区域
 
-    if (current.position().left + current.width() > tabs.parent().scrollLeft() + tabs.parent().width()) {
-      _iframeTabs.scrollTabs(current.position().left + current.width());
-    } //高亮元素左侧，小于，已滚动区域
+    var current = tabs.find('li').eq(index); //当前标签
+
+    current.addClass('current').siblings().removeClass('current');
+
+    _iframeTabs.highLight(url); //高亮侧边相应栏目
+    //滚动到合适位置，显示出高亮的tabs
+    // var log = [];
+    // log.push('可视区域宽度：' + tabs.parent().width());
+    // log.push('滚动容器宽度：' + tabs.width());
+    // log.push('高亮元素左上角距离父级：' + current.position().left);
+    // log.push('高亮元素宽度：' + current.width());
+    // log.push('已滚动距离：' + tabs.parent().scrollLeft());
 
 
-    if (current.position().left < tabs.parent().scrollLeft()) {
-      _iframeTabs.scrollTabs(tabs.parent().scrollLeft() + current.position().left);
-    }
+    var leftSide = tabs.parent().scrollLeft(); //左侧边界
+
+    var rightSide = tabs.parent().scrollLeft() + tabs.parent().width(); //右侧边界
+
+    var currentLeft = current.position().left; //高亮元素左边
+
+    var currentRight = current.position().left + current.outerWidth(); //高亮元素右边
+    // log.push('当前可视范围：' + leftSide + ' ~ ' + rightSide);
+    // log.push('实际可视宽度：' + (rightSide - leftSide));
+
+    var leftIn = currentLeft >= leftSide && currentLeft <= rightSide; //左侧可见
+
+    var rightIn = currentRight >= leftSide && currentRight <= rightSide; //右侧可见
+    // log.push('左侧可见：' + leftIn);
+    // log.push('右侧可见：' + rightIn);
+    // $.log(log.join('\n'))
+    //在右侧，滚到高亮元素的右侧
+
+    if (currentLeft >= leftSide && !(currentRight <= rightSide)) {
+      _iframeTabs.scrollTabs(currentRight - tabs.parent().outerWidth());
+    } //在左边，滚到高亮元素的左侧
+
+
+    if (!(currentLeft >= leftSide) && currentRight <= rightSide) {
+      _iframeTabs.scrollTabs(currentLeft);
+    } //每次切换，重置当前iframe高度。
+
 
     var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
 
     iframe.show().siblings('iframe').hide();
     iframe.renderHeight();
-
-    _iframeTabs.highLight(url);
   },
   //高亮当前菜单
   highLight: function highLight(url) {
@@ -1657,6 +1913,11 @@ var _iframeTabs = {
     _iframeTabs.params.el = el; //菜单绑定
 
     el.on('click', function () {
+      //已高亮，退出
+      if ($(this).hasClass('current')) {
+        return;
+      }
+
       var url = $(this).data('url') || '';
       var title = $(this).data('title') || $.trim($(this).text());
 
@@ -1703,6 +1964,10 @@ var _iframeTabs = {
 
     _iframeTabs.params.refreshEl.on('click', function () {
       _iframeTabs.refresh();
+    }); //鼠标滚轮，滚动
+
+
+    _iframeTabs.params.headerEl.on('mousewheel', function (e) {// console.log(e.deltaY);
     });
   },
   //滚动tabs
@@ -1725,7 +1990,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\iframeTabs.js","/admin")
-},{"XJF/FV":3,"buffer":2}],6:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2,"jquery-mousewheel":5}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1779,7 +2044,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\renderHeight.js","/admin")
-},{"XJF/FV":3,"buffer":2}],7:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1834,7 +2099,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/admin\\subNav.js","/admin")
-},{"XJF/FV":3,"buffer":2}],8:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1849,8 +2114,8 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_69cd4edc.js","/")
-},{"./admin/iframeTabs":5,"./admin/renderHeight":6,"./admin/subNav":7,"./log/log":9,"./tabs/tabs":10,"XJF/FV":3,"buffer":2}],9:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5ee35c64.js","/")
+},{"./admin/iframeTabs":6,"./admin/renderHeight":7,"./admin/subNav":8,"./log/log":10,"./tabs/tabs":11,"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1868,7 +2133,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
+},{"XJF/FV":3,"buffer":2}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -1937,4 +2202,4 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":3,"buffer":2}]},{},[8])
+},{"XJF/FV":3,"buffer":2}]},{},[9])
