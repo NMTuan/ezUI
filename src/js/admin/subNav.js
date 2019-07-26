@@ -31,6 +31,8 @@ var subNav = {
             var state = $(this).closest('dl').hasClass('current');
             if(!state){
                 subNav.switch($(this));
+            } else {
+                $(this).closest('dl').removeClass('current');
             }
         });
     }
