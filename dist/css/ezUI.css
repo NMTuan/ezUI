@@ -706,6 +706,12 @@ body {
   display: block;
 }
 
+.eza.nav li.eza.nav-line {
+  height: 0;
+  overflow: hidden;
+  border-bottom: 1px solid #424242;
+}
+
 .eza.sub-nav {
   width: 170px;
   height: 100%;
@@ -851,11 +857,28 @@ body {
   height: 25px;
   line-height: 25px;
   font-size: 12px;
-  color: #ecf4f8;
+  color: #c5ddeb;
+}
+
+.eza.header-menu ul, .eza.header-menu li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.eza.header-menu li {
+  display: inline;
+  margin: 0 12px 0 0;
 }
 
 .eza.header-menu a {
+  color: #c5ddeb;
+  text-decoration: none;
+}
+
+.eza.header-menu a:hover {
   color: #ecf4f8;
+  text-decoration: underline;
 }
 
 .eza.header-arrow {

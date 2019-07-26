@@ -1,3 +1,4 @@
+$this: &;
 .logo {
     width: $nav-width;
     height: 100px;
@@ -43,4 +44,9 @@ li {
         display: block;
     }
 
+    &#{$this}-line {
+        height: 0;
+        overflow: hidden;
+        border-bottom: 1px solid color('grey', 'd3');
+    }
 }
