@@ -120,5 +120,31 @@
             border-bottom-color: color('grey', 'base');
         }
     }
-
+    &-loading {
+        display: none;
+        margin: -24px 0 0 -24px;
+        color: color('grey', 'l2');
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+    &-error {
+        display: none;
+        width: 90px;
+        height: 84px;
+        margin: -42px 0 0 -45px;
+        text-align: center;
+        color: color('grey', 'l2');
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        span {
+            display: block;
+            font-size: 18px;
+            line-height: 2;
+            color: color('grey', 'd1');
+        }
+    }
 }

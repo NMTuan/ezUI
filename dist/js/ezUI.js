@@ -13970,7 +13970,7 @@ global.ez = {}; // ez.scrollWheel = require('./scrollWheel/scrollWheel');
 
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_531297b1.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_dd789897.js","/")
 },{"./audioPlayer/audioPlay":14,"./imageView/imageView":16,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -13996,7 +13996,7 @@ var imageView = {
   },
   windowTpl: function windowTpl() {
     var el = $('<div>').attr('class', 'ez image-view');
-    var html = '' + '<div class="ez image-view-head"></div>' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<div class="ez image-view-bar">' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
+    var html = '' + '<div class="ez image-view-head"></div>' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<div class="ez image-view-bar">' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<i class="ez image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' + '<i class="ez image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
     el.append(html);
     return el;
   },
@@ -14091,10 +14091,14 @@ var imageView = {
     img.src = src;
 
     if (img.complete) {
-      callback(img);
+      callback(false, img);
     } else {
       img.onload = function () {
-        callback(img);
+        callback(false, img);
+      };
+
+      img.onerror = function () {
+        callback(true);
       };
     }
   },
@@ -14105,10 +14109,22 @@ var imageView = {
 
     if (!src) {
       return;
-    }
+    } //1.清除原图, 清楚error
 
-    imageView.imageCreate(src, function (img) {
-      el.find('img').remove();
+
+    el.find('img').remove();
+    el.find('.image-view-error').hide(); //2.显示loading
+
+    el.find('.image-view-loading').show(); //3.loading img
+
+    imageView.imageCreate(src, function (error, img) {
+      el.find('.image-view-loading').hide();
+
+      if (error) {
+        el.find('.image-view-error').show();
+        return;
+      }
+
       el.find('.image-view-body td').append(img);
       el.find('.image-view-body').css({
         top: 0,
@@ -14116,12 +14132,11 @@ var imageView = {
       });
       imageView.imageResize(el, img);
 
-      if (!title) {
-        return;
+      if (title) {
+        el.find('.image-view-head').html(title);
       }
-
-      el.find('.image-view-head').html(title);
-    });
+    }); //4.移除loading
+    //5.显示图片
   },
   //重置大小
   imageResize: function imageResize(el, img) {

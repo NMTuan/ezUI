@@ -21,6 +21,8 @@ var imageView = {
             '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' +
             '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' +
             '</div>' +
+            '<i class="ez image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' +
+            '<i class="ez image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' +
             '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' +
             '<div class="ez image-view-foot">' +
             '<i class="ez image-view-resize"></i>' +
@@ -115,11 +117,14 @@ var imageView = {
         var img = new Image();
         img.src = src;
         if (img.complete) {
-            callback(img);
+            callback(false, img);
         } else {
             img.onload = function () {
-                callback(img);
+                callback(false, img);
             };
+            img.onerror = function () {
+                callback(true);
+            }
         }
     },
     //插入图片
@@ -129,16 +134,27 @@ var imageView = {
         if (!src) {
             return;
         }
-        imageView.imageCreate(src, function (img) {
-            el.find('img').remove();
+        //1.清除原图, 清楚error
+        el.find('img').remove();
+        el.find('.image-view-error').hide();
+        //2.显示loading
+        el.find('.image-view-loading').show();
+        //3.loading img
+        imageView.imageCreate(src, function (error, img) {
+            el.find('.image-view-loading').hide();
+            if(error){
+                el.find('.image-view-error').show();
+                return;
+            }
             el.find('.image-view-body td').append(img);
             el.find('.image-view-body').css({top: 0, left: 0});
             imageView.imageResize(el, img);
-            if (!title) {
-                return;
+            if (title) {
+                el.find('.image-view-head').html(title);
             }
-            el.find('.image-view-head').html(title);
         });
+        //4.移除loading
+        //5.显示图片
     },
     //重置大小
     imageResize: function (el, img) {
