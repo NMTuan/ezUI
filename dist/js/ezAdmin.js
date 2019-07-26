@@ -1650,10 +1650,10 @@ var _iframeTabs = {
   urls: [],
   //记录所有打开url
   //打开新页面
-  open: function open(url, title, backgroundModel) {
+  open: function open(url, title, backgroundModel, parentName) {
     //如果内页使用，需要提升
     if (window.top !== window) {
-      window.top.eza.iframeTabs.open(url, title, backgroundModel);
+      window.top.eza.iframeTabs.open(url, title, backgroundModel, window.name);
       return;
     } //先检测是否打开
 
@@ -1662,7 +1662,7 @@ var _iframeTabs = {
 
     if (!isCreated) {
       //如果没创建，先创建
-      _iframeTabs.create(url, title);
+      _iframeTabs.create(url, title, parentName);
 
       if (!backgroundModel) {
         //非后台模式，切换过去
@@ -1674,7 +1674,7 @@ var _iframeTabs = {
     }
   },
   //创建页面
-  create: function create(url, title) {
+  create: function create(url, title, parentName) {
     _iframeTabs.urls.push(url); //记录已打开页面
 
 
@@ -1682,6 +1682,8 @@ var _iframeTabs = {
 
     var tabHeader = $('<li>');
     tabHeader.data('url', url);
+    tabHeader.data('parent', parentName); //记录哪个tabs打开的我
+
     tabHeader.html(title || '新开窗口' + _iframeTabs.index);
 
     _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
@@ -1802,13 +1804,13 @@ var _iframeTabs = {
       }
     });
   },
-  //关闭页面
-  close: function close(confirm, url, index) {
+  //关闭页面，确认框，关闭tabs的url，关闭tabs的index
+  close: function close(confirm, refreshParent, url, index) {
     //如果内页使用，需要提升
     if (window.top !== window && window.name) {
       url = url || window.name; //如果没url，则关闭当前iframe。
 
-      window.top.eza.iframeTabs.close(confirm, url, index);
+      window.top.eza.iframeTabs.close(confirm, false, url, index);
       return;
     }
 
@@ -1837,16 +1839,21 @@ var _iframeTabs = {
 
       var li = _iframeTabs.params.headerEl.find('li').eq(index);
 
+      var parentName = li.data('parent');
       li.remove();
 
       _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
 
       _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
-      //如果关闭高亮标签，则高亮上一个
+      //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
 
 
       if (li.hasClass('current')) {
-        var prev = index === 0 ? 0 : index - 1;
+        if (parentName) {
+          var prev = $.inArray(parentName, _iframeTabs.urls);
+        } else {
+          var prev = index === 0 ? 0 : index - 1;
+        }
 
         _iframeTabs.params.headerEl.find('li').eq(prev).click();
       } //如果有加载条，结束
@@ -1854,6 +1861,11 @@ var _iframeTabs = {
 
       if (typeof NProgress !== 'undefined') {
         NProgress.done();
+      } //如果要刷新父级
+
+
+      if (refreshParent && parentName) {
+        _iframeTabs.refresh();
       }
     };
 
@@ -1875,8 +1887,12 @@ var _iframeTabs = {
     }
   },
   //刷新页面
-  refresh: function refresh() {
-    var index = _iframeTabs.params.headerEl.find('li.current').index();
+  refresh: function refresh(url) {
+    if (_iframeTabs.checkCreated(url)) {
+      var index = $.inArray(url, _iframeTabs.urls);
+    } else {
+      var index = _iframeTabs.params.headerEl.find('li.current').index();
+    }
 
     var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
 
@@ -1942,7 +1958,7 @@ var _iframeTabs = {
     _iframeTabs.closeBtn.on('click', function () {
       var li = $(this).closest('li');
 
-      _iframeTabs.close(false, li.data('url'), li.index());
+      _iframeTabs.close(false, false, li.data('url'), li.index());
     }); //arrow
 
 
@@ -2123,7 +2139,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_68c7ac92.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6c0ae648.js","/")
 },{"./admin/iframeTabs":6,"./admin/renderHeight":7,"./admin/subNav":8,"./log/log":10,"./tabs/tabs":11,"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

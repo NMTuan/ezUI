@@ -14,16 +14,16 @@ var iframeTabs = {
     closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
     urls: [],   //记录所有打开url
     //打开新页面
-    open: function (url, title, backgroundModel) {
+    open: function (url, title, backgroundModel, parentName) {
         //如果内页使用，需要提升
         if (window.top !== window) {
-            window.top.eza.iframeTabs.open(url, title, backgroundModel);
+            window.top.eza.iframeTabs.open(url, title, backgroundModel, window.name);
             return;
         }
         //先检测是否打开
         var isCreated = iframeTabs.checkCreated(url);
         if (!isCreated) { //如果没创建，先创建
-            iframeTabs.create(url, title);
+            iframeTabs.create(url, title, parentName);
             if (!backgroundModel) {   //非后台模式，切换过去
                 iframeTabs.switch(url);
             }
@@ -32,13 +32,14 @@ var iframeTabs = {
         }
     },
     //创建页面
-    create: function (url, title) {
+    create: function (url, title, parentName) {
         iframeTabs.urls.push(url);  //记录已打开页面
         iframeTabs.index++;
 
         //构建标签头
         var tabHeader = $('<li>');
         tabHeader.data('url', url);
+        tabHeader.data('parent', parentName);   //记录哪个tabs打开的我
         tabHeader.html(title || '新开窗口' + iframeTabs.index);
         iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
         iframeTabs.params.headerEl.append(tabHeader);
@@ -133,12 +134,12 @@ var iframeTabs = {
             }
         });
     },
-    //关闭页面
-    close: function (confirm, url, index) {
+    //关闭页面，确认框，关闭tabs的url，关闭tabs的index
+    close: function (confirm, refreshParent, url, index) {
         //如果内页使用，需要提升
         if (window.top !== window && window.name) {
             url = url || window.name;   //如果没url，则关闭当前iframe。
-            window.top.eza.iframeTabs.close(confirm, url, index);
+            window.top.eza.iframeTabs.close(confirm, false, url, index);
             return;
         }
         if (!url) {
@@ -161,19 +162,27 @@ var iframeTabs = {
                 return;
             }
             var li = iframeTabs.params.headerEl.find('li').eq(index);
+            var parentName = li.data('parent');
             li.remove();
             iframeTabs.params.contentEl.find('iframe').eq(index).remove();
             iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
-            //如果关闭高亮标签，则高亮上一个
+            //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
             if (li.hasClass('current')) {
-                var prev = index === 0 ? 0 : index - 1;
+                if(parentName){
+                    var prev = $.inArray(parentName, iframeTabs.urls);
+                } else {
+                    var prev = index === 0 ? 0 : index - 1;
+                }
                 iframeTabs.params.headerEl.find('li').eq(prev).click();
             }
             //如果有加载条，结束
             if (typeof NProgress !== 'undefined') {
                 NProgress.done();
             }
-
+            //如果要刷新父级
+            if(refreshParent && parentName){
+                iframeTabs.refresh();
+            }
         };
         if (typeof confirm === 'boolean' && confirm === true) {
             if (typeof top.layer !== 'undefined') {
@@ -192,8 +201,12 @@ var iframeTabs = {
         }
     },
     //刷新页面
-    refresh: function () {
-        var index = iframeTabs.params.headerEl.find('li.current').index();
+    refresh: function (url) {
+        if(iframeTabs.checkCreated(url)){
+            var index = $.inArray(url, iframeTabs.urls);
+        } else {
+            var index = iframeTabs.params.headerEl.find('li.current').index();
+        }
         var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
         if (iframe.length === 0) {
             return;
@@ -248,7 +261,7 @@ var iframeTabs = {
         //close
         iframeTabs.closeBtn.on('click', function () {
             var li = $(this).closest('li');
-            iframeTabs.close(false, li.data('url'), li.index());
+            iframeTabs.close(false, false, li.data('url'), li.index());
         });
 
         //arrow
