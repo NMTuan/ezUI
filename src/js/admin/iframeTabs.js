@@ -142,23 +142,18 @@ var iframeTabs = {
             window.top.eza.iframeTabs.close(confirm, false, url, index);
             return;
         }
-        if (!url) {
-            return;
-        }
-        if ($.inArray(url, iframeTabs.urls) < 0) {
-            return;
-        }
+        // if (!url) {
+        //     return;
+        // }
+        // if ($.inArray(url, iframeTabs.urls) < 0) {
+        //     return;
+        // }
         var close = function () {
             //没下标，先找下标
             if (typeof index === 'undefined') {
-                iframeTabs.params.headerEl.find('li').each(function (i, item) {
-                    if ($(item).data('url') === url) {
-                        index = i;
-                        return false;
-                    }
-                });
+                index = $.inArray(iframeTabs.params.headerEl.find('.current').data('url'), iframeTabs.urls);
             }
-            if (typeof index === 'undefined') {
+            if (index === -1) {
                 return;
             }
             var li = iframeTabs.params.headerEl.find('li').eq(index);

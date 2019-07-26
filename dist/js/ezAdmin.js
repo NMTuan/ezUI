@@ -1812,28 +1812,21 @@ var _iframeTabs = {
 
       window.top.eza.iframeTabs.close(confirm, false, url, index);
       return;
-    }
+    } // if (!url) {
+    //     return;
+    // }
+    // if ($.inArray(url, iframeTabs.urls) < 0) {
+    //     return;
+    // }
 
-    if (!url) {
-      return;
-    }
-
-    if ($.inArray(url, _iframeTabs.urls) < 0) {
-      return;
-    }
 
     var close = function close() {
       //没下标，先找下标
       if (typeof index === 'undefined') {
-        _iframeTabs.params.headerEl.find('li').each(function (i, item) {
-          if ($(item).data('url') === url) {
-            index = i;
-            return false;
-          }
-        });
+        index = $.inArray(_iframeTabs.params.headerEl.find('.current').data('url'), _iframeTabs.urls);
       }
 
-      if (typeof index === 'undefined') {
+      if (index === -1) {
         return;
       }
 
@@ -2141,7 +2134,7 @@ eza.renderHeight = require('./admin/renderHeight');
 eza.tabs = require('./tabs/tabs');
 eza.subNav = require('./admin/subNav');
 eza.iframeTabs = require('./admin/iframeTabs');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8122b08a.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_afdbabe7.js","/")
 },{"./admin/iframeTabs":6,"./admin/renderHeight":7,"./admin/subNav":8,"./log/log":10,"./tabs/tabs":11,"XJF/FV":3,"buffer":2}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
