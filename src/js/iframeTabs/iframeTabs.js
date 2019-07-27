@@ -17,7 +17,7 @@ var iframeTabs = {
     open: function (url, title, backgroundModel, parentName) {
         //如果内页使用，需要提升
         if (window.top !== window) {
-            window.top.eza.iframeTabs.open(url, title, backgroundModel, window.name);
+            window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name);
             return;
         }
         //先检测是否打开
@@ -139,7 +139,7 @@ var iframeTabs = {
         //如果内页使用，需要提升
         if (window.top !== window && window.name) {
             url = url || window.name;   //如果没url，则关闭当前iframe。
-            window.top.eza.iframeTabs.close(confirm, false, url, index);
+            window.top.ez.iframeTabs.close(confirm, false, url, index);
             return;
         }
         // if (!url) {

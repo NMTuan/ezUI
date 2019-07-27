@@ -13966,12 +13966,411 @@ module.exports = audioPlayer.play;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+$.extend({
+  ezConfig: {
+    debug: true
+  }
+});
 global.ez = {}; // ez.scrollWheel = require('./scrollWheel/scrollWheel');
 
+ez.log = require('./log/log');
+ez.renderHeight = require('./renderHeight/renderHeight');
+ez.tabs = require('./tabs/tabs');
+ez.subNav = require('./subNav/subNav');
+ez.iframeTabs = require('./iframeTabs/iframeTabs');
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_70774034.js","/")
-},{"./audioPlayer/audioPlay":14,"./imageView/imageView":16,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_121af744.js","/")
+},{"./audioPlayer/audioPlay":14,"./iframeTabs/iframeTabs":16,"./imageView/imageView":17,"./log/log":18,"./renderHeight/renderHeight":19,"./subNav/subNav":20,"./tabs/tabs":21,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var mousewheel = require('jquery-mousewheel')($); //鼠标滚轮
+
+
+var _iframeTabs = {
+  defaults: {
+    el: '',
+    //菜单元素，不是容器，jquery选择器
+    parentEl: '',
+    //父级菜单元素，不是容器，jquery选择器
+    headerEl: '',
+    //页签容器，jquery选择器
+    contentEl: '',
+    //内容容器，jquery选择器
+    leftArrow: '',
+    //左滚按钮
+    rightArrow: '',
+    //右滚按钮
+    refreshEl: '' //刷新按钮
+
+  },
+  index: 0,
+  //计数器
+  closeBtn: $('<i>').attr('class', 'fa fa-times'),
+  //关闭按钮
+  urls: [],
+  //记录所有打开url
+  //打开新页面
+  open: function open(url, title, backgroundModel, parentName) {
+    //如果内页使用，需要提升
+    if (window.top !== window) {
+      window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name);
+      return;
+    } //先检测是否打开
+
+
+    var isCreated = _iframeTabs.checkCreated(url);
+
+    if (!isCreated) {
+      //如果没创建，先创建
+      _iframeTabs.create(url, title, parentName);
+
+      if (!backgroundModel) {
+        //非后台模式，切换过去
+        _iframeTabs.switch(url);
+      }
+    } else {
+      //如果已创建，则切换过去，不考虑是否为后台模式
+      _iframeTabs.switch(url);
+    }
+  },
+  //创建页面
+  create: function create(url, title, parentName) {
+    _iframeTabs.urls.push(url); //记录已打开页面
+
+
+    _iframeTabs.index++; //构建标签头
+
+    var tabHeader = $('<li>');
+    tabHeader.data('url', url);
+    tabHeader.data('parent', parentName); //记录哪个tabs打开的我
+
+    tabHeader.html(title || '新开窗口' + _iframeTabs.index);
+
+    _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+
+    _iframeTabs.params.headerEl.append(tabHeader); //构建标签内容
+
+
+    var tabContent = $('<iframe>');
+    tabContent.attr('src', url);
+    tabContent.attr('frameborder', '0');
+    tabContent.attr('name', url);
+
+    _iframeTabs.params.contentEl.append(tabContent);
+
+    if (typeof NProgress !== 'undefined') {
+      NProgress.configure({
+        parent: '#iframeTabsContent'
+      });
+      NProgress.start();
+
+      tabContent[0].onload = function () {
+        NProgress.done();
+      };
+    }
+  },
+  //切换到页面
+  switch: function _switch(url) {
+    var index = $.inArray(url, _iframeTabs.urls);
+    var tabs = _iframeTabs.params.headerEl; //tabs标签区域
+
+    var current = tabs.find('li').eq(index); //当前标签
+
+    current.addClass('current').siblings().removeClass('current');
+
+    _iframeTabs.highLight(url); //高亮侧边相应栏目
+    //滚动到合适位置，显示出高亮的tabs
+    // var log = [];
+    // log.push('可视区域宽度：' + tabs.parent().width());
+    // log.push('滚动容器宽度：' + tabs.width());
+    // log.push('高亮元素左上角距离父级：' + current.position().left);
+    // log.push('高亮元素宽度：' + current.width());
+    // log.push('已滚动距离：' + tabs.parent().scrollLeft());
+
+
+    var leftSide = tabs.parent().scrollLeft(); //左侧边界
+
+    var rightSide = tabs.parent().scrollLeft() + tabs.parent().width(); //右侧边界
+
+    var currentLeft = current.position().left; //高亮元素左边
+
+    var currentRight = current.position().left + current.outerWidth(); //高亮元素右边
+    // log.push('当前可视范围：' + leftSide + ' ~ ' + rightSide);
+    // log.push('实际可视宽度：' + (rightSide - leftSide));
+
+    var leftIn = currentLeft >= leftSide && currentLeft <= rightSide; //左侧可见
+
+    var rightIn = currentRight >= leftSide && currentRight <= rightSide; //右侧可见
+    // log.push('左侧可见：' + leftIn);
+    // log.push('右侧可见：' + rightIn);
+    // $.log(log.join('\n'))
+    //在右侧，滚到高亮元素的右侧
+
+    if (currentLeft >= leftSide && !(currentRight <= rightSide)) {
+      _iframeTabs.scrollTabs(currentRight - tabs.parent().outerWidth());
+    } //在左边，滚到高亮元素的左侧
+
+
+    if (!(currentLeft >= leftSide) && currentRight <= rightSide) {
+      _iframeTabs.scrollTabs(currentLeft);
+    } //每次切换，重置当前iframe高度。
+
+
+    var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
+
+    iframe.show().siblings('iframe').hide();
+    iframe.renderHeight();
+  },
+  //高亮当前菜单
+  highLight: function highLight(url) {
+    _iframeTabs.params.el.filter('.current').removeClass('current');
+
+    _iframeTabs.params.el.each(function (i, item) {
+      if ($(item).data('url') === url) {
+        $(item).addClass('current');
+        return false;
+      }
+    });
+  },
+  //高亮父级菜单，只有在点击tabs的时候才会需要。
+  highLightParent: function highLightParent(url) {
+    _iframeTabs.params.el.each(function (i, item) {
+      if ($(item).data('url') === url) {
+        //父级
+        var dl = $(item).closest('dl');
+
+        if (!dl.hasClass('current')) {
+          dl.addClass('current').siblings('dl').removeClass('current');
+        } //顶级
+
+
+        var id = $(item).closest('.sub-nav-item').attr('id');
+
+        var current = _iframeTabs.params.parentEl.filter('.current');
+
+        if (current.attr('href') !== '#' + id) {
+          //判断当前高亮是否为已高亮。
+          current.removeClass('current');
+
+          _iframeTabs.params.parentEl.each(function (i, item) {
+            if ($(item).attr('href') === '#' + id) {
+              $(item).click();
+              return false;
+            }
+          });
+        }
+
+        return false;
+      }
+    });
+  },
+  //关闭页面，确认框，关闭tabs的url，关闭tabs的index
+  close: function close(confirm, refreshParent, url, index) {
+    //如果内页使用，需要提升
+    if (window.top !== window && window.name) {
+      url = url || window.name; //如果没url，则关闭当前iframe。
+
+      window.top.ez.iframeTabs.close(confirm, false, url, index);
+      return;
+    } // if (!url) {
+    //     return;
+    // }
+    // if ($.inArray(url, iframeTabs.urls) < 0) {
+    //     return;
+    // }
+
+
+    var close = function close() {
+      //没下标，先找下标
+      if (typeof index === 'undefined') {
+        index = $.inArray(_iframeTabs.params.headerEl.find('.current').data('url'), _iframeTabs.urls);
+      }
+
+      if (index === -1) {
+        return;
+      }
+
+      var li = _iframeTabs.params.headerEl.find('li').eq(index);
+
+      var parentName = li.data('parent');
+      li.remove();
+
+      _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+
+      _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
+      //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
+
+
+      if (li.hasClass('current')) {
+        if (parentName) {
+          var prev = $.inArray(parentName, _iframeTabs.urls);
+        } else {
+          var prev = index === 0 ? 0 : index - 1;
+        }
+
+        _iframeTabs.params.headerEl.find('li').eq(prev).click();
+      } //如果有加载条，结束
+
+
+      if (typeof NProgress !== 'undefined') {
+        NProgress.done();
+      } //如果要刷新父级
+
+
+      if (refreshParent && parentName) {
+        _iframeTabs.refresh();
+      }
+    };
+
+    if (typeof confirm === 'boolean' && confirm === true) {
+      if (typeof top.layer !== 'undefined') {
+        top.layer.confirm('确定要关闭么？', function (index) {
+          close();
+          top.layer.close(index);
+        });
+      } else {
+        var cfm = top.confirm('确定要关闭么');
+
+        if (cfm) {
+          close();
+        }
+      }
+    } else {
+      close();
+    }
+  },
+  //刷新页面
+  refresh: function refresh(url) {
+    if (_iframeTabs.checkCreated(url)) {
+      var index = $.inArray(url, _iframeTabs.urls);
+    } else {
+      var index = _iframeTabs.params.headerEl.find('li.current').index();
+    }
+
+    var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
+
+    if (iframe.length === 0) {
+      return;
+    }
+
+    var src = iframe[0].contentWindow.document.location.href; // var src = iframe.attr('src');
+
+    iframe.attr('src', src);
+
+    if (typeof NProgress !== 'undefined') {
+      NProgress.configure({
+        parent: '#iframeTabsContent'
+      });
+      NProgress.start();
+
+      iframe[0].onload = function () {
+        NProgress.done();
+      };
+    }
+  },
+  //监测是否已经创建
+  checkCreated: function checkCreated(url) {
+    return $.inArray(url, _iframeTabs.urls) < 0 ? false : true;
+  },
+  //初始化，绑定事件
+  iframeTabs: function iframeTabs(el, params) {
+    if (el.length < 0) {
+      return;
+    }
+
+    _iframeTabs.params = $.extend({}, _iframeTabs.defaults, params);
+    _iframeTabs.params.el = el; //菜单绑定
+
+    el.on('click', function () {
+      //已高亮，退出
+      if ($(this).hasClass('current')) {
+        return;
+      }
+
+      var url = $(this).data('url') || '';
+      var title = $(this).data('title') || $.trim($(this).text());
+
+      if (url !== '#' && url !== '###' && url !== '') {
+        _iframeTabs.open(url, title);
+      }
+    }); //tabs绑定
+
+    _iframeTabs.params.headerEl.on('click', 'li', function () {
+      if ($(this).hasClass('current')) {
+        return;
+      }
+
+      var url = $(this).data('url');
+
+      _iframeTabs.switch(url);
+
+      _iframeTabs.highLightParent(url);
+    }); //close
+
+
+    _iframeTabs.closeBtn.on('click', function () {
+      var li = $(this).closest('li');
+
+      _iframeTabs.close(false, false, li.data('url'), li.index());
+    }); //arrow
+
+
+    var ul = _iframeTabs.params.headerEl;
+    var scrollBox = ul.parent();
+
+    _iframeTabs.params.leftArrow.on('click', function () {
+      var step = scrollBox.scrollLeft() - 200;
+
+      _iframeTabs.scrollTabs(step);
+    });
+
+    _iframeTabs.params.rightArrow.on('click', function () {
+      var step = scrollBox.scrollLeft() + 200;
+
+      _iframeTabs.scrollTabs(step);
+    }); //刷新
+
+
+    _iframeTabs.params.refreshEl.on('click', function () {
+      _iframeTabs.refresh();
+    }); //鼠标滚轮，滚动
+
+
+    _iframeTabs.params.headerEl.on('mousewheel', function (e) {
+      if (e.deltaY > 0) {
+        var step = scrollBox.scrollLeft() - 200;
+      } else {
+        var step = scrollBox.scrollLeft() + 200;
+      }
+
+      _iframeTabs.scrollTabs(step);
+    });
+  },
+  //滚动tabs
+  scrollTabs: function scrollTabs(step, time) {
+    time = time || 100;
+
+    _iframeTabs.params.headerEl.parent().stop(true).animate({
+      scrollLeft: step
+    }, time);
+  }
+};
+
+$.fn.iframeTabs = function (params) {
+  _iframeTabs.iframeTabs(this, params);
+
+  return this;
+};
+
+module.exports = {
+  iframeTabs: _iframeTabs.iframeTabs,
+  open: _iframeTabs.open,
+  close: _iframeTabs.close
+};
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14316,4 +14715,202 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}]},{},[15])
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],18:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _log = {
+  log: function log() {
+    if ($.ezConfig && $.ezConfig.debug) {
+      console.log.apply(this, arguments);
+    }
+  }
+};
+$.extend({
+  log: function log() {
+    _log.log.apply(this, arguments);
+  }
+});
+module.exports = _log.log;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
+},{"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _renderHeight = {
+  defaults: {
+    correct: 0 //修正高度
+
+  },
+  render: function render(el) {
+    var winHeight = $(window).height();
+    $.each(el, function () {
+      //涉及到el，都要循环，兼容jquery
+      if ($(this).is(':hidden')) {
+        //隐藏元素，无需处理
+        return;
+      }
+
+      var height = winHeight - $(this).offset().top + _renderHeight.params.correct;
+
+      $(this).height(height);
+    });
+  },
+  renderHeight: function renderHeight(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
+    if (el.data('renderHeight')) {
+      //防止重复执行。
+      _renderHeight.render(el);
+
+      return;
+    }
+
+    el.data('renderHeight', 'true');
+    _renderHeight.params = $.extend({}, _renderHeight.defaults, params);
+
+    _renderHeight.render(el);
+
+    $(window).on('resize', function () {
+      _renderHeight.render(el);
+    });
+  }
+};
+
+$.fn.renderHeight = function (params) {
+  _renderHeight.renderHeight(this, params);
+
+  return this;
+};
+
+module.exports = _renderHeight.renderHeight;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
+},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _subNav = {
+  defaults: {},
+  switch: function _switch(el) {
+    _subNav.el.each(function (i, item) {
+      var dl = $(item).closest('dl');
+
+      if (dl.hasClass('current')) {
+        dl.removeClass('current');
+      }
+    });
+
+    el.closest('dl').addClass('current');
+  },
+  init: function init() {
+    //清理一下空dd容器。
+    _subNav.el.each(function (i, item) {
+      var dd = $(item).closest('dl').find('dd');
+
+      if ($.trim(dd.html()) == '') {
+        dd.remove();
+      }
+    });
+  },
+  subNav: function subNav(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
+    _subNav.el = el;
+    _subNav.params = $.extend({}, _subNav.defaults, params);
+
+    _subNav.init();
+
+    el.on('click', function () {
+      var state = $(this).closest('dl').hasClass('current');
+
+      if (!state) {
+        _subNav.switch($(this));
+      } else {
+        $(this).closest('dl').removeClass('current');
+      }
+    });
+  }
+};
+$.fn.extend({
+  subNav: function subNav(params) {
+    _subNav.subNav(this, params);
+
+    return this;
+  }
+});
+module.exports = _subNav.subNav;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _tabs = {
+  defaults: {
+    currentClass: 'current',
+    //高亮的class
+    defaultHide: true //默认隐藏
+
+  },
+  contents: [],
+  //所有容器
+  init: function init() {
+    //找到所有容器
+    $.each(_tabs.el, function (i, item) {
+      var id = $(item).attr('href');
+
+      if (id) {
+        _tabs.contents.push(id);
+      }
+
+      if (_tabs.params.defaultHide && !$(item).hasClass(_tabs.params.currentClass)) {
+        $(id).hide();
+      }
+    });
+  },
+  change: function change(clickObj) {
+    var id = clickObj.attr('href');
+
+    if ($(id).length <= 0) {
+      return;
+    }
+
+    _tabs.el.removeClass(_tabs.params.currentClass);
+
+    $.each(_tabs.contents, function (i, item) {
+      if (id === item) {
+        clickObj.addClass(_tabs.params.currentClass);
+        $(id).show();
+      } else {
+        $(item).hide();
+      }
+    });
+  },
+  tabs: function tabs(el, params) {
+    if (el.length <= 0) {
+      return;
+    }
+
+    _tabs.el = el;
+    _tabs.params = $.extend({}, _tabs.defaults, params);
+
+    _tabs.init();
+
+    el.on('click', function () {
+      _tabs.change($(this));
+    });
+  }
+};
+$.fn.extend({
+  tabs: function tabs(params) {
+    _tabs.tabs(this, params);
+
+    return this;
+  }
+});
+module.exports = _tabs.tabs;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
+},{"XJF/FV":7,"buffer":6}]},{},[15])

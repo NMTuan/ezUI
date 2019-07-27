@@ -1,6 +1,6 @@
 var log = {
     log: function () {
-        if ($.ezaConfig && $.ezaConfig.debug) {
+        if ($.ezConfig && $.ezConfig.debug) {
             console.log.apply(this, arguments);
         }
     }
