@@ -72,27 +72,38 @@ var imageView = {
     //设置窗口大小
     viewResizeDrag: function (el) {
         var resizeBtn = el.find('.image-view-resize');
-        resizeBtn.draggabilly();
-        var width, height, right, bottom;
-        resizeBtn.on('dragStart', function () {
+        var fixed = imageView.fixedIframe();
+        var width, height, x, y;
+        var down = function (e) {
             width = el.width();
             height = el.height();
-            right = $(this).css('right');
-            bottom = $(this).css('bottom');
-        });
-        resizeBtn.on('dragMove', function (e, pointer, moveVector) {
-            $(this).css('display', 'none');
-            imageView.viewResize(el, width + moveVector.x, height + moveVector.y);
-        });
-        resizeBtn.on('dragEnd', function () {
-            resizeBtn.css({
-                display: 'block',
-                top: '',
-                right: right,
-                bottom: bottom,
-                left: ''
-            });
-        });
+            x = e.clientX;
+            y = e.clientY;
+            fixed.appendTo('body');
+        };
+        var move = function (e) {
+            var newX = e.clientX >= $(window).width() ? $(window).width() - x - 2 : e.clientX - x;
+            var newY = e.clientY >= $(window).height() ? $(window).height() - y - 2 : e.clientY - y;
+            imageView.viewResize(el, width + newX, height + newY);
+        };
+        var up = function () {
+            $(document).off('mousemove');
+            $(document).off('mouseup');
+            fixed.remove();
+        };
+        resizeBtn
+            .on('mousedown', function (e) {
+                down(e);
+                $(document)
+                    .on('mousemove', function (e) {
+                        move(e);
+                    })
+                    .on('mouseup', function () {
+                        up();
+                    })
+                ;
+            })
+        ;
     },
     viewResize: function (el, width, height) {
         width = width < 200 ? 200 : width;
@@ -142,7 +153,7 @@ var imageView = {
         //3.loading img
         imageView.imageCreate(src, function (error, img) {
             el.find('.image-view-loading').hide();
-            if(error){
+            if (error) {
                 el.find('.image-view-error').show();
                 return;
             }
@@ -244,17 +255,19 @@ var imageView = {
         el.data('index', params.index);
         imageView.imageInsert(el, data[params.index], params);
 
-        //窗口拖拽
-        el.draggabilly({
-            handle: '.image-view-head',
-            containment: 'html'
-        });
+        //修复iframe下拖动卡顿
         var fixed = imageView.fixedIframe();
         el.on('dragStart', function () {
             fixed.appendTo('body');
         });
         el.on('dragEnd', function () {
             fixed.remove();
+        });
+
+        //窗口拖拽
+        el.draggabilly({
+            handle: '.image-view-head',
+            containment: 'html'
         });
 
         //初始位置

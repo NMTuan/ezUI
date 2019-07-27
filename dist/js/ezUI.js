@@ -13970,7 +13970,7 @@ global.ez = {}; // ez.scrollWheel = require('./scrollWheel/scrollWheel');
 
 ez.imageView = require('./imageView/imageView');
 ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b3730ca5.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_70774034.js","/")
 },{"./audioPlayer/audioPlay":14,"./imageView/imageView":16,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14043,25 +14043,35 @@ var imageView = {
   //设置窗口大小
   viewResizeDrag: function viewResizeDrag(el) {
     var resizeBtn = el.find('.image-view-resize');
-    resizeBtn.draggabilly();
-    var width, height, right, bottom;
-    resizeBtn.on('dragStart', function () {
+    var fixed = imageView.fixedIframe();
+    var width, height, x, y;
+
+    var down = function down(e) {
       width = el.width();
       height = el.height();
-      right = $(this).css('right');
-      bottom = $(this).css('bottom');
-    });
-    resizeBtn.on('dragMove', function (e, pointer, moveVector) {
-      $(this).css('display', 'none');
-      imageView.viewResize(el, width + moveVector.x, height + moveVector.y);
-    });
-    resizeBtn.on('dragEnd', function () {
-      resizeBtn.css({
-        display: 'block',
-        top: '',
-        right: right,
-        bottom: bottom,
-        left: ''
+      x = e.clientX;
+      y = e.clientY;
+      fixed.appendTo('body');
+    };
+
+    var move = function move(e) {
+      var newX = e.clientX >= $(window).width() ? $(window).width() - x - 2 : e.clientX - x;
+      var newY = e.clientY >= $(window).height() ? $(window).height() - y - 2 : e.clientY - y;
+      imageView.viewResize(el, width + newX, height + newY);
+    };
+
+    var up = function up() {
+      $(document).off('mousemove');
+      $(document).off('mouseup');
+      fixed.remove();
+    };
+
+    resizeBtn.on('mousedown', function (e) {
+      down(e);
+      $(document).on('mousemove', function (e) {
+        move(e);
+      }).on('mouseup', function () {
+        up();
       });
     });
   },
@@ -14245,18 +14255,19 @@ var imageView = {
 
     var el = imageView.viewCreate(data, params);
     el.data('index', params.index);
-    imageView.imageInsert(el, data[params.index], params); //窗口拖拽
+    imageView.imageInsert(el, data[params.index], params); //修复iframe下拖动卡顿
 
-    el.draggabilly({
-      handle: '.image-view-head',
-      containment: 'html'
-    });
     var fixed = imageView.fixedIframe();
     el.on('dragStart', function () {
       fixed.appendTo('body');
     });
     el.on('dragEnd', function () {
       fixed.remove();
+    }); //窗口拖拽
+
+    el.draggabilly({
+      handle: '.image-view-head',
+      containment: 'html'
     }); //初始位置
 
     el.draggabilly('setPosition', 100, 100); //图片拖拽
