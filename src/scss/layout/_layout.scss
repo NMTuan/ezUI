@@ -3,6 +3,7 @@
         min-width: 100px;
         min-height: 100px;
         background-color: color('grey', 'l5');
+        overflow: hidden;
         position: fixed;
         &-left {
             top: 0;
@@ -31,5 +32,8 @@
     }
     &.container {
         overflow: hidden;
+        width: auto;
+        padding: 0;
+        margin: 0;
     }
 }

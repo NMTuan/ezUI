@@ -2,17 +2,25 @@ var mousewheel = require('jquery-mousewheel')($);   //鼠标滚轮
 
 var scrollWheel = {
     scrollWheel: function (el, params) {
+        // var lock = false;
         $(el).on('mousewheel', function (e) {
-            $.log(e.deltaY);
+            e.preventDefault();
+            e.stopPropagation();
+            // if(lock){
+            //     return;
+            // }
+            // lock = true;
             if (e.deltaY > 0) {
-                var step = $(el).scrollTop() - 200;
+                var step = $(el).scrollTop() - 100;
 
             } else {
-                var step = $(el).scrollTop() + 200;
+                var step = $(el).scrollTop() + 100;
             }
-            $(el).stop(true).animate({
+            $(el).stop(false, true).animate({
                 scrollTop: step
-            }, 100)
+            }, 200, function () {
+                // lock = false;
+            });
         });
     }
 };

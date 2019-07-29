@@ -373,6 +373,7 @@ body {
   min-width: 100px;
   min-height: 100px;
   background-color: #fafafa;
+  overflow: hidden;
   position: fixed;
 }
 
@@ -392,6 +393,9 @@ body {
 
 .ez.container {
   overflow: hidden;
+  width: auto;
+  padding: 0;
+  margin: 0;
 }
 
 .ez.image-view {

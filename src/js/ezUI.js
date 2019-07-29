@@ -5,7 +5,7 @@ $.extend({
 });
 
 global.ez = {};
-// ez.scrollWheel = require('./scrollWheel/scrollWheel');
+ez.scrollWheel = require('./scrollWheel/scrollWheel');
 ez.log = require('./log/log');  //打印
 ez.renderHeight = require('./renderHeight/renderHeight');   //自动计算容器高度
 ez.fixedContainer = require('./fixedContainer/fixedContainer'); //若有左右侧边，修正边距
