@@ -372,6 +372,8 @@ body {
 .ez.sidebar {
   min-width: 100px;
   min-height: 100px;
+  margin: 0;
+  padding: 0;
   background-color: #fafafa;
   overflow: hidden;
   position: fixed;

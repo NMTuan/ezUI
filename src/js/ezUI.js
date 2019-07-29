@@ -15,3 +15,4 @@ ez.iframeTabs = require('./iframeTabs/iframeTabs'); //多标签框架
 
 ez.imageView = require('./imageView/imageView');    //图片查看
 ez.audioPlayer = require('./audioPlayer/audioPlay');    //音频播放
+ez.menuTree = require('./menuTree/menuTree');   //树状菜单
