@@ -13973,15 +13973,62 @@ $.extend({
 });
 global.ez = {}; // ez.scrollWheel = require('./scrollWheel/scrollWheel');
 
-ez.log = require('./log/log');
-ez.renderHeight = require('./renderHeight/renderHeight');
-ez.tabs = require('./tabs/tabs');
-ez.subNav = require('./subNav/subNav');
-ez.iframeTabs = require('./iframeTabs/iframeTabs');
-ez.imageView = require('./imageView/imageView');
-ez.audioPlayer = require('./audioPlayer/audioPlay');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_121af744.js","/")
-},{"./audioPlayer/audioPlay":14,"./iframeTabs/iframeTabs":16,"./imageView/imageView":17,"./log/log":18,"./renderHeight/renderHeight":19,"./subNav/subNav":20,"./tabs/tabs":21,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+ez.log = require('./log/log'); //打印
+
+ez.renderHeight = require('./renderHeight/renderHeight'); //自动计算容器高度
+
+ez.fixedContainer = require('./fixedContainer/fixedContainer'); //若有左右侧边，修正边距
+
+ez.tabs = require('./tabs/tabs'); //tabs切换
+
+ez.subNav = require('./subNav/subNav'); //二级菜单收缩
+
+ez.iframeTabs = require('./iframeTabs/iframeTabs'); //多标签框架
+
+ez.imageView = require('./imageView/imageView'); //图片查看
+
+ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b4aa2398.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./renderHeight/renderHeight":20,"./subNav/subNav":21,"./tabs/tabs":22,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _fixedContainer = {
+  defaults: {
+    leftClass: '.sidebar-left',
+    rightClass: '.sidebar-right' // topClass: '.sidebar-top',
+    // bottomClass: '.sidebar-bottom'
+
+  },
+  params: null,
+  fixedContainer: function fixedContainer(el, params) {
+    _fixedContainer.params = $.extend(true, _fixedContainer.defaults, params);
+    var left = el.siblings(_fixedContainer.params.leftClass);
+    var right = el.siblings(_fixedContainer.params.rightClass); // var top = el.siblings(fixedContainer.params.topClass);
+    // var bottom = el.siblings(fixedContainer.params.bottomClass);
+
+    var leftWidth = left.outerWidth() || 0;
+    var rightWidth = right.outerWidth() || 0; // var topHeight = top.outerHeight() || 0;
+    // var bottomHeight = bottom.outerHeight() || 0;
+
+    el.css({
+      // marginTop: topHeight,
+      marginRight: rightWidth,
+      // marginBottom: bottomHeight,
+      marginLeft: leftWidth
+    });
+  }
+};
+$.fn.extend({
+  fixedContainer: function fixedContainer(params) {
+    _fixedContainer.fixedContainer(this, params);
+
+    return this;
+  }
+});
+module.exports = _fixedContainer.fixedContainer;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fixedContainer\\fixedContainer.js","/fixedContainer")
+},{"XJF/FV":7,"buffer":6}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14125,7 +14172,14 @@ var _iframeTabs = {
   },
   //高亮当前菜单
   highLight: function highLight(url) {
-    _iframeTabs.params.el.filter('.current').removeClass('current');
+    //取消老高亮
+    _iframeTabs.params.el.filter('.current').removeClass('current'); //不传参，则取消高亮后就结束了。
+
+
+    if (typeof url === 'undefined') {
+      return;
+    } //高亮当前
+
 
     _iframeTabs.params.el.each(function (i, item) {
       if ($(item).data('url') === url) {
@@ -14221,6 +14275,11 @@ var _iframeTabs = {
 
       if (refreshParent && parentName) {
         _iframeTabs.refresh();
+      } //如果窗口全部关闭，左侧菜单的高亮取消，否则没法再次点击
+
+
+      if (_iframeTabs.urls.length === 0) {
+        _iframeTabs.highLight();
       }
     };
 
@@ -14370,7 +14429,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],17:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14715,7 +14774,7 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],18:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14733,7 +14792,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14787,7 +14846,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
-},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14844,7 +14903,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

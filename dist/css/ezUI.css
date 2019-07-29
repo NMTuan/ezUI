@@ -369,6 +369,31 @@ body {
   position: fixed;
 }
 
+.ez.sidebar {
+  min-width: 100px;
+  min-height: 100px;
+  background-color: #fafafa;
+  position: fixed;
+}
+
+.ez.sidebar-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.ez.sidebar-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-left: 1px solid #e0e0e0;
+}
+
+.ez.container {
+  overflow: hidden;
+}
+
 .ez.image-view {
   overflow: hidden;
   border: 1px solid #9e9e9e;
@@ -939,6 +964,7 @@ body {
 .eza.header-tabs li.current {
   color: #424242;
   background-color: #ecf4f8;
+  border-bottom: 1px solid #357ba5;
 }
 
 .eza.header-tabs li.current .fa-times {
@@ -967,4 +993,21 @@ body {
   display: block;
   width: 100%;
   background-color: #ecf4f8;
+}
+
+.eza.guide {
+  padding: 6px 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+  line-height: 1;
+  color: #9e9e9e;
+}
+
+.eza.guide-item {
+  color: #9e9e9e;
+  text-decoration: none;
+}
+
+.eza.guide-space {
+  margin: 0 6px;
 }

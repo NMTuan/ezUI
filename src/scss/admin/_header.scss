@@ -91,6 +91,7 @@ $height: 30px;
         &.current {
             color: color('grey', 'd3');
             background-color: color($base-color, 'l5');
+            border-bottom: 1px solid color($base-color, 'd1');
 
             .fa-times {
                 color: color($base-color, 'l4');

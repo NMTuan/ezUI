@@ -101,7 +101,13 @@ var iframeTabs = {
     },
     //高亮当前菜单
     highLight: function (url) {
+        //取消老高亮
         iframeTabs.params.el.filter('.current').removeClass('current');
+        //不传参，则取消高亮后就结束了。
+        if (typeof url === 'undefined') {
+            return;
+        }
+        //高亮当前
         iframeTabs.params.el.each(function (i, item) {
             if ($(item).data('url') === url) {
                 $(item).addClass('current');
@@ -163,7 +169,7 @@ var iframeTabs = {
             iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
             //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
             if (li.hasClass('current')) {
-                if(parentName){
+                if (parentName) {
                     var prev = $.inArray(parentName, iframeTabs.urls);
                 } else {
                     var prev = index === 0 ? 0 : index - 1;
@@ -175,8 +181,12 @@ var iframeTabs = {
                 NProgress.done();
             }
             //如果要刷新父级
-            if(refreshParent && parentName){
+            if (refreshParent && parentName) {
                 iframeTabs.refresh();
+            }
+            //如果窗口全部关闭，左侧菜单的高亮取消，否则没法再次点击
+            if (iframeTabs.urls.length === 0) {
+                iframeTabs.highLight();
             }
         };
         if (typeof confirm === 'boolean' && confirm === true) {
@@ -197,7 +207,7 @@ var iframeTabs = {
     },
     //刷新页面
     refresh: function (url) {
-        if(iframeTabs.checkCreated(url)){
+        if (iframeTabs.checkCreated(url)) {
             var index = $.inArray(url, iframeTabs.urls);
         } else {
             var index = iframeTabs.params.headerEl.find('li.current').index();

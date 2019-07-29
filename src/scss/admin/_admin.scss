@@ -64,5 +64,21 @@ html, body {
         background-color: color($base-color, 'l5');
         @import "main";
     }
+
 }
 
+//临时
+.eza.guide {
+    padding: 6px 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+    line-height: 1;
+    color: color('grey', 'base');
+    &-item {
+        color: color('grey', 'base');
+        text-decoration: none;
+    }
+    &-space {
+        margin: 0 6px;
+    }
+}
