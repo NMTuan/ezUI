@@ -1,0 +1,129 @@
+<% title = '管理端布局'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+
+<div class="ez container">
+    <%
+    var role = [
+        {
+            name: '回拨管理回拨管理回拨管理', child: [
+                {
+                    name: '梯度管理', child: [
+                        {name: '添加'},
+                        {name: '编辑'},
+                        {name: '删除'},
+                    ]
+                },
+                {
+                    name: '黑名单管理', child: [
+                        {name: '添加'},
+                        {name: '删除'},
+                    ]
+                },
+                {
+                    name: '订单管理', child: [
+                        {name: '详情'},
+                        {name: '审核记录'},
+                    ]
+                },
+                {
+                    name: '产品管理', child: [
+                        {name: '充值'},
+                        {
+                            name: '详情', child: [
+                                {
+                                    name: '业务场景', child: [
+                                        {name: '添加添加添加添加添加添加添加添加'},
+                                        {name: '编辑'},
+                                        {name: '启用/停用'},
+                                    ]
+                                },
+                                {
+                                    name: '黑名单', child: [
+                                        {name: '添加'},
+                                        {name: '删除'},
+                                    ]
+                                },
+                                {name: '话单'},
+                                {name: '扣费记录'},
+                            ]
+                        },
+                    ]
+                },
+            ]
+        },
+        {
+            name: '客户管理', child: [
+                {
+                    name: '用户管理', child: [
+                        {name: '用户设置', child: []},
+                        {name: '启用', child: []},
+                        {name: '禁用', child: []},
+                        {name: '重置密码', child: []},
+                        {name: '认证信息过期', child: []},
+                        {name: '认证信息', child: []},
+                        {
+                            name: '详情', child: [
+                                {name: '企业信息', child: []},
+                                {name: '帐号信息', child: []},
+                                {name: '组织架构', child: []},
+                                {name: '员工管理', child: []},
+                                {name: '角色管理', child: []},
+                                {
+                                    name: '产品管理', child: [
+                                        {name: '产品开通', child: []},
+                                    ]
+                                },
+                                {
+                                    name: '产品管理', child: [
+                                        {name: '号码管理', child: []},
+                                        {name: 'AI外呼', child: []},
+                                        {name: '短信管理', child: []},
+                                        {
+                                            name: '网页回呼', child: [
+                                                {name: '短信充值', child: []},
+                                            ]
+                                        },
+                                        {
+                                            name: '客户中心', child: [
+                                                {name: '字段管理', child: [
+                                                        {name: '字段管理', child: []},
+                                                    ]},
+                                            ]
+                                        },
+                                    ]
+                                },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    name: '实名审核', child: [
+                        {name: '认证审核', child: []},
+                    ]
+                },
+            ]
+        }
+    ];
+    %>
+    <% var render_role = function (data) { %>
+        <ul class="ez role">
+            <% data.forEach(function(item, i){ %>
+                <li class="ez role-item">
+<!--                    【添】【编】-->
+                    <label><input type="checkbox" name=""> <%- item.name %></label>
+                    <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
+                        <% render_role(item.child) %>
+                    <% } %>
+                </li>
+            <% }) %>
+        </ul>
+    <% }; %>
+    <% render_role(role); %>
+
+</div>
+<script>
+    $('.role').role();
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>

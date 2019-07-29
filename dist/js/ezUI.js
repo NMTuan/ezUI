@@ -13990,8 +13990,10 @@ ez.imageView = require('./imageView/imageView'); //图片查看
 ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_146139c0.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./scrollWheel/scrollWheel":22,"./subNav/subNav":23,"./tabs/tabs":24,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+
+ez.role = require('./role/role'); //权限的布局结构
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6a3343e2.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14914,6 +14916,42 @@ module.exports = _renderHeight.renderHeight;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var _role = {
+  //返回深度
+  deep: function deep(el, index) {// if(el.children('li').children('ul').length > 0){
+    //     index++;
+    //     role.deep(el.children('li').children('ul'), index);
+    // } else {
+    //     return index;
+    // }
+  },
+  role: function role(el, params) {
+    var max = 0;
+    el.find('li').each(function () {
+      var i = $(this).parents('ul').length;
+
+      if (i > max) {
+        max = i;
+      }
+    });
+    $.log(max);
+    var width = $(window).width() / max;
+    el.find('label').width(width);
+  }
+};
+$.fn.extend({
+  role: function role(params) {
+    _role.role(this, params);
+
+    return this;
+  }
+});
+module.exports = _role.role;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/role\\role.js","/role")
+},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 var mousewheel = require('jquery-mousewheel')($); //鼠标滚轮
 
 
@@ -14949,7 +14987,7 @@ $.fn.extend({
 });
 module.exports = _scrollWheel.scrollWheel;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/scrollWheel\\scrollWheel.js","/scrollWheel")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],23:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15006,7 +15044,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],24:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

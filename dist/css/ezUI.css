@@ -1017,3 +1017,43 @@ body {
 .eza.guide-space {
   margin: 0 6px;
 }
+
+.ez.role {
+  width: 100%;
+  margin: 0;
+  display: inline-block;
+  border-right: 1px solid #e0e0e0;
+  padding: 0;
+  list-style-type: none;
+  vertical-align: middle;
+  line-height: 1;
+  background-color: #FFFFFF;
+  flex: 1;
+}
+
+.ez.role-item {
+  border: 1px solid #e0e0e0;
+  border-width: 1px 0 1px 1px;
+  padding: 0;
+  margin: -1px;
+  font-size: 0;
+  display: flex;
+}
+
+.ez.role-item label {
+  border-right: 1px solid #e0e0e0;
+  vertical-align: middle;
+  padding: 6px;
+  line-height: 1.6;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.ez.role-item label:hover {
+  background-color: #ecf4f8;
+}
+
+.ez.role-item label input {
+  vertical-align: middle;
+}
