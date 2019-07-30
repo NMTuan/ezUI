@@ -1,7 +1,6 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
-
 <div class="ez container">
     <%
     var role = [
@@ -22,7 +21,7 @@
                 },
                 {
                     name: '订单管理', child: [
-                        {name: '详情'},
+                        {name: '详情', checked: true},
                         {name: '审核记录'},
                     ]
                 },
@@ -86,12 +85,7 @@
                                         },
                                         {
                                             name: '客户中心', child: [
-                                                {name: '字段管理', child: [
-                                                        {name: '字段管理', child: [
-                                                                {name: '字段管理', child: []},
-
-                                                            ]},
-                                                    ]},
+                                                {name: '字段管理', child: []},
                                             ]
                                         },
                                     ]
@@ -113,8 +107,18 @@
         <ul class="ez role">
             <% data.forEach(function(item, i){ %>
                 <li class="ez role-item">
-<!--                    【添】【编】-->
-                    <label><input type="checkbox" name=""> <%- item.name %></label>
+                    <label>
+                        <span class="ez role-bar">
+                        <i class="remixicon-add-box-line"></i>
+                        <i class="remixicon-edit-box-line"></i>
+                        <i class="remixicon-delete-bin-7-line"></i>
+                        </span>
+                        <span class="ez role-name">
+                            <input type="checkbox"
+                                   name=""<%- typeof item.checked !== 'undefined' && item.checked ? ' checked="checked"' : '' %>>
+                            <%- item.name %>
+                        </span>
+                    </label>
                     <% if(typeof item.child != 'undefined' && item.child.length > 0){ %>
                         <% render_role(item.child) %>
                     <% } %>

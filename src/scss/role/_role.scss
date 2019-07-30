@@ -1,5 +1,6 @@
 //临时
 .ez.role {
+    $role: &;
     width: 100%;
     margin: 0;
     display: inline-block;
@@ -17,6 +18,7 @@
         margin: -1px;
         font-size: 0;
         display: flex;
+        flex: 1;
         label {
             //width: 200px;
             border-right: 1px solid color('grey', 'l2');
@@ -26,11 +28,53 @@
             font-size: 14px;
             display: flex;
             align-items: center;
+            position: relative;
             &:hover {
+                background-color: color('grey', 'l5');
+                #{$role}-bar {
+                    display: block;
+                }
+            }
+            &.active {
+                //font-weight: bold;
+                //color: color($base-color, 'base');
                 background-color: color($base-color, 'l5');
+                #{$role}-bar {
+                    //font-weight: bold;
+                    //color: color($base-color, 'base');
+                    background-color: color('shades', 'white');
+                }
             }
             input {
                 vertical-align: middle;
+            }
+        }
+    }
+    &-name {
+        flex: 1;
+    }
+    &-bar {
+        display: none;
+        white-space: nowrap;
+        //padding: 0 6px;
+        border: 1px solid color('grey', 'l2');
+        border-width: 0 0 1px 1px;
+        //background-color: color('grey', 'l5');
+        background-color: color('shades', 'white');
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        i {
+            display: inline-block;
+            height: 34px;
+            line-height: 34px;
+            padding: 0 10px;
+            cursor: pointer;
+            color: color('grey', 'base');
+            &:hover {
+                color: color('red', 'base');
+                background-color: color('grey', 'l4');
             }
         }
     }

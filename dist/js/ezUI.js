@@ -13992,7 +13992,7 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_dd5a0ee3.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e9c69e20.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14917,15 +14917,10 @@ module.exports = _renderHeight.renderHeight;
 "use strict";
 
 var _role = {
+  defaults: {},
+  params: null,
   //返回深度
-  deep: function deep(el, index) {// if(el.children('li').children('ul').length > 0){
-    //     index++;
-    //     role.deep(el.children('li').children('ul'), index);
-    // } else {
-    //     return index;
-    // }
-  },
-  role: function role(el, params) {
+  deep: function deep(el) {
     var max = 0;
     el.find('li').each(function () {
       var i = $(this).parents('ul').length;
@@ -14934,9 +14929,74 @@ var _role = {
         max = i;
       }
     });
-    $.log(max);
+    return max;
+  },
+  //勾选父级
+  checkParents: function checkParents(input) {
+    var check = function check(input) {
+      var ul = input.closest('ul');
+      var parentLabel = ul.prev('label');
+
+      if (parentLabel.length > 0) {
+        var input = parentLabel.find('input');
+
+        if (!input.prop('checked')) {
+          input.prop('checked', true).change();
+        }
+
+        check(input);
+      }
+    };
+
+    check(input);
+  },
+  //取消子集
+  checkChilds: function checkChilds(input) {
+    var label = input.closest('label');
+    var ul = label.next('ul');
+    var childs = ul.find('input:checked');
+
+    if (childs.length > 0) {
+      childs.prop('checked', false).change();
+    }
+  },
+  role: function role(el, params) {
+    _role.params = $.extend({}, _role.defaults, params); //初始化每项宽度
+
+    var max = _role.deep(el);
+
     var width = $(window).width() / max;
-    el.find('label').width(width - max * 2);
+    el.find('label').width(width - max * 2 - 1);
+    $(window).on('resize', function () {
+      var width = $(window).width() / max;
+      el.find('label').width(width - max * 2 - 1);
+    }); //已勾高亮
+
+    el.find('label').each(function (i, item) {
+      var s = $(this);
+
+      if (s.find('input:checked').length > 0) {
+        s.addClass('active');
+      }
+    }); //操作项不触发勾选操作
+
+    el.find('.role-bar').on('click', function (e) {
+      e.preventDefault();
+    }); //勾选操作
+
+    el.find('input').on('change', function () {
+      var checked = $(this).prop('checked');
+
+      if (checked) {
+        $(this).closest('label').addClass('active'); //向上勾选
+
+        _role.checkParents($(this));
+      } else {
+        $(this).closest('label').removeClass('active'); //向下取消
+
+        _role.checkChilds($(this));
+      }
+    });
   }
 };
 $.fn.extend({

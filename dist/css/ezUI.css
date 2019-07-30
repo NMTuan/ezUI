@@ -1038,6 +1038,7 @@ body {
   margin: -1px;
   font-size: 0;
   display: flex;
+  flex: 1;
 }
 
 .ez.role-item label {
@@ -1048,12 +1049,55 @@ body {
   font-size: 14px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .ez.role-item label:hover {
+  background-color: #fafafa;
+}
+
+.ez.role-item label:hover .ez.role-bar {
+  display: block;
+}
+
+.ez.role-item label.active {
   background-color: #ecf4f8;
+}
+
+.ez.role-item label.active .ez.role-bar {
+  background-color: #FFFFFF;
 }
 
 .ez.role-item label input {
   vertical-align: middle;
+}
+
+.ez.role-name {
+  flex: 1;
+}
+
+.ez.role-bar {
+  display: none;
+  white-space: nowrap;
+  border: 1px solid #e0e0e0;
+  border-width: 0 0 1px 1px;
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.ez.role-bar i {
+  display: inline-block;
+  height: 34px;
+  line-height: 34px;
+  padding: 0 10px;
+  cursor: pointer;
+  color: #9e9e9e;
+}
+
+.ez.role-bar i:hover {
+  color: #F44336;
+  background-color: #f5f5f5;
 }
