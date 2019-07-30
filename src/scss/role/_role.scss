@@ -4,13 +4,17 @@
     width: 100%;
     margin: 0;
     display: inline-block;
-    border-right: 1px solid color('grey', 'l2');
+    overflow: hidden;
+    border: 1px solid color('grey', 'l2');
     padding: 0;
     list-style-type: none;
     vertical-align: middle;
     line-height: 1;
     background-color: color('shades', 'white');
     flex: 1;
+    .role {
+        border-width: 0;
+    }
     &-item {
         border: 1px solid color('grey', 'l2');
         border-width: 1px 0 1px 1px;
@@ -21,6 +25,9 @@
         flex: 1;
         label {
             //width: 200px;
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
             border-right: 1px solid color('grey', 'l2');
             vertical-align: middle;
             padding: 6px;

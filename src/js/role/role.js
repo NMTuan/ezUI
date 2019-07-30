@@ -41,10 +41,10 @@ var role = {
 
         //初始化每项宽度
         var max = role.deep(el);
-        var width = $(window).width() / max;
+        var width = el.width() / max;
         el.find('label').width(width - max*2 - 1);
         $(window).on('resize', function () {
-            var width = $(window).width() / max;
+            var width = el.width() / max;
             el.find('label').width(width - max*2 - 1);
         });
 

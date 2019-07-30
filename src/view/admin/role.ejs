@@ -1,6 +1,8 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
-
+<div class="ez sidebar sidebar-left" style="width: 260px;">
+    <%- include('../compoents/_menuTree.ejs'); %>
+</div>
 <div class="ez container">
     <%
     var role = [
@@ -126,11 +128,14 @@
             <% }) %>
         </ul>
     <% }; %>
+
     <% render_role(role); %>
 
 </div>
 <script>
+    $('.ez.container').fixedContainer();
     $('.role').role();
 </script>
+
 
 <%- include('../compoents/default/_footer.ejs'); %>
