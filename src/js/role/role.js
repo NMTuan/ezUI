@@ -19,7 +19,7 @@ var role = {
 
         $.log(max);
         var width = $(window).width() / max;
-        el.find('label').width(width);
+        el.find('label').width(width - max*2);
     }
 };
 
