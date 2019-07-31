@@ -207,6 +207,7 @@ var iframeTabs = {
     },
     //刷新页面
     refresh: function (url) {
+        //统一由url找到index，然后再找到iframe
         if (iframeTabs.checkCreated(url)) {
             var index = $.inArray(url, iframeTabs.urls);
         } else {
@@ -218,6 +219,9 @@ var iframeTabs = {
         }
         var src = iframe[0].contentWindow.document.location.href;
         // var src = iframe.attr('src');
+        //过滤掉hash
+        src = src.replace('###', '');
+        src = src.replace('#', '');
         iframe.attr('src', src);
 
         if (typeof NProgress !== 'undefined') {

@@ -13992,7 +13992,7 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_936302d7.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a8ef8a49.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14306,6 +14306,7 @@ var _iframeTabs = {
   },
   //刷新页面
   refresh: function refresh(url) {
+    //统一由url找到index，然后再找到iframe
     if (_iframeTabs.checkCreated(url)) {
       var index = $.inArray(url, _iframeTabs.urls);
     } else {
@@ -14319,7 +14320,10 @@ var _iframeTabs = {
     }
 
     var src = iframe[0].contentWindow.document.location.href; // var src = iframe.attr('src');
+    //过滤掉hash
 
+    src = src.replace('###', '');
+    src = src.replace('#', '');
     iframe.attr('src', src);
 
     if (typeof NProgress !== 'undefined') {
