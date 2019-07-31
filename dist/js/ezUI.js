@@ -13992,7 +13992,7 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ea12e5.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_936302d7.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14592,6 +14592,10 @@ var imageView = {
     imageView.imageCreate(src, function (error, img) {
       el.find('.image-view-loading').hide();
 
+      if (title) {
+        el.find('.image-view-head').html(title);
+      }
+
       if (error) {
         el.find('.image-view-error').show();
         return;
@@ -14603,10 +14607,6 @@ var imageView = {
         left: 0
       });
       imageView.imageResize(el, img);
-
-      if (title) {
-        el.find('.image-view-head').html(title);
-      }
     }); //4.移除loading
     //5.显示图片
   },

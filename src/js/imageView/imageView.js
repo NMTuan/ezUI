@@ -153,6 +153,9 @@ var imageView = {
         //3.loading img
         imageView.imageCreate(src, function (error, img) {
             el.find('.image-view-loading').hide();
+            if (title) {
+                el.find('.image-view-head').html(title);
+            }
             if (error) {
                 el.find('.image-view-error').show();
                 return;
@@ -160,9 +163,6 @@ var imageView = {
             el.find('.image-view-body td').append(img);
             el.find('.image-view-body').css({top: 0, left: 0});
             imageView.imageResize(el, img);
-            if (title) {
-                el.find('.image-view-head').html(title);
-            }
         });
         //4.移除loading
         //5.显示图片
