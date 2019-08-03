@@ -94,8 +94,8 @@ var iframeTabs = {
         }
 
         //每次切换，重置当前iframe高度。
-        var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
-        iframe.show().siblings('iframe').hide();
+        var iframe = iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
+        iframe.show().siblings('iframe, .eza').hide();
         iframe.renderHeight();
 
     },
@@ -165,7 +165,7 @@ var iframeTabs = {
             var li = iframeTabs.params.headerEl.find('li').eq(index);
             var parentName = li.data('parent');
             li.remove();
-            iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+            iframeTabs.params.contentEl.find('iframe, .eza').eq(index).remove();
             iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
             //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
             if (li.hasClass('current')) {
@@ -213,8 +213,11 @@ var iframeTabs = {
         } else {
             var index = iframeTabs.params.headerEl.find('li.current').index();
         }
-        var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
+        var iframe = iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
         if (iframe.length === 0) {
+            return;
+        }
+        if(!iframe[0].contentWindow){   //不是iframe的固定页签
             return;
         }
         var src = iframe[0].contentWindow.document.location.href;
@@ -243,6 +246,15 @@ var iframeTabs = {
         }
         iframeTabs.params = $.extend({}, iframeTabs.defaults, params);
         iframeTabs.params.el = el;
+
+        //初始化固定标签
+        iframeTabs.params.headerEl.find('li').each(function (i, item) {
+            var url = $(item).data('url');
+            if(url){
+                iframeTabs.urls.push(url);
+            }
+        });
+        iframeTabs.params.contentEl.find('iframe, .eza').renderHeight();
 
         //菜单绑定
         el.on('click', function () {

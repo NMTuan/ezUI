@@ -1001,6 +1001,10 @@ body {
   background-color: #ecf4f8;
 }
 
+.eza.main-content {
+  overflow: auto;
+}
+
 .eza.guide {
   padding: 6px 12px;
   border-bottom: 1px solid #ddd;

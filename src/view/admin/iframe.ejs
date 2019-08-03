@@ -152,10 +152,16 @@
     <i id="header-arrow-right" class="eza header-arrow pull-right remixicon-arrow-right-s-line"></i>
     <div class="eza header-tabs">
         <ul id="iframeTabsHeader">
+            <li class="current" data-url="overview">这是个固定页面</li>
         </ul>
     </div>
 </div>
 <div id="iframeTabsContent" class="eza main">
+    <div class="eza main-content">
+        <%for(var i = 0; i < 100; i++){%>
+        <p>这是固定页面的内容</p>
+        <%}%>
+    </div>
     <!--    <iframe src="./index.html" frameborder="0" id="iframe"></iframe>-->
 </div>
 <%- include('../compoents/default/_footer.ejs'); %>

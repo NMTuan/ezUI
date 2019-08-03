@@ -13992,7 +13992,7 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_25f8b72f.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3f41dd0f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14169,9 +14169,9 @@ var _iframeTabs = {
     } //每次切换，重置当前iframe高度。
 
 
-    var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
+    var iframe = _iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
 
-    iframe.show().siblings('iframe').hide();
+    iframe.show().siblings('iframe, .eza').hide();
     iframe.renderHeight();
   },
   //高亮当前菜单
@@ -14255,7 +14255,7 @@ var _iframeTabs = {
       var parentName = li.data('parent');
       li.remove();
 
-      _iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+      _iframeTabs.params.contentEl.find('iframe, .eza').eq(index).remove();
 
       _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
       //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
@@ -14313,9 +14313,14 @@ var _iframeTabs = {
       var index = _iframeTabs.params.headerEl.find('li.current').index();
     }
 
-    var iframe = _iframeTabs.params.contentEl.find('iframe').eq(index);
+    var iframe = _iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
 
     if (iframe.length === 0) {
+      return;
+    }
+
+    if (!iframe[0].contentWindow) {
+      //不是iframe的固定页签
       return;
     }
 
@@ -14348,7 +14353,18 @@ var _iframeTabs = {
     }
 
     _iframeTabs.params = $.extend({}, _iframeTabs.defaults, params);
-    _iframeTabs.params.el = el; //菜单绑定
+    _iframeTabs.params.el = el; //初始化固定标签
+
+    _iframeTabs.params.headerEl.find('li').each(function (i, item) {
+      var url = $(item).data('url');
+
+      if (url) {
+        _iframeTabs.urls.push(url);
+      }
+    });
+
+    _iframeTabs.params.contentEl.find('iframe, .eza').renderHeight(); //菜单绑定
+
 
     el.on('click', function () {
       //已高亮，退出
