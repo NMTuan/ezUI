@@ -683,23 +683,13 @@ body {
 .eza.nav {
   width: 50px;
   height: 100%;
-  padding-top: 55px;
+  padding-top: 80px;
   background-color: #212121;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   z-index: 1;
-}
-
-.eza.nav .logo {
-  width: 50px;
-  height: 100px;
-  background-color: #212121;
-  color: #FFFFFF;
-  text-align: center;
-  line-height: 100px;
-  border-bottom: 1px solid #424242;
 }
 
 .eza.nav ul {
@@ -747,7 +737,7 @@ body {
   width: 170px;
   height: 100%;
   overflow: hidden;
-  padding-top: 55px;
+  padding-top: 80px;
   background-color: #424242;
   position: fixed;
   top: 0;
@@ -863,8 +853,83 @@ body {
   position: relative;
 }
 
+.eza.user {
+  width: 220px;
+  height: 80px;
+  overflow: hidden;
+  background-color: #212121;
+  border-bottom: 1px solid #424242;
+  padding: 7px 12px;
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.eza.user img {
+  padding: 16px 16px 16px 0;
+  background-color: #212121;
+}
+
+.eza.user dl, .eza.user dt, .eza.user dd {
+  margin: 0;
+  padding: 0;
+}
+
+.eza.user dl {
+  line-height: 2;
+}
+
+.eza.user dl a {
+  color: #757575;
+  text-decoration: none;
+}
+
+.eza.user dl a:hover {
+  color: #e0e0e0;
+}
+
+.eza.user dt {
+  font-size: 16px;
+  line-height: 2;
+  font-weight: normal;
+}
+
+.eza.user dt i {
+  font-size: 14px;
+}
+
+.eza.user dt .eza.user-name {
+  color: #fff;
+}
+
+.eza.user dd {
+  border-top: 1px solid #424242;
+  line-height: 2;
+  font-size: 12px;
+  color: #757575;
+}
+
+.eza.user dd table {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.eza.user dd a {
+  float: left;
+  width: 74px;
+  color: #757575;
+}
+
+.eza.user dd a:hover, .eza.user dd a.active {
+  color: #e0e0e0;
+}
+
 .eza.header {
-  height: 55px;
+  height: 39px;
+  border-top: 4px solid #2d6a8d;
   background-color: #3c8dbc;
   position: relative;
   z-index: 2;
@@ -872,7 +937,7 @@ body {
 
 .eza.header-logo {
   width: 220px;
-  line-height: 55px;
+  line-height: 35px;
   text-align: center;
   color: #FFFFFF;
   font-size: 18px;
@@ -885,8 +950,8 @@ body {
 
 .eza.header-menu {
   text-align: right;
-  height: 25px;
-  line-height: 25px;
+  height: 0px;
+  line-height: 0px;
   font-size: 12px;
   color: #c5ddeb;
 }
@@ -913,22 +978,20 @@ body {
 }
 
 .eza.header-arrow {
-  height: 30px;
-  line-height: 30px;
+  height: 35px;
+  line-height: 35px;
   color: #ecf4f8;
-  background-color: #357ba5;
   padding: 0 10px;
   cursor: pointer;
 }
 
 .eza.header-arrow:hover {
-  background-color: #2d6a8d;
+  background-color: #357ba5;
 }
 
 .eza.header-tabs {
-  height: 30px;
+  height: 35px;
   overflow: hidden;
-  background-color: #357ba5;
   padding: 0;
   font-size: 0;
   list-style-type: none;
@@ -949,18 +1012,17 @@ body {
 
 .eza.header-tabs li {
   margin: 0;
-  height: 30px;
+  height: 35px;
   padding: 0 14px;
-  line-height: 30px;
+  line-height: 35px;
   display: inline-block;
   font-size: 14px;
   color: #ecf4f8;
-  background-color: #357ba5;
   cursor: pointer;
 }
 
 .eza.header-tabs li:hover {
-  background-color: #2d6a8d;
+  background-color: #357ba5;
 }
 
 .eza.header-tabs li:hover .fa-times {
