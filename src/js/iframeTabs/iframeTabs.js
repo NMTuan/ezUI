@@ -14,16 +14,16 @@ var iframeTabs = {
     closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
     urls: [],   //记录所有打开url
     //打开新页面
-    open: function (url, title, backgroundModel, parentName) {
+    open: function (url, title, backgroundModel, parentName, noClose) {
         //如果内页使用，需要提升
         if (window.top !== window) {
-            window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name);
+            window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name, noClose);
             return;
         }
         //先检测是否打开
         var isCreated = iframeTabs.checkCreated(url);
         if (!isCreated) { //如果没创建，先创建
-            iframeTabs.create(url, title, parentName);
+            iframeTabs.create(url, title, parentName, noClose);
             if (!backgroundModel) {   //非后台模式，切换过去
                 iframeTabs.switch(url);
             }
@@ -32,7 +32,7 @@ var iframeTabs = {
         }
     },
     //创建页面
-    create: function (url, title, parentName) {
+    create: function (url, title, parentName, noClose) {
         iframeTabs.urls.push(url);  //记录已打开页面
         iframeTabs.index++;
 
@@ -41,7 +41,9 @@ var iframeTabs = {
         tabHeader.data('url', url);
         tabHeader.data('parent', parentName);   //记录哪个tabs打开的我
         tabHeader.html(title || '新开窗口' + iframeTabs.index);
-        iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+        if(!noClose) {
+            iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+        }
         iframeTabs.params.headerEl.append(tabHeader);
 
         //构建标签内容

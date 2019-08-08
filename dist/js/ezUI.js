@@ -13992,7 +13992,7 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a1faa443.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_376c59a0.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14063,10 +14063,10 @@ var _iframeTabs = {
   urls: [],
   //记录所有打开url
   //打开新页面
-  open: function open(url, title, backgroundModel, parentName) {
+  open: function open(url, title, backgroundModel, parentName, noClose) {
     //如果内页使用，需要提升
     if (window.top !== window) {
-      window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name);
+      window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name, noClose);
       return;
     } //先检测是否打开
 
@@ -14075,7 +14075,7 @@ var _iframeTabs = {
 
     if (!isCreated) {
       //如果没创建，先创建
-      _iframeTabs.create(url, title, parentName);
+      _iframeTabs.create(url, title, parentName, noClose);
 
       if (!backgroundModel) {
         //非后台模式，切换过去
@@ -14087,7 +14087,7 @@ var _iframeTabs = {
     }
   },
   //创建页面
-  create: function create(url, title, parentName) {
+  create: function create(url, title, parentName, noClose) {
     _iframeTabs.urls.push(url); //记录已打开页面
 
 
@@ -14099,7 +14099,9 @@ var _iframeTabs = {
 
     tabHeader.html(title || '新开窗口' + _iframeTabs.index);
 
-    _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+    if (!noClose) {
+      _iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+    }
 
     _iframeTabs.params.headerEl.append(tabHeader); //构建标签内容
 
