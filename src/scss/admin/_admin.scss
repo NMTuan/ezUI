@@ -19,7 +19,7 @@ html, body {
         top: 0;
         bottom: 0;
         left: 0;
-        z-index: 1;
+        z-index: 3;
         @import "nav";
     }
 
@@ -33,6 +33,7 @@ html, body {
         top: 0;
         bottom: 0;
         left: $nav-width;
+        z-index: 2;
         @import "sub-nav";
     }
 
@@ -62,7 +63,7 @@ html, body {
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 10;
+        z-index: 3;
         img {
             padding: 16px 16px 16px 0;
             background-color: color('grey', 'd4');
@@ -113,13 +114,20 @@ html, body {
             }
         }
     }
+    &.headlines {
+        //display: none;
+        overflow: hidden;
+        margin: 0 0 0 $nav-width+$sub-nav-width;
+        position: relative;
+        @import "headlines";
+    }
     &.header {
         $border: 4px;
         height: $header-height + $border;
         border-top: $border solid color($base-color, 'd2');
         background-color: color($base-color, 'base');
         position: relative;
-        z-index: 2;
+        z-index: 1;
         @import "header";
     }
 

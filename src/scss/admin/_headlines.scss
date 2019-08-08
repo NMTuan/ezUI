@@ -1,0 +1,46 @@
+$headlines: &;
+dl, dt, dd {
+    margin: 0;
+    padding: 0;
+}
+dl {
+    font-size: 14px;
+    padding: 12px;
+    background-color: color('yellow', 'l3');
+    color: color('grey', 'd3');
+}
+dt {
+    font-weight: bold;
+    span {
+        font-weight: normal;
+        font-size: 12px;
+        color: color('grey', 'base');
+        margin-left: 12px;
+    }
+}
+dd {
+    margin-top: 6px;
+    line-height: 1.2;
+}
+&-icon {
+    float: left;
+
+}
+&-close {
+    float: right;
+    padding: 10px;
+    line-height: 1;
+    //position: absolute;
+    //top: 10px;
+    //right: 10px;
+    color: color('grey', 'l1');
+    &:hover {
+        color: color('grey', 'd2');
+        cursor: pointer;
+    }
+}
+&-danger {
+    dl {
+        background-color: color('red', 'l4');
+    }
+}
