@@ -929,6 +929,7 @@ body {
 }
 
 .eza.headlines {
+  display: none;
   overflow: hidden;
   margin: 0 0 0 220px;
   position: relative;

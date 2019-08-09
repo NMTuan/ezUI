@@ -13985,6 +13985,8 @@ ez.subNav = require('./subNav/subNav'); //二级菜单收缩
 
 ez.iframeTabs = require('./iframeTabs/iframeTabs'); //多标签框架
 
+ez.headlines = require('./headlines/headlines'); //头条
+
 ez.imageView = require('./imageView/imageView'); //图片查看
 
 ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
@@ -13992,8 +13994,8 @@ ez.audioPlayer = require('./audioPlayer/audioPlay'); //音频播放
 ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 
 ez.role = require('./role/role'); //权限的布局结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_376c59a0.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./iframeTabs/iframeTabs":17,"./imageView/imageView":18,"./log/log":19,"./menuTree/menuTree":20,"./renderHeight/renderHeight":21,"./role/role":22,"./scrollWheel/scrollWheel":23,"./subNav/subNav":24,"./tabs/tabs":25,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8ab68112.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./headlines/headlines":17,"./iframeTabs/iframeTabs":18,"./imageView/imageView":19,"./log/log":20,"./menuTree/menuTree":21,"./renderHeight/renderHeight":22,"./role/role":23,"./scrollWheel/scrollWheel":24,"./subNav/subNav":25,"./tabs/tabs":26,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14033,6 +14035,76 @@ $.fn.extend({
 module.exports = _fixedContainer.fixedContainer;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fixedContainer\\fixedContainer.js","/fixedContainer")
 },{"XJF/FV":7,"buffer":6}],17:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _headlines = {
+  defaults: {
+    title: '',
+    //标题
+    time: '',
+    //时间
+    content: '',
+    //内容
+    // url: '',    //新开页签地址
+    // name: '',   //新开页签标题, 默认取title
+    close: true //关闭按钮
+
+  },
+  params: null,
+  el: null,
+  tpl: function tpl() {
+    var dl = $("<dl>");
+    var time = _headlines.params.time ? '<span>' + _headlines.params.time + '</span>' : '';
+    var html = '' + '<dt>' + _headlines.params.title + time + '</dt>' + '<dd>' + _headlines.params.content + '</dd>' + '';
+    dl.append(html);
+    return dl;
+  },
+  headlines: function headlines(el, params) {
+    if (el.length === 0) {
+      return;
+    }
+
+    _headlines.el = el;
+    _headlines.params = $.extend({}, _headlines.defaults, params);
+    $.log(_headlines.params);
+    el.html(_headlines.tpl());
+
+    if (_headlines.params.close) {
+      el.prepend('<i class="eza headlines-close remixicon-close-circle-fill"></i>');
+    }
+
+    _headlines.show();
+
+    _headlines.el.find('.headlines-close').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      _headlines.hide();
+    }); // if(headlines.params.url){
+    //     headlines.el.on('click', function () {
+    //         ez.iframeTabs.open(headlines.params.url, headlines.params.name || headlines.params.title);
+    //     });
+    // }
+
+  },
+  show: function show() {
+    _headlines.el.slideDown(function () {
+      $(window).resize();
+    });
+  },
+  hide: function hide() {
+    _headlines.el.slideUp(function () {
+      $(window).resize();
+    });
+  }
+};
+module.exports = {
+  show: _headlines.headlines,
+  close: _headlines.hide
+};
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/headlines\\headlines.js","/headlines")
+},{"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14455,7 +14527,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],18:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14800,7 +14872,7 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],19:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14818,7 +14890,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14880,7 +14952,7 @@ $.fn.extend({
 });
 module.exports = _menuTree.menuTree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/menuTree\\menuTree.js","/menuTree")
-},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14934,7 +15006,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
-},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15030,7 +15102,7 @@ $.fn.extend({
 });
 module.exports = _role.role;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/role\\role.js","/role")
-},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15069,7 +15141,7 @@ $.fn.extend({
 });
 module.exports = _scrollWheel.scrollWheel;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/scrollWheel\\scrollWheel.js","/scrollWheel")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],24:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15126,7 +15198,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

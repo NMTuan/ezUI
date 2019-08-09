@@ -115,7 +115,7 @@ html, body {
         }
     }
     &.headlines {
-        //display: none;
+        display: none;
         overflow: hidden;
         margin: 0 0 0 $nav-width+$sub-nav-width;
         position: relative;
