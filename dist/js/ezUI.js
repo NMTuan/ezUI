@@ -13996,7 +13996,7 @@ ez.menuTree = require('./menuTree/menuTree'); //树状菜单
 ez.role = require('./role/role'); //权限的布局结构
 
 ez.msg = require('./msg/msg'); //消息
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_cc8df3fa.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_148fe1ca.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./headlines/headlines":17,"./iframeTabs/iframeTabs":18,"./imageView/imageView":19,"./log/log":20,"./menuTree/menuTree":21,"./msg/msg":22,"./renderHeight/renderHeight":23,"./role/role":24,"./scrollWheel/scrollWheel":25,"./subNav/subNav":26,"./tabs/tabs":27,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";

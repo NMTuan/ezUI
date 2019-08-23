@@ -1,0 +1,145 @@
+.ez.form {
+    $form: &;
+    font-size: 14px;
+    background-color: #fff;
+    form {
+        margin: 0;
+        padding: 0;
+    }
+    &-row { //表单项
+        vertical-align: middle;
+        padding: 6px 0;
+        &-tips {
+            font-size: 10px;
+            padding: 0;
+            color: color('grey', 'base');
+            #{$form}-content {
+                margin-top: -6px;
+                padding-top: 0;
+            }
+        }
+    }
+    &-title {   //标题
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 0 6px;
+    }
+    &-content { //内容
+        white-space: nowrap;
+        width: 100%;
+        vertical-align: middle;
+        padding: 6px;
+        position: relative;
+    }
+    &-flex {    //水平自适应容器
+        display: flex;
+        flex-wrap: nowrap;
+        border: 1px solid color('grey', 'l3');
+    }
+    &-control { //自适应容器
+        flex: 1 1 auto;
+        background-color: color('shades', 'white');
+        margin: 0 2px 0 0;  //为了focus时显示完整的outline
+        padding: 0 15px;
+        border: 0;
+        min-height: 34px;
+        line-height: 34px;
+        white-space: normal;
+        &:last-child {
+            margin: 0;
+        }
+        .btn {
+            border: 0!important;
+        }
+        input {
+            vertical-align: middle;
+        }
+        //&:focus {
+        label {
+            margin-right: 12px;
+        }
+    }
+    &-addon {   //小组件
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        padding: 9px 15px;
+        background-color: color('grey', 'l5');
+        border: 1px solid color('grey', 'l3');
+        border-width: 0 1px;
+        margin: 0 0 0 -1px;
+        &:last-child {
+            border-right: 0;
+        }
+    }
+
+    //表单项成一行
+    &-inline {
+        display: table;
+        border-collapse: collapse;
+        #{$form}-row {
+            display: table-row;
+            padding: 0!important;
+        }
+        #{$form}-title {
+            display: table-cell;
+            text-align: right;
+        }
+        #{$form}-content {
+            display: table-cell;
+        }
+        //水平模式, 常见于搜索
+        &-horizontal {
+            #{$form}-row {
+                display: inline-block;
+            }
+        }
+    }
+
+    &-full {    //通栏宽度, 不加, 则适应内容实际宽度
+        width: 100%;
+    }
+    &-left {  //标题居左
+        #{$form}-title {
+            text-align: left;
+        }
+    }
+    &-center {  //标题居中
+        #{$form}-title {
+            text-align: center;
+        }
+    }
+    &-right {   //标题居右
+        #{$form}-title {
+            text-align: right;
+        }
+    }
+    &-sm {
+        font-size: 12px;
+        #{$form} {
+            &-row {
+                padding: 3px 0;
+                &-tips {
+                    #{$form}-content {
+                        margin-top: -3px;
+                        padding-top: 0;
+                    }
+                }
+            }
+            &-title {
+                padding: 0 3px;
+            }
+            &-content {
+                padding: 3px;
+            }
+            &-control {
+                padding: 0 10px;
+                min-height: 26px;
+                line-height: 26px;
+            }
+            &-addon {
+                padding: 6px 10px;
+            }
+        }
+    }
+}

@@ -44,12 +44,14 @@ body {
 //@import './layout/grid';
 //布局
 @import "./layout/layout";
+@import "./form/form";  //表单
 
 //按钮
-//@import './button/button';
+@import './button/button';
 
 //表格
 //@import './table/table';
+
 
 //tree
 @import "./menu-tree/menu-tree";

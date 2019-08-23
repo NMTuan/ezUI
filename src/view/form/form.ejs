@@ -1,0 +1,26 @@
+<% title = '表单'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+<h2>横向(常见于搜索)</h2>
+<div class="ez form form-inline form-inline-horizontal form-sm">
+    <%- include('./_form.ejs');%>
+</div>
+<hr>
+
+<h2>一行</h2>
+<div class="ez form form-inline form-full">
+    <%- include('./_form.ejs');%>
+</div>
+<hr>
+
+<h2>分行</h2>
+<div class="ez form">
+    <%- include('./_form.ejs');%>
+</div>
+
+<script>
+    $('.form-sm').find('.btn').addClass('btn-sm');  //sm模式下按钮也调小
+    $('.form-inline-horizontal').find('.form-row-tips').remove();   //水平模式下用不到tips
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>
