@@ -1,4 +1,4 @@
-.ez.form {
+.ez-form {
     $form: &;
     font-size: 14px;
     background-color: #fff;
@@ -34,7 +34,7 @@
     &-flex {    //水平自适应容器
         display: flex;
         flex-wrap: nowrap;
-        border: 1px solid color('grey', 'l3');
+        border: 1px solid color('grey', 'l2');
     }
     &-control { //自适应容器
         flex: 1 1 auto;
@@ -64,8 +64,8 @@
         display: flex!important;
         align-items: center;
         padding: 9px 15px;
-        background-color: color('grey', 'l5');
-        border: 1px solid color('grey', 'l3');
+        background-color: color('grey', 'l4');
+        border: 1px solid color('grey', 'l2');
         border-width: 0 1px;
         margin: 0 0 0 -1px;
         &:last-child {
