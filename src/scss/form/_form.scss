@@ -54,11 +54,11 @@
         input {
             vertical-align: middle;
         }
-        //&:focus {
         label {
             margin-right: 12px;
         }
     }
+
     &-addon {   //小组件
         white-space: nowrap;
         display: flex!important;
@@ -80,6 +80,9 @@
         border-radius: 3px;
         padding: 3px;
         white-space: nowrap;
+    }
+
+    &-select {
     }
 
     //表单项成一行
@@ -145,6 +148,9 @@
                 padding: 0 6px;
                 min-height: 26px;
                 line-height: 26px;
+                i {
+                    font-size: 14px;
+                }
             }
             &-addon {
                 padding: 6px 10px;
