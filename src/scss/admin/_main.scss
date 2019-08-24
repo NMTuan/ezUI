@@ -3,3 +3,6 @@ iframe {
     width: 100%;
     background-color: color($base-color, 'l5');
 }
+&-content {
+    overflow: auto;
+}

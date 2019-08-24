@@ -16,7 +16,7 @@ body {
 
 .ez,
 .eza {
-    &.pull {
+    &-pull {
         &-right {
             float: right;
         }
@@ -26,11 +26,11 @@ body {
         }
     }
 
-    &.clearfix {
+    &-clearfix {
         @extend %clear;
     }
 
-    &.fixed {
+    &-fixed {
         position: fixed;
     }
 }
@@ -44,12 +44,15 @@ body {
 //@import './layout/grid';
 //布局
 @import "./layout/layout";
+@import "./form/form";  //表单
+@import "./select/select";  //下拉选框
 
 //按钮
-//@import './button/button';
+@import './button/button';
 
 //表格
 //@import './table/table';
+
 
 //tree
 @import "./menu-tree/menu-tree";

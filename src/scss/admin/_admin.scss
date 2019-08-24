@@ -6,19 +6,20 @@ html, body {
 .eza {
     $nav-width: 50px;
     $sub-nav-width: 170px;
-    $header-height: 55px;
+    $header-height: 35px;
+    $user-height: 80px;
 
     &.nav {
         width: $nav-width;
         height: 100%;
         //overflow: hidden;
-        padding-top: $header-height;
+        padding-top: $user-height;
         background-color: color('grey', 'd4');
         position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
-        z-index: 1;
+        z-index: 3;
         @import "nav";
     }
 
@@ -26,12 +27,13 @@ html, body {
         width: $sub-nav-width;
         height: 100%;
         overflow: hidden;
-        padding-top: $header-height;
+        padding-top: $user-height;
         background-color: color('grey', 'd3');
         position: fixed;
         top: 0;
         bottom: 0;
         left: $nav-width;
+        z-index: 2;
         @import "sub-nav";
     }
 
@@ -48,11 +50,84 @@ html, body {
         position: relative;
     }
 
+    &.user {
+        $user: &;
+        width: $nav-width + $sub-nav-width;
+        height: $user-height;
+        overflow: hidden;
+        background-color: color('grey', 'd4');
+        border-bottom: 1px solid color('grey', 'd3');
+        padding: 7px 12px;
+        color: #fff;
+        font-size: 14px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        img {
+            padding: 16px 16px 16px 0;
+            background-color: color('grey', 'd4');
+        }
+        dl, dt, dd {
+            margin: 0;
+            padding: 0;
+        }
+        dl {
+            line-height: 2;
+            a {
+                color: color('grey', 'd1');
+                text-decoration: none;
+                &:hover {
+                    color: color('grey', 'l2');
+                }
+            }
+        }
+        dt {
+            font-size: 16px;
+            line-height: 2;
+            font-weight: normal;
+            i {
+                font-size: 14px;
+            }
+            #{$user}-name {
+                color: #fff;
+            }
+        }
+        dd {
+            border-top: 1px solid color('grey', 'd3');
+            line-height: 2;
+            font-size: 12px;
+            color: color('grey', 'd1');
+            table {
+                width: 100%;
+                white-space: nowrap;
+            }
+            a {
+                float: left;
+                width: 74px;
+                //text-align: center;
+                color: color('grey', 'd1');
+                &:hover,
+                &.active {
+                    color: color('grey', 'l2');
+                }
+            }
+        }
+    }
+    &.headlines {
+        display: none;
+        overflow: hidden;
+        margin: 0 0 0 $nav-width+$sub-nav-width;
+        position: relative;
+        @import "headlines";
+    }
     &.header {
-        height: $header-height;
+        $border: 4px;
+        height: $header-height + $border;
+        border-top: $border solid color($base-color, 'd2');
         background-color: color($base-color, 'base');
         position: relative;
-        z-index: 2;
+        z-index: 1;
         @import "header";
     }
 

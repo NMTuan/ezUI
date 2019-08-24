@@ -27,7 +27,7 @@ var menuTree = {
                     className = 'fa-caret-right';
                 }
             }
-            $(li).prepend(menuTree.nodeIcon().addClass(className));
+            $(li).children('.menuTree-item').prepend(menuTree.nodeIcon().addClass(className));
         });
 
         //点击节点事件

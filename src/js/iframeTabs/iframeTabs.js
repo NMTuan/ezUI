@@ -14,16 +14,16 @@ var iframeTabs = {
     closeBtn: $('<i>').attr('class', 'fa fa-times'),    //关闭按钮
     urls: [],   //记录所有打开url
     //打开新页面
-    open: function (url, title, backgroundModel, parentName) {
+    open: function (url, title, backgroundModel, parentName, noClose) {
         //如果内页使用，需要提升
         if (window.top !== window) {
-            window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name);
+            window.top.ez.iframeTabs.open(url, title, backgroundModel, window.name, noClose);
             return;
         }
         //先检测是否打开
         var isCreated = iframeTabs.checkCreated(url);
         if (!isCreated) { //如果没创建，先创建
-            iframeTabs.create(url, title, parentName);
+            iframeTabs.create(url, title, parentName, noClose);
             if (!backgroundModel) {   //非后台模式，切换过去
                 iframeTabs.switch(url);
             }
@@ -32,7 +32,7 @@ var iframeTabs = {
         }
     },
     //创建页面
-    create: function (url, title, parentName) {
+    create: function (url, title, parentName, noClose) {
         iframeTabs.urls.push(url);  //记录已打开页面
         iframeTabs.index++;
 
@@ -41,7 +41,9 @@ var iframeTabs = {
         tabHeader.data('url', url);
         tabHeader.data('parent', parentName);   //记录哪个tabs打开的我
         tabHeader.html(title || '新开窗口' + iframeTabs.index);
-        iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+        if(!noClose) {
+            iframeTabs.closeBtn.clone(true).appendTo(tabHeader);
+        }
         iframeTabs.params.headerEl.append(tabHeader);
 
         //构建标签内容
@@ -94,8 +96,8 @@ var iframeTabs = {
         }
 
         //每次切换，重置当前iframe高度。
-        var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
-        iframe.show().siblings('iframe').hide();
+        var iframe = iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
+        iframe.show().siblings('iframe, .eza').hide();
         iframe.renderHeight();
 
     },
@@ -165,7 +167,7 @@ var iframeTabs = {
             var li = iframeTabs.params.headerEl.find('li').eq(index);
             var parentName = li.data('parent');
             li.remove();
-            iframeTabs.params.contentEl.find('iframe').eq(index).remove();
+            iframeTabs.params.contentEl.find('iframe, .eza').eq(index).remove();
             iframeTabs.urls.splice($.inArray(url, iframeTabs.urls), 1); //移除urls里的记录。
             //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
             if (li.hasClass('current')) {
@@ -207,17 +209,24 @@ var iframeTabs = {
     },
     //刷新页面
     refresh: function (url) {
+        //统一由url找到index，然后再找到iframe
         if (iframeTabs.checkCreated(url)) {
             var index = $.inArray(url, iframeTabs.urls);
         } else {
             var index = iframeTabs.params.headerEl.find('li.current').index();
         }
-        var iframe = iframeTabs.params.contentEl.find('iframe').eq(index);
+        var iframe = iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
         if (iframe.length === 0) {
+            return;
+        }
+        if(!iframe[0].contentWindow){   //不是iframe的固定页签
             return;
         }
         var src = iframe[0].contentWindow.document.location.href;
         // var src = iframe.attr('src');
+        //过滤掉hash
+        src = src.replace('###', '');
+        src = src.replace('#', '');
         iframe.attr('src', src);
 
         if (typeof NProgress !== 'undefined') {
@@ -239,6 +248,15 @@ var iframeTabs = {
         }
         iframeTabs.params = $.extend({}, iframeTabs.defaults, params);
         iframeTabs.params.el = el;
+
+        //初始化固定标签
+        iframeTabs.params.headerEl.find('li').each(function (i, item) {
+            var url = $(item).data('url');
+            if(url){
+                iframeTabs.urls.push(url);
+            }
+        });
+        iframeTabs.params.contentEl.find('iframe, .eza').renderHeight();
 
         //菜单绑定
         el.on('click', function () {
