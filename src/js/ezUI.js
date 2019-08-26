@@ -19,3 +19,5 @@ ez.audioPlayer = require('./audioPlayer/audioPlay');    //音频播放
 ez.menuTree = require('./menuTree/menuTree');   //树状菜单
 ez.role = require('./role/role');   //权限的布局结构
 ez.msg = require('./msg/msg');  //消息
+ez.form = require('./form/form');   //表单
+ez.tree = require('./tree/tree');   //树结构

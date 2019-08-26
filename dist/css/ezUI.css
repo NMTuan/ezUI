@@ -497,6 +497,29 @@ body {
   white-space: nowrap;
 }
 
+.ez-form-select-item {
+  margin: 0;
+  padding: 0;
+}
+
+.ez-form-select-head {
+  vertical-align: middle;
+}
+
+.ez-form-select-body {
+  display: none;
+  overflow: hidden;
+  margin: 0 6px;
+  padding: 0;
+  box-shadow: 0px 2px 4px #e0e0e0;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+}
+
 .ez-form-inline {
   display: table;
   border-collapse: collapse;
@@ -576,30 +599,19 @@ body {
   padding: 1px;
 }
 
-.ez-select {
+.ez-form-sm .ez-form-select-body {
+  margin: 0 3px;
+}
+
+.ez-tree {
+  font-size: 14px;
+  line-height: 34px;
+}
+
+.ez-tree-ul {
+  list-style-type: none;
   margin: 0;
-  padding: 0;
-  border: 1px solid #e0e0e0;
-  position: relative;
-}
-
-.ez-select-head {
-  min-height: 34px;
-  vertical-align: middle;
-}
-
-.ez-select-body {
-  display: none;
-  opacity: 0.3;
-  overflow: hidden;
-  margin: 0 6px;
-  padding: 0;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
+  padding: 0 12px;
 }
 
 .ez-btn {
