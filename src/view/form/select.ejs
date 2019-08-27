@@ -4,20 +4,25 @@
 <div id="tree" class="ez-tree">
 
 </div>
-<script>
-    $('#tree').ez_tree({
-        data: [
-            {key: '营业执照复印件', value: '1'},
-            {key: '法人身份证复印件', value: '2', child: [
-                    {key: '21', value: '21'},
-                    {key: '22', value: '22'},
-                    {key: '23', value: '23'},
-                ]},
-            {key: '经办人手持营业执照及身份证', value: '3'},
-            {key: '中呼服务协议', value: '4'},
-        ],
-    });
-</script>
+<!--<script>-->
+<!--    $('#tree').ez_tree({-->
+<!--        data: [-->
+<!--            {key: '营业执照复印件', value: '1'},-->
+<!--            {key: '法人身份证复印件', value: '2', child: [-->
+<!--                    {key: '21', value: '21'},-->
+<!--                    {key: '22', value: '22'},-->
+<!--                    {key: '23', value: '23'},-->
+<!--                ]},-->
+<!--            {key: '经办人手持营业执照及身份证', value: '3'},-->
+<!--            {key: '中呼服务协议', value: '4'},-->
+<!--        ],-->
+<!--        type: 'checkbox',-->
+<!--        selected: {-->
+<!--            21: {key: '21', value: '21'},-->
+<!--            3: {key: '经办人手持营业执照及身份证', value: '3'},-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
 
 <h2>一行</h2>
 <div class="ez-form ez-form-inline ez-form-full">
@@ -38,13 +43,12 @@
         data: [
             {key: '营业执照复印件', value: '1'},
             {key: '法人身份证复印件', value: '2'},
-            {key: '经办人手持营业执照及身份证', value: '3', selected: true},
+            {key: '经办人手持营业执照及身份证', value: '3'},
             {key: '中呼服务协议', value: '4'},
         ],
-        selected: [
-            {key: '21', value: '21'},
-            {key: '经办人手持营业执照及身份证', value: '3'},
-        ]
+        selected: {
+            3: {key: '经办人手持营业执照及身份证', value: '3'},
+        }
     }).click()
     $('.ez-form-select').eq(1).ez_form_select({
         data: [

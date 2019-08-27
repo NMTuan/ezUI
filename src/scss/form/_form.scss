@@ -80,6 +80,13 @@
         border-radius: 3px;
         padding: 3px;
         white-space: nowrap;
+        &-remove {
+            color: color('grey', 'base');
+            &:hover {
+                cursor: pointer;
+                color: color('red', 'd2');
+            }
+        }
     }
 
     &-select {

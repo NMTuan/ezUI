@@ -497,6 +497,15 @@ body {
   white-space: nowrap;
 }
 
+.ez-form-label-remove {
+  color: #9e9e9e;
+}
+
+.ez-form-label-remove:hover {
+  cursor: pointer;
+  color: #D32F2F;
+}
+
 .ez-form-select {
   position: relative;
 }

@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a316a582.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a78903e2.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14049,73 +14049,97 @@ var Tree = require('../tree/tree');
 var form = {
   defaults: {
     icon: '.ez-form-select-icon',
+    //下拉的图标按钮
     item: '.ez-form-select-item',
+    //整个select
     head: '.ez-form-select-head',
+    //下拉显示框区域
     body: '.ez-form-select-body',
+    //下拉菜单
+    field: '.ez-form-select-field',
+    //隐藏域
+    removeBtn: '.ez-form-label-remove',
+    //移除按钮
     dir: 3,
     //1上 2右 3下 4左
     data: [],
-    selected: [],
+    //数据集
+    selected: {},
+    //选中数据  {value: {key: value}, }
     selected_min: 0,
     //最小选择数量, 0为不限
     selected_max: 1 //最大选择数量, 0为不限
 
   },
   Select: function Select(els, _params) {
+    var s = this;
     var params = $.extend(true, {}, form.defaults, _params);
     $.each(els, function () {
-      var select = $(this);
-      form.init(select, params);
-      form.events(select, params);
-    });
+      var el = $(this);
+      form.init.call(s, el, params);
+      form.events.call(s, el, params);
+    }); // $.log(s);
   },
-  init: function init(select, params) {
-    var icon = select.find(params.icon);
-    var head = select.find(params.head);
-    var body = select.find(params.body); //selected
-
-    form.renderVal(select, params); //value
-
-    new Tree(body, {
+  init: function init(el, params) {
+    var s = this;
+    var body = el.find(params.body);
+    this.tree = new Tree(body, {
       data: params.data,
       selected: params.selected,
-      type: params.selected_max === 1 ? 'radio' : 'checkbox'
+      type: params.selected_max === 1 ? 'radio' : 'checkbox',
+      selectChange: function selectChange(input, tree_el) {
+        $.log('change');
+        var selected = this.params.selected;
+        params.selected = selected;
+        form.renderVal.call(s, el, params);
+      }
     });
   },
-  renderVal: function renderVal(select, params) {
-    var head = select.find(params.head);
+  renderVal: function renderVal(el, params) {
+    var head = el.find(params.head);
     head.html('');
+    var field = el.find(params.field);
+    field.html('');
 
-    if (params.selected.length === 0) {
+    if ($.isEmptyObject(params.selected)) {
       return;
     }
 
     var label = $('<span>').addClass('ez-form-label');
-    var removeBtn = $('<i>').addClass('remixicon-close-circle-fill');
+    var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
     $.each(params.selected, function (i, item) {
-      head.append(label.clone().html(item.key + ' ').append(removeBtn.clone(true)));
+      head.append(label.clone().html(item.key + ' ').append(removeBtn.clone().data('value', item.value)));
       head.append(' ');
+      field.append('<option value="' + item.value + '">' + item.key + '</option>');
     });
   },
-  events: function events(select, params) {
-    var icon = select.find(params.icon);
-    var head = select.find(params.head);
-    var body = select.find(params.body);
-    select.on('click', function () {
-      form.show(select, params);
+  events: function events(el, params) {
+    var s = this;
+    var icon = el.find(params.icon);
+    var head = el.find(params.head);
+    var body = el.find(params.body);
+    el.on('click', function () {
+      form.toggle(el, params);
     });
     head.on('click', function (e) {
       e.stopPropagation();
-      form.toggle(select, params);
+      form.toggle(el, params);
+    });
+    head.on('click', params.removeBtn, function (e) {
+      e.stopPropagation();
+      s.tree.unSelected($(this).data('value'));
+    });
+    body.on('click', function (e) {
+      e.stopPropagation();
     });
     icon.on('click', function (e) {
       e.stopPropagation();
-      form.toggle(select, params);
+      form.toggle(el, params);
     }); //任意位置, 关闭
 
     $(document).on('click', function (e) {
-      if (e.target != select[0] && $(e.target).closest(select).length == 0 && body.css('display') != 'none') {
-        form.hide(select, params);
+      if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
+        form.hide(el, params);
       }
     });
   },
@@ -14139,17 +14163,17 @@ var form = {
     $('body').css('overflow', ov);
     return rs;
   },
-  show: function show(select, params) {
+  show: function show(el, params) {
     // var item = select.find(params.item);
-    var height = select.height();
-    var body = select.find(params.body);
+    var height = el.height();
+    var body = el.find(params.body);
 
     if (body.css('display') != 'none') {
       return;
     }
 
     body.show();
-    var dir = form.showWhere(body, select); //向上显示
+    var dir = form.showWhere(body, el); //向上显示
 
     if (params.dir === 1 && dir.top === true || dir.bottom === false && dir.top === true) {
       body.css('bottom', height);
@@ -14157,14 +14181,14 @@ var form = {
       body.css('top', height);
     }
   },
-  hide: function hide(select, params) {
-    select.find(params.body).css({
+  hide: function hide(el, params) {
+    el.find(params.body).css({
       top: '',
       bottom: ''
     }).hide();
   },
-  toggle: function toggle(select, params) {
-    var body = select.find(params.body);
+  toggle: function toggle(el, params) {
+    var body = el.find(params.body);
 
     if (body.css('display') === 'none') {
       form.show.apply(this, arguments);
@@ -15477,47 +15501,77 @@ var tree = {
     li: 'ez-tree-li',
     item: 'ez-tree-item',
     name: '',
+    //input的name, 不指定则随机
     type: '',
-    //radio, checkbox
+    //前置input框, radio, checkbox, 留空则没前置
     data: [],
-    selected: []
+    //数据
+    selected: {},
+    //选中数据 {value: {key, value}, }
+    beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
+    },
+    choose: function choose(input, el) {
+      //选中后执行
+      $.log('choose');
+    },
+    selectChange: function selectChange(input, el) {
+      //selected数据改变时执行
+      $.log('change');
+    }
   },
-  Tree: function Tree(els, _params) {
-    var params = $.extend(true, {}, tree.defaults, {
+  Tree: function Tree(els, params) {
+    var s = this;
+    s.els = els;
+    s.params = $.extend(true, {}, tree.defaults, {
       name: 'tree' + random(100)
-    }, _params); // $.log(params);
-
+    }, params);
     $.each(els, function () {
       var el = $(this);
-      tree.init(el, params);
+      tree.init.call(s, el);
+    });
+
+    s.unSelected = function (value) {
+      tree.unSelected.call(s, value);
+    };
+
+    this.params.selectChange.call(this);
+  },
+  //初始化
+  init: function init(el) {
+    var html = tree.render(this.params);
+    el.html(html);
+    tree.events.apply(this, arguments);
+  },
+  //事件
+  events: function events(el) {
+    var s = this;
+    var params = s.params;
+    var ipt = el.find('input');
+    ipt.on('click', function () {
+      //插入事件, 若返回false, 则返回
+      var before = params.beforeChoose($(this), el);
+
+      if (before === false) {
+        return false;
+      }
+
+      var status = $(this).prop('checked');
+      var value = $(this).data('value');
+
+      if (status) {
+        //选中了
+        tree.selected.call(s, value, $(this).data('key'));
+      } else {
+        //取消了
+        tree.unSelected.call(s, value);
+      } //插入事件
+
+
+      params.choose.call(s, $(this), el);
     });
   },
-  ul: function ul(params) {
-    return $('<ul>').addClass(params.ul);
-  },
-  li: function li(params, data) {
-    var li = $('<li>').addClass(params.li);
-    var item = $('<div>').addClass(params.item);
-    var html = data.key;
-
-    if (params.type === 'radio') {
-      html = '<label><input type="radio" name="' + params.name + '" /> ' + data.key + '</label>';
-    }
-
-    if (params.type === 'checkbox') {
-      html = '<label><input type="checkbox" name="' + params.name + '" /> ' + data.key + '</label>';
-    }
-
-    item.html(html);
-    li.append(item);
-    return li;
-  },
-  init: function init(el, params) {
-    var html = tree.render(el, params);
-    window.html = html;
-    el.html(html);
-  },
-  render: function render(el, params) {
+  //渲染
+  render: function render(params) {
     var dom = tree.ul(params);
 
     var _render = function _render(data, html) {
@@ -15537,6 +15591,51 @@ var tree = {
     _render(params.data, dom);
 
     return dom;
+  },
+  ul: function ul(params) {
+    return $('<ul>').addClass(params.ul);
+  },
+  li: function li(params, data) {
+    var li = $('<li>').addClass(params.li);
+    var item = $('<div>').addClass(params.item);
+    var html = data.key;
+    var checked = params.type && params.selected[data.value] ? 'checked="checked"' : '';
+
+    if (params.type === 'radio') {
+      html = '<label><input type="radio" ' + checked + ' name="' + params.name + '" data-value="' + data.value + '" data-key="' + data.key + '" /> ' + data.key + '</label>';
+    }
+
+    if (params.type === 'checkbox') {
+      html = '<label><input type="checkbox" ' + checked + ' name="' + params.name + '" data-value="' + data.value + '" data-key="' + data.key + '" /> ' + data.key + '</label>';
+    }
+
+    item.html(html);
+    li.append(item);
+    return li;
+  },
+  //方法
+  selected: function selected(value, key) {
+    var s = this;
+    var params = s.params;
+    params.selected[value] = {
+      value: value,
+      key: key
+    };
+    params.selectChange.call(s);
+  },
+  unSelected: function unSelected(value) {
+    var s = this;
+    var els = s.els;
+    var params = s.params;
+
+    if (params.selected[value]) {
+      delete params.selected[value];
+      $.each(els, function () {
+        var el = $(this);
+        tree.init.call(s, el);
+      });
+      params.selectChange.call(s);
+    }
   }
 };
 $.fn.extend({

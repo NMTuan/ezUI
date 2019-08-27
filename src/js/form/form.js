@@ -1,70 +1,88 @@
 var Tree = require('../tree/tree');
 var form = {
     defaults: {
-        icon: '.ez-form-select-icon',
-        item: '.ez-form-select-item',
-        head: '.ez-form-select-head',
-        body: '.ez-form-select-body',
+        icon: '.ez-form-select-icon',       //下拉的图标按钮
+        item: '.ez-form-select-item',       //整个select
+        head: '.ez-form-select-head',       //下拉显示框区域
+        body: '.ez-form-select-body',       //下拉菜单
+        field: '.ez-form-select-field',     //隐藏域
+        removeBtn: '.ez-form-label-remove', //移除按钮
+
         dir: 3, //1上 2右 3下 4左
-        data: [],
-        selected: [],
+        data: [],       //数据集
+        selected: {},   //选中数据  {value: {key: value}, }
         selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
     },
     Select: function (els, _params) {
+        var s = this;
         var params = $.extend(true, {}, form.defaults, _params);
         $.each(els, function () {
-            var select = $(this);
-            form.init(select, params);
-            form.events(select, params);
+            var el = $(this);
+            form.init.call(s, el, params);
+            form.events.call(s, el, params);
         });
+        // $.log(s);
     },
-    init: function (select, params) {
-        var icon = select.find(params.icon);
-        var head = select.find(params.head);
-        var body = select.find(params.body);
-        //selected
-        form.renderVal(select, params);
-        //value
-        new Tree(body, {
+    init: function (el, params) {
+        var s = this;
+        var body = el.find(params.body);
+        this.tree = new Tree(body, {
             data: params.data,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
+            selectChange: function(input, tree_el){
+                $.log('change');
+                var selected = this.params.selected;
+                params.selected = selected;
+                form.renderVal.call(s, el, params);
+            }
         });
     },
-    renderVal: function (select, params) {
-        var head = select.find(params.head);
+    renderVal: function (el, params) {
+        var head = el.find(params.head);
         head.html('');
-        if (params.selected.length === 0) {
+        var field = el.find(params.field);
+        field.html('');
+        if ($.isEmptyObject(params.selected)) {
             return;
         }
         var label = $('<span>').addClass('ez-form-label');
-        var removeBtn = $('<i>').addClass('remixicon-close-circle-fill');
+        var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
         $.each(params.selected, function (i, item) {
-            head.append(label.clone().html(item.key + ' ').append(removeBtn.clone(true)));
+            head.append(label.clone().html(item.key + ' ').append(removeBtn.clone().data('value', item.value)));
             head.append(' ');
+            field.append('<option value="' + item.value + '">' + item.key + '</option>')
         });
     },
-    events: function (select, params) {
-        var icon = select.find(params.icon);
-        var head = select.find(params.head);
-        var body = select.find(params.body);
+    events: function (el, params) {
+        var s = this;
+        var icon = el.find(params.icon);
+        var head = el.find(params.head);
+        var body = el.find(params.body);
 
-        select.on('click', function () {
-            form.show(select, params);
+        el.on('click', function () {
+            form.toggle(el, params);
         });
         head.on('click', function (e) {
             e.stopPropagation();
-            form.toggle(select, params);
+            form.toggle(el, params);
+        });
+        head.on('click', params.removeBtn, function (e) {
+            e.stopPropagation();
+            s.tree.unSelected($(this).data('value'));
+        });
+        body.on('click', function (e) {
+            e.stopPropagation();
         });
         icon.on('click', function (e) {
             e.stopPropagation();
-            form.toggle(select, params);
+            form.toggle(el, params);
         });
         //任意位置, 关闭
         $(document).on('click', function (e) {
-            if (e.target != select[0] && $(e.target).closest(select).length == 0 && body.css('display') != 'none') {
-                form.hide(select, params);
+            if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
+                form.hide(el, params);
             }
         });
     },
@@ -84,15 +102,15 @@ var form = {
         $('body').css('overflow', ov);
         return rs;
     },
-    show: function (select, params) {
+    show: function (el, params) {
         // var item = select.find(params.item);
-        var height = select.height();
-        var body = select.find(params.body);
+        var height = el.height();
+        var body = el.find(params.body);
         if (body.css('display') != 'none') {
             return;
         }
         body.show();
-        var dir = form.showWhere(body, select);
+        var dir = form.showWhere(body, el);
         //向上显示
         if ((params.dir === 1 && dir.top === true) || (dir.bottom === false && dir.top === true)) {
             body.css('bottom', height);
@@ -100,14 +118,14 @@ var form = {
             body.css('top', height);
         }
     },
-    hide: function (select, params) {
-        select.find(params.body).css({
+    hide: function (el, params) {
+        el.find(params.body).css({
             top: '',
             bottom: ''
         }).hide();
     },
-    toggle: function (select, params) {
-        var body = select.find(params.body);
+    toggle: function (el, params) {
+        var body = el.find(params.body);
         if (body.css('display') === 'none') {
             form.show.apply(this, arguments);
         } else {
