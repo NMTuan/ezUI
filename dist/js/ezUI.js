@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_72b228d.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a316a582.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14049,12 +14049,17 @@ var Tree = require('../tree/tree');
 var form = {
   defaults: {
     icon: '.ez-form-select-icon',
+    item: '.ez-form-select-item',
     head: '.ez-form-select-head',
     body: '.ez-form-select-body',
     dir: 3,
     //1上 2右 3下 4左
     data: [],
-    selected: []
+    selected: [],
+    selected_min: 0,
+    //最小选择数量, 0为不限
+    selected_max: 1 //最大选择数量, 0为不限
+
   },
   Select: function Select(els, _params) {
     var params = $.extend(true, {}, form.defaults, _params);
@@ -14067,11 +14072,29 @@ var form = {
   init: function init(select, params) {
     var icon = select.find(params.icon);
     var head = select.find(params.head);
-    var body = select.find(params.body);
+    var body = select.find(params.body); //selected
+
+    form.renderVal(select, params); //value
+
     new Tree(body, {
       data: params.data,
-      type: 'radio',
-      name: 'a1'
+      selected: params.selected,
+      type: params.selected_max === 1 ? 'radio' : 'checkbox'
+    });
+  },
+  renderVal: function renderVal(select, params) {
+    var head = select.find(params.head);
+    head.html('');
+
+    if (params.selected.length === 0) {
+      return;
+    }
+
+    var label = $('<span>').addClass('ez-form-label');
+    var removeBtn = $('<i>').addClass('remixicon-close-circle-fill');
+    $.each(params.selected, function (i, item) {
+      head.append(label.clone().html(item.key + ' ').append(removeBtn.clone(true)));
+      head.append(' ');
     });
   },
   events: function events(select, params) {
@@ -14081,11 +14104,13 @@ var form = {
     select.on('click', function () {
       form.show(select, params);
     });
-    head.on('click', function () {
-      form.show(select, params);
+    head.on('click', function (e) {
+      e.stopPropagation();
+      form.toggle(select, params);
     });
-    icon.on('click', function () {
-      form.show(select, params);
+    icon.on('click', function (e) {
+      e.stopPropagation();
+      form.toggle(select, params);
     }); //任意位置, 关闭
 
     $(document).on('click', function (e) {
@@ -14105,16 +14130,18 @@ var form = {
 
     rs.top = ref.offset().top > el.height(); // $.log(ref.offset().top , el.height())
 
-    rs.right = ref.offset().left + ref.width() > el.width(); // $.log(ref.offset().left + ref.width() , el.width())
+    rs.right = ref.offset().left + ref.width() > el.width(); //未校验正确性
+    // $.log(ref.offset().left + ref.width() , el.width())
 
-    rs.left = ref.offset().left > el.width(); // $.log(ref.offset().left , el.width())
+    rs.left = ref.offset().left > el.width(); //未校验正确性
+    // $.log(ref.offset().left , el.width())
 
     $('body').css('overflow', ov);
     return rs;
   },
   show: function show(select, params) {
-    var head = select.find(params.head);
-    var headHeight = head.height();
+    // var item = select.find(params.item);
+    var height = select.height();
     var body = select.find(params.body);
 
     if (body.css('display') != 'none') {
@@ -14125,11 +14152,25 @@ var form = {
     var dir = form.showWhere(body, select); //向上显示
 
     if (params.dir === 1 && dir.top === true || dir.bottom === false && dir.top === true) {
-      body.css('bottom', headHeight + 4);
+      body.css('bottom', height);
+    } else {
+      body.css('top', height);
     }
   },
   hide: function hide(select, params) {
-    select.find(params.body).hide();
+    select.find(params.body).css({
+      top: '',
+      bottom: ''
+    }).hide();
+  },
+  toggle: function toggle(select, params) {
+    var body = select.find(params.body);
+
+    if (body.css('display') === 'none') {
+      form.show.apply(this, arguments);
+    } else {
+      form.hide.apply(this, arguments);
+    }
   }
 };
 $.fn.extend({
@@ -15436,13 +15477,16 @@ var tree = {
     li: 'ez-tree-li',
     item: 'ez-tree-item',
     name: '',
-    type: '' //radio, checkbox
-
+    type: '',
+    //radio, checkbox
+    data: [],
+    selected: []
   },
   Tree: function Tree(els, _params) {
     var params = $.extend(true, {}, tree.defaults, {
       name: 'tree' + random(100)
-    }, _params);
+    }, _params); // $.log(params);
+
     $.each(els, function () {
       var el = $(this);
       tree.init(el, params);
@@ -15454,14 +15498,17 @@ var tree = {
   li: function li(params, data) {
     var li = $('<li>').addClass(params.li);
     var item = $('<div>').addClass(params.item);
+    var html = data.key;
 
     if (params.type === 'radio') {
-      var html = '<label><input type="radio" name="' + params.name + '" /> ' + data.key + '</label>';
-      item.prepend(html);
-    } else {
-      item.html(data.key);
+      html = '<label><input type="radio" name="' + params.name + '" /> ' + data.key + '</label>';
     }
 
+    if (params.type === 'checkbox') {
+      html = '<label><input type="checkbox" name="' + params.name + '" /> ' + data.key + '</label>';
+    }
+
+    item.html(html);
     li.append(item);
     return li;
   },

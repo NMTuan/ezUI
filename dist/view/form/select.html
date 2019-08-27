@@ -18,6 +18,9 @@
 </head>
 
 <body>
+    <div id="tree" class="ez-tree">
+    </div>
+    <script>$("#tree").ez_tree({data:[{key:"营业执照复印件",value:"1"},{key:"法人身份证复印件",value:"2",child:[{key:"21",value:"21"},{key:"22",value:"22"},{key:"23",value:"23"}]},{key:"经办人手持营业执照及身份证",value:"3"},{key:"中呼服务协议",value:"4"}]})</script>
     <h2>一行</h2>
     <div class="ez-form ez-form-inline ez-form-full">
         <form action="">
@@ -49,28 +52,8 @@
                     <div class="ez-form-select ez-form-flex">
                         <div class="ez-form-control">
                             <dl class="ez-form-select-item">
-                                <dt class="ez-form-select-head">
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                </dt>
-                                <dd class="ez-form-select-body">
-                                    <ul class="ez-tree">
-                                        <li>营业执照复印件或照片</li>
-                                        <li>法人身份证复印件或照片(正反面)</li>
-                                        <li>经办人手持</li>
-                                        <li>目的码承诺书</li>
-                                    </ul>
-                                </dd>
+                                <dt class="ez-form-select-head"></dt>
+                                <dd class="ez-form-select-body"></dd>
                             </dl>
                         </div>
                         <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
@@ -120,28 +103,8 @@
                     <div class="ez-form-select ez-form-flex">
                         <div class="ez-form-control">
                             <dl class="ez-form-select-item">
-                                <dt class="ez-form-select-head">
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                                    <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                                    <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                                </dt>
-                                <dd class="ez-form-select-body">
-                                    <ul class="ez-tree">
-                                        <li>营业执照复印件或照片</li>
-                                        <li>法人身份证复印件或照片(正反面)</li>
-                                        <li>经办人手持</li>
-                                        <li>目的码承诺书</li>
-                                    </ul>
-                                </dd>
+                                <dt class="ez-form-select-head"></dt>
+                                <dd class="ez-form-select-body"></dd>
                             </dl>
                         </div>
                         <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
@@ -161,10 +124,7 @@
         </form>
     </div>
     <hr>
-    <div id="tree" class="ez-tree">
-    </div>
-    <script>$("#tree").ez_tree({data:[{key:"营业执照复印件",value:"1"},{key:"法人身份证复印件",value:"2",child:[{key:"21",value:"21"},{key:"22",value:"22"},{key:"23",value:"23"}]},{key:"经办人手持营业执照及身份证",value:"3",selected:!0},{key:"中呼服务协议",value:"4"}]})</script>
-    <script>$(".ez-form-sm").find(".ez-btn").addClass("ez-btn-sm"),$(".ez-form-select").eq(0).ez_form_select({data:[{key:"营业执照复印件",value:"1"},{key:"法人身份证复印件",value:"2"},{key:"经办人手持营业执照及身份证",value:"3",selected:!0},{key:"中呼服务协议",value:"4"}]}).click(),$(".ez-form-select").eq(1).ez_form_select({data:[{key:"男",value:"1"},{key:"女",value:"2"},{key:"保密",value:"3"},{key:"未知",value:"4"},{key:"不限",value:"5"}]})</script>
+    <script>$(".ez-form-sm").find(".ez-btn").addClass("ez-btn-sm"),$(".ez-form-select").eq(0).ez_form_select({selected_max:0,data:[{key:"营业执照复印件",value:"1"},{key:"法人身份证复印件",value:"2"},{key:"经办人手持营业执照及身份证",value:"3",selected:!0},{key:"中呼服务协议",value:"4"}],selected:[{key:"21",value:"21"},{key:"经办人手持营业执照及身份证",value:"3"}]}).click(),$(".ez-form-select").eq(1).ez_form_select({data:[{key:"男",value:"1"},{key:"女",value:"2"},{key:"保密",value:"3"},{key:"未知",value:"4"},{key:"不限",value:"5"}]})</script>
 </body>
 
 </html>

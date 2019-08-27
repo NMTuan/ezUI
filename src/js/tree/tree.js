@@ -6,9 +6,12 @@ var tree = {
         item: 'ez-tree-item',
         name: '',
         type: '',   //radio, checkbox
+        data: [],
+        selected: [],
     },
     Tree: function (els, _params) {
         var params = $.extend(true, {}, tree.defaults, {name: 'tree' + random(100)}, _params);
+        // $.log(params);
         $.each(els, function () {
             var el = $(this);
             tree.init(el, params);
@@ -20,12 +23,14 @@ var tree = {
     li: function (params, data) {
         var li = $('<li>').addClass(params.li);
         var item = $('<div>').addClass(params.item);
+        var html = data.key;
         if(params.type === 'radio'){
-            var html = '<label><input type="radio" name="'+ params.name +'" /> '+ data.key +'</label>'
-            item.prepend(html);
-        } else {
-            item.html(data.key);
+            html = '<label><input type="radio" name="'+ params.name +'" /> '+ data.key +'</label>'
         }
+        if(params.type === 'checkbox') {
+            html = '<label><input type="checkbox" name="'+ params.name +'" /> '+ data.key +'</label>'
+        }
+        item.html(html);
         li.append(item);
         return li;
     },
