@@ -14,32 +14,34 @@ var form = {
         selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
     },
-    Select: function (els, _params) {
+    Select: function (els, params) {
         var s = this;
-        var params = $.extend(true, {}, form.defaults, _params);
+        s.params = $.extend(true, {}, form.defaults, params);
         $.each(els, function () {
             var el = $(this);
-            form.init.call(s, el, params);
-            form.events.call(s, el, params);
+            form.init.call(s, el);
+            form.events.call(s, el);
         });
         // $.log(s);
     },
-    init: function (el, params) {
+    init: function (el) {
         var s = this;
+        var params = s.params;
         var body = el.find(params.body);
         this.tree = new Tree(body, {
             data: params.data,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
-            selectChange: function(input, tree_el){
+            selectChange: function () {
                 $.log('change');
-                var selected = this.params.selected;
-                params.selected = selected;
-                form.renderVal.call(s, el, params);
+                params.selected = this.params.selected;
+                form.renderVal.call(s, el);
             }
         });
     },
-    renderVal: function (el, params) {
+    renderVal: function (el) {
+        var s = this;
+        var params = s.params;
         var head = el.find(params.head);
         head.html('');
         var field = el.find(params.field);
@@ -55,18 +57,19 @@ var form = {
             field.append('<option value="' + item.value + '">' + item.key + '</option>')
         });
     },
-    events: function (el, params) {
+    events: function (el) {
         var s = this;
+        var params = s.params;
         var icon = el.find(params.icon);
         var head = el.find(params.head);
         var body = el.find(params.body);
 
         el.on('click', function () {
-            form.toggle(el, params);
+            form.toggle.call(s, el);
         });
         head.on('click', function (e) {
             e.stopPropagation();
-            form.toggle(el, params);
+            form.toggle.call(s, el);
         });
         head.on('click', params.removeBtn, function (e) {
             e.stopPropagation();
@@ -77,12 +80,12 @@ var form = {
         });
         icon.on('click', function (e) {
             e.stopPropagation();
-            form.toggle(el, params);
+            form.toggle.call(s, el);
         });
         //任意位置, 关闭
         $(document).on('click', function (e) {
             if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
-                form.hide(el, params);
+                form.hide.call(s, el);
             }
         });
     },
@@ -102,11 +105,12 @@ var form = {
         $('body').css('overflow', ov);
         return rs;
     },
-    show: function (el, params) {
-        // var item = select.find(params.item);
+    show: function (el) {
+        var s = this;
+        var params = s.params;
         var height = el.height();
         var body = el.find(params.body);
-        if (body.css('display') != 'none') {
+        if (body.css('display') !== 'none') {
             return;
         }
         body.show();
@@ -118,14 +122,14 @@ var form = {
             body.css('top', height);
         }
     },
-    hide: function (el, params) {
-        el.find(params.body).css({
+    hide: function (el) {
+        el.find(this.params.body).css({
             top: '',
             bottom: ''
         }).hide();
     },
-    toggle: function (el, params) {
-        var body = el.find(params.body);
+    toggle: function (el) {
+        var body = el.find(this.params.body);
         if (body.css('display') === 'none') {
             form.show.apply(this, arguments);
         } else {

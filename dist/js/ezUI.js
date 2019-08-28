@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a78903e2.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a659b3ee.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14071,31 +14071,33 @@ var form = {
     selected_max: 1 //最大选择数量, 0为不限
 
   },
-  Select: function Select(els, _params) {
+  Select: function Select(els, params) {
     var s = this;
-    var params = $.extend(true, {}, form.defaults, _params);
+    s.params = $.extend(true, {}, form.defaults, params);
     $.each(els, function () {
       var el = $(this);
-      form.init.call(s, el, params);
-      form.events.call(s, el, params);
+      form.init.call(s, el);
+      form.events.call(s, el);
     }); // $.log(s);
   },
-  init: function init(el, params) {
+  init: function init(el) {
     var s = this;
+    var params = s.params;
     var body = el.find(params.body);
     this.tree = new Tree(body, {
       data: params.data,
       selected: params.selected,
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
-      selectChange: function selectChange(input, tree_el) {
+      selectChange: function selectChange() {
         $.log('change');
-        var selected = this.params.selected;
-        params.selected = selected;
-        form.renderVal.call(s, el, params);
+        params.selected = this.params.selected;
+        form.renderVal.call(s, el);
       }
     });
   },
-  renderVal: function renderVal(el, params) {
+  renderVal: function renderVal(el) {
+    var s = this;
+    var params = s.params;
     var head = el.find(params.head);
     head.html('');
     var field = el.find(params.field);
@@ -14113,17 +14115,18 @@ var form = {
       field.append('<option value="' + item.value + '">' + item.key + '</option>');
     });
   },
-  events: function events(el, params) {
+  events: function events(el) {
     var s = this;
+    var params = s.params;
     var icon = el.find(params.icon);
     var head = el.find(params.head);
     var body = el.find(params.body);
     el.on('click', function () {
-      form.toggle(el, params);
+      form.toggle.call(s, el);
     });
     head.on('click', function (e) {
       e.stopPropagation();
-      form.toggle(el, params);
+      form.toggle.call(s, el);
     });
     head.on('click', params.removeBtn, function (e) {
       e.stopPropagation();
@@ -14134,12 +14137,12 @@ var form = {
     });
     icon.on('click', function (e) {
       e.stopPropagation();
-      form.toggle(el, params);
+      form.toggle.call(s, el);
     }); //任意位置, 关闭
 
     $(document).on('click', function (e) {
       if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
-        form.hide(el, params);
+        form.hide.call(s, el);
       }
     });
   },
@@ -14163,12 +14166,13 @@ var form = {
     $('body').css('overflow', ov);
     return rs;
   },
-  show: function show(el, params) {
-    // var item = select.find(params.item);
+  show: function show(el) {
+    var s = this;
+    var params = s.params;
     var height = el.height();
     var body = el.find(params.body);
 
-    if (body.css('display') != 'none') {
+    if (body.css('display') !== 'none') {
       return;
     }
 
@@ -14181,14 +14185,14 @@ var form = {
       body.css('top', height);
     }
   },
-  hide: function hide(el, params) {
-    el.find(params.body).css({
+  hide: function hide(el) {
+    el.find(this.params.body).css({
       top: '',
       bottom: ''
     }).hide();
   },
-  toggle: function toggle(el, params) {
-    var body = el.find(params.body);
+  toggle: function toggle(el) {
+    var body = el.find(this.params.body);
 
     if (body.css('display') === 'none') {
       form.show.apply(this, arguments);
