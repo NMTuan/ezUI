@@ -20,7 +20,7 @@
 <body>
     <div id="tree" class="ez-tree">
     </div>
-    <script>$("#tree").ez_tree({data:[{key:"营业执照复印件",value:"1"},{key:"法人身份证复印件",value:"2",child:[{key:"21",value:"21"},{key:"22",value:"22"},{key:"23",value:"23"}]},{key:"经办人手持营业执照及身份证",value:"3"},{key:"中呼服务协议",value:"4"}],type:"checkbox",selected:{21:{key:"21",value:"21"},3:{key:"经办人手持营业执照及身份证",value:"3"}}})</script>
+    <script>$("#tree").ez_tree({data:[{id:1,pid:0,title:"营业执照复印件"},{id:2,pid:0,title:"法人身份证复印件"},{id:3,pid:0,selected:!0,title:"经办人手持营业执照及身份证"},{id:4,pid:0,title:"中呼服务协议"},{id:5,pid:2,title:"22"},{id:6,pid:2,title:"23"},{id:7,pid:2,selected:!0,title:"24"}],type:"checkbox"})</script>
     <h2>一行</h2>
     <div class="ez-form ez-form-inline ez-form-full">
         <form action="">
@@ -124,30 +124,7 @@
         </form>
     </div>
     <hr>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <script>$(".ez-form-sm").find(".ez-btn").addClass("ez-btn-sm"),$(".ez-form-select").eq(0).ez_form_select({selected_max:0,data:[{id:1,pid:0,title:"营业执照复印件"},{id:2,pid:0,title:"法人身份证复印件"},{id:3,pid:0,selected:!0,title:"经办人手持营业执照及身份证"},{id:4,pid:0,title:"中呼服务协议"}],selected:[3]}).click(),$(".ez-form-select").eq(1).ez_form_select({data:[{id:1,pid:0,title:"男"},{id:2,pid:0,title:"女"},{id:3,pid:0,title:"保密"},{id:4,pid:0,title:"未知"},{id:5,pid:0,title:"不限"}]})</script>
 </body>
 
 </html>

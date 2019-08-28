@@ -7,14 +7,13 @@ var tree = {
         name: '',   //input的name, 不指定则随机
         type: '',   //前置input框, radio, checkbox, 留空则没前置
         data: [],   //数据
-        selected: {},   //选中数据 {value: {key, value}, }
         beforeChoose: function (input, el) {    //选中事件前执行, 返回false则不改变input值
         },
         choose: function (input, el) {  //选中后执行
-            $.log('choose');
+            // $.log('choose');
         },
-        selectChange: function (input, el) {   //selected数据改变时执行
-            $.log('change');
+        dataChange: function () {   //selected数据改变时执行
+            // $.log('change');
         }
     },
     Tree: function (els, params) {
@@ -25,16 +24,16 @@ var tree = {
             var el = $(this);
             tree.init.call(s, el);
         });
-        s.unSelected = function (value) {
-            tree.unSelected.call(s, value);
+        s.unSelected = function (id) {
+            tree.unSelected.call(s, id);
         };
-        this.params.selectChange.call(this);
+        s.params.dataChange.call(this);
     },
     //初始化
     init: function (el) {
-        var html = tree.render(this.params);
+        var html = tree.render.call(this);
         el.html(html);
-        tree.events.apply(this, arguments);
+        tree.events.call(this, el);
     },
     //事件
     events: function (el) {
@@ -48,11 +47,11 @@ var tree = {
                 return false;
             }
             var status = $(this).prop('checked');
-            var value = $(this).data('value');
-            if(status){ //选中了
-                tree.selected.call(s, value, $(this).data('key'));
+            var id = $(this).data('id');
+            if (status) { //选中了
+                tree.selected.call(s, id);
             } else {    //取消了
-                tree.unSelected.call(s, value);
+                tree.unSelected.call(s, id);
             }
             //插入事件
             params.choose.call(s, $(this), el);
@@ -60,59 +59,89 @@ var tree = {
     },
 
     //渲染
-    render: function (params) {
-        var dom = tree.ul(params);
-        var _render = function (data, html) {
-            $.each(data, function (i, item) {
-                var li = tree.li(params, item);
-                html.append(li);
-                if (item.child && item.child.length > 0) {
-                    var ul = tree.ul(params);
-                    li.append(ul);
-                    _render(item.child, ul);
-                }
-            });
-        };
-        _render(params.data, dom);
-        return dom;
+    ul: function () {
+        return $('<ul>').addClass(this.params.ul);
     },
-    ul: function (params) {
-        return $('<ul>').addClass(params.ul);
-    },
-    li: function (params, data) {
+    li: function (data) {
+        var params = this.params;
         var li = $('<li>').addClass(params.li);
         var item = $('<div>').addClass(params.item);
         var html = data.key;
-        var checked = params.type && params.selected[data.value] ? 'checked="checked"' : '';
+        var checked = data.selected ? 'checked="checked"' : '';
         if (params.type === 'radio') {
-            html = '<label><input type="radio" ' + checked + ' name="' + params.name + '" data-value="' + data.value + '" data-key="'+ data.key +'" /> ' + data.key + '</label>'
+            html = '<label><input type="radio" ' + checked + ' name="' + params.name + '" data-id="' + data.id + '" data-pid="' + data.pid + '" data-title="' + data.title + '" /> ' + data.title + '</label>'
         }
         if (params.type === 'checkbox') {
-            html = '<label><input type="checkbox" ' + checked + ' name="' + params.name + '" data-value="' + data.value + '" data-key="'+ data.key +'" /> ' + data.key + '</label>'
+            html = '<label><input type="checkbox" ' + checked + ' name="' + params.name + '" data-id="' + data.id + '" data-pid="' + data.pid + '" data-title="' + data.title + '" /> ' + data.title + '</label>'
         }
         item.html(html);
         li.append(item);
         return li;
     },
+    //获取节点dom
+    render: function (id) {
+        var s = this;
+        id = id || 0;
+        var child = tree.getChildData.call(this, id);
+        if (child.length === 0) {
+            return;
+        }
+        var dom = tree.ul.call(this);
+        var get = function (data, html) {
+            $.each(data, function (i, item) {
+                var li = tree.li.call(s, item);
+                html.append(li);
+                var child = tree.getChildData.call(s, item.id);
+                if (child.length > 0) {
+                    var ul = tree.ul.call(s);
+                    li.append(ul);
+                    get(child, ul);
+                }
+            })
+        };
+        get(child, dom);
+        return dom;
+    },
+    //获取节点数据
+    getChildData: function (id) {
+        id = id || 0;
+        var childData = [];
+        $.each(this.params.data, function (i, item) {
+            if (item.pid === id) {
+                childData.push(item);
+            }
+        });
+        return childData;
+    },
+    getData: function(id){
+        id = id || 0;
+        var data = {};
+        $.each(this.params.data, function (i, item) {
+            if(item.id === id){
+                data = item;
+                return false;
+            }
+        });
+        return data;
+    },
 
     //方法
-    selected: function(value, key){
+    selected: function (id) {
         var s = this;
         var params = s.params;
-        params.selected[value] = {value: value, key: key};
-        params.selectChange.call(s);
+        var item = tree.getData.call(s, id);
+        if(item.selected !== true){
+            item.selected = true;
+            params.dataChange.call(s);
+        }
     },
-    unSelected: function (value) {
+    unSelected: function (id) {
         var s = this;
-        var els = s.els;
         var params = s.params;
-        if(params.selected[value]){
-            delete params.selected[value];
-            $.each(els, function () {
-                var el = $(this);
-                tree.init.call(s, el);
-            });
-            params.selectChange.call(s);
+        var item = tree.getData.call(s, id);
+        if(item.selected === true){
+            item.selected = false;
+            params.dataChange.call(s);
         }
     },
 };
