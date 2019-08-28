@@ -1,21 +1,66 @@
 <% title = '表单'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
+<div id="tree" class="ez-tree">
+
+</div>
+<!--<script>-->
+<!--    $('#tree').ez_tree({-->
+<!--        data: [-->
+<!--            {key: '营业执照复印件', value: '1'},-->
+<!--            {key: '法人身份证复印件', value: '2', child: [-->
+<!--                    {key: '21', value: '21'},-->
+<!--                    {key: '22', value: '22'},-->
+<!--                    {key: '23', value: '23'},-->
+<!--                ]},-->
+<!--            {key: '经办人手持营业执照及身份证', value: '3'},-->
+<!--            {key: '中呼服务协议', value: '4'},-->
+<!--        ],-->
+<!--        type: 'checkbox',-->
+<!--        selected: {-->
+<!--            21: {key: '21', value: '21'},-->
+<!--            3: {key: '经办人手持营业执照及身份证', value: '3'},-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
 <h2>一行</h2>
 <div class="ez-form ez-form-inline ez-form-full">
-    <%- include('./_select.ejs');%>
+    <%- include('./_select.ejs'); %>
 </div>
 <hr>
 
 <div class="ez-form ez-form-inline ez-form-full ez-form-sm">
-    <%- include('./_select.ejs');%>
+    <%- include('./_select.ejs'); %>
 </div>
 <hr>
 
 
 <script>
-    $('.form-sm').find('.btn').addClass('btn-sm');  //sm模式下按钮也调小
+    $('.ez-form-sm').find('.ez-btn').addClass('ez-btn-sm');  //sm模式下按钮也调小
+    $('.ez-form-select').eq(0).ez_form_select({
+        selected_max: 0,
+        data: [
+            {key: '营业执照复印件', value: '1'},
+            {key: '法人身份证复印件', value: '2'},
+            {key: '经办人手持营业执照及身份证', value: '3'},
+            {key: '中呼服务协议', value: '4'},
+        ],
+        selected: {
+            3: {key: '经办人手持营业执照及身份证', value: '3'},
+        }
+    }).click()
+    $('.ez-form-select').eq(1).ez_form_select({
+        data: [
+            {key: '男', value: '1'},
+            {key: '女', value: '2'},
+            {key: '保密', value: '3'},
+            {key: '未知', value: '4'},
+            {key: '不限', value: '5'},
+        ]
+    });
 </script>
 
 
 <%- include('../compoents/default/_footer.ejs'); %>
+
