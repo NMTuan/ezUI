@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5431b8a2.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8b1a24b0.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14064,10 +14064,9 @@ var form = {
     //1上 2右 3下 4左
     data: [],
     //数据集
-    selected: {},
-    //选中数据  {value: {key: value}, }
-    selected_min: 0,
-    //最小选择数量, 0为不限
+    selected: [],
+    //选中数据  [{id, title}]
+    // selected_min: 0,    //最小选择数量, 0为不限
     selected_max: 1 //最大选择数量, 0为不限
 
   },
@@ -14078,19 +14077,20 @@ var form = {
       var el = $(this);
       form.init.call(s, el);
       form.events.call(s, el);
-    }); // $.log(s);
+    });
   },
   init: function init(el) {
     var s = this;
     var params = s.params;
-    var body = el.find(params.body);
+    var body = el.find(params.body); // form.renderVal.call(s, el);
+
     this.tree = new Tree(body, {
       data: params.data,
       selected: params.selected,
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
-      selectChange: function selectChange() {
-        $.log('change');
-        params.selected = this.params.selected;
+      dataChange: function dataChange() {
+        params.selected = this.getSelected();
+        console.table(params.selected);
         form.renderVal.call(s, el);
       }
     });
@@ -14110,9 +14110,9 @@ var form = {
     var label = $('<span>').addClass('ez-form-label');
     var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
     $.each(params.selected, function (i, item) {
-      head.append(label.clone().html(item.key + ' ').append(removeBtn.clone().data('value', item.value)));
+      head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
       head.append(' ');
-      field.append('<option value="' + item.value + '">' + item.key + '</option>');
+      field.append('<option value="' + item.id + '">' + item.title + '</option>');
     });
   },
   events: function events(el) {
@@ -14130,7 +14130,7 @@ var form = {
     });
     head.on('click', params.removeBtn, function (e) {
       e.stopPropagation();
-      s.tree.unSelected($(this).data('value'));
+      s.tree.unSelected($(this).data('id'));
     });
     body.on('click', function (e) {
       e.stopPropagation();
@@ -15510,6 +15510,8 @@ var tree = {
     //前置input框, radio, checkbox, 留空则没前置
     data: [],
     //数据
+    selected: [],
+    //选中数据
     beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
     },
     choose: function choose(input, el) {//选中后执行
@@ -15525,6 +15527,7 @@ var tree = {
     s.params = $.extend(true, {}, tree.defaults, {
       name: 'tree' + random(100)
     }, params);
+    tree.concat.call(s);
     $.each(els, function () {
       var el = $(this);
       tree.init.call(s, el);
@@ -15532,6 +15535,10 @@ var tree = {
 
     s.unSelected = function (id) {
       tree.unSelected.call(s, id);
+    };
+
+    s.getSelected = function () {
+      return tree.getSelected.call(s);
     };
 
     s.params.dataChange.call(this);
@@ -15542,12 +15549,26 @@ var tree = {
     el.html(html);
     tree.events.call(this, el);
   },
+  //拼合selected到data
+  concat: function concat() {
+    var data = this.params.data;
+    var selected = this.params.selected;
+    $.each(selected, function (i, item) {
+      $.log(i, item);
+      item.selected = true;
+      $.each(data, function (index) {
+        if (this.id == item.id) {
+          $.extend(data[index], item);
+          return false;
+        }
+      });
+    });
+  },
   //事件
   events: function events(el) {
     var s = this;
     var params = s.params;
-    var ipt = el.find('input');
-    ipt.on('click', function () {
+    el.on('click', 'input', function () {
       //插入事件, 若返回false, 则返回
       var before = params.beforeChoose($(this), el);
 
@@ -15571,14 +15592,16 @@ var tree = {
     });
   },
   //渲染
+  //ul的dom构建
   ul: function ul() {
     return $('<ul>').addClass(this.params.ul);
   },
+  //li的dom构建 todo:需要优化
   li: function li(data) {
     var params = this.params;
-    var li = $('<li>').addClass(params.li);
+    var li = $('<li>').addClass(params.li).attr('id', params.name + '_' + data.id);
     var item = $('<div>').addClass(params.item);
-    var html = data.key;
+    var html = data.title;
     var checked = data.selected ? 'checked="checked"' : '';
 
     if (params.type === 'radio') {
@@ -15593,7 +15616,7 @@ var tree = {
     li.append(item);
     return li;
   },
-  //获取节点dom
+  //把pid==id的数据构建为dom结构, 包括子集.
   render: function render(id) {
     var s = this;
     id = id || 0;
@@ -15622,7 +15645,7 @@ var tree = {
     get(child, dom);
     return dom;
   },
-  //获取节点数据
+  //从所有数据中找pid==id的数据
   getChildData: function getChildData(id) {
     id = id || 0;
     var childData = [];
@@ -15633,6 +15656,7 @@ var tree = {
     });
     return childData;
   },
+  //从所有数据中找id==id的数据
   getData: function getData(id) {
     id = id || 0;
     var data = {};
@@ -15645,6 +15669,7 @@ var tree = {
     return data;
   },
   //方法
+  //选择
   selected: function selected(id) {
     var s = this;
     var params = s.params;
@@ -15655,6 +15680,7 @@ var tree = {
       params.dataChange.call(s);
     }
   },
+  //取消选择
   unSelected: function unSelected(id) {
     var s = this;
     var params = s.params;
@@ -15662,8 +15688,20 @@ var tree = {
 
     if (item.selected === true) {
       item.selected = false;
+      $('#' + params.name + '_' + id).html(tree.li.call(s, item));
       params.dataChange.call(s);
     }
+  },
+  //取所有选中数据
+  getSelected: function getSelected() {
+    var data = this.params.data;
+    var selected = [];
+    $.each(data, function (i, item) {
+      if (item.selected) {
+        selected.push(item);
+      }
+    });
+    return selected;
   }
 };
 $.fn.extend({

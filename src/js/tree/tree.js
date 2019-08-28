@@ -7,6 +7,7 @@ var tree = {
         name: '',   //input的name, 不指定则随机
         type: '',   //前置input框, radio, checkbox, 留空则没前置
         data: [],   //数据
+        selected: [], //选中数据
         beforeChoose: function (input, el) {    //选中事件前执行, 返回false则不改变input值
         },
         choose: function (input, el) {  //选中后执行
@@ -20,12 +21,16 @@ var tree = {
         var s = this;
         s.els = els;
         s.params = $.extend(true, {}, tree.defaults, {name: 'tree' + random(100)}, params);
+        tree.concat.call(s);
         $.each(els, function () {
             var el = $(this);
             tree.init.call(s, el);
         });
         s.unSelected = function (id) {
             tree.unSelected.call(s, id);
+        };
+        s.getSelected = function () {
+            return tree.getSelected.call(s);
         };
         s.params.dataChange.call(this);
     },
@@ -35,12 +40,26 @@ var tree = {
         el.html(html);
         tree.events.call(this, el);
     },
+    //拼合selected到data
+    concat: function () {
+        var data = this.params.data;
+        var selected = this.params.selected;
+        $.each(selected, function (i, item) {
+            $.log(i, item);
+            item.selected = true;
+            $.each(data, function (index) {
+                if (this.id == item.id) {
+                    $.extend(data[index], item);
+                    return false;
+                }
+            })
+        });
+    },
     //事件
     events: function (el) {
         var s = this;
         var params = s.params;
-        var ipt = el.find('input');
-        ipt.on('click', function () {
+        el.on('click', 'input', function () {
             //插入事件, 若返回false, 则返回
             var before = params.beforeChoose($(this), el);
             if (before === false) {
@@ -59,14 +78,16 @@ var tree = {
     },
 
     //渲染
+    //ul的dom构建
     ul: function () {
         return $('<ul>').addClass(this.params.ul);
     },
+    //li的dom构建 todo:需要优化
     li: function (data) {
         var params = this.params;
-        var li = $('<li>').addClass(params.li);
+        var li = $('<li>').addClass(params.li).attr('id', params.name + '_' + data.id);
         var item = $('<div>').addClass(params.item);
-        var html = data.key;
+        var html = data.title;
         var checked = data.selected ? 'checked="checked"' : '';
         if (params.type === 'radio') {
             html = '<label><input type="radio" ' + checked + ' name="' + params.name + '" data-id="' + data.id + '" data-pid="' + data.pid + '" data-title="' + data.title + '" /> ' + data.title + '</label>'
@@ -78,7 +99,7 @@ var tree = {
         li.append(item);
         return li;
     },
-    //获取节点dom
+    //把pid==id的数据构建为dom结构, 包括子集.
     render: function (id) {
         var s = this;
         id = id || 0;
@@ -102,7 +123,7 @@ var tree = {
         get(child, dom);
         return dom;
     },
-    //获取节点数据
+    //从所有数据中找pid==id的数据
     getChildData: function (id) {
         id = id || 0;
         var childData = [];
@@ -113,11 +134,12 @@ var tree = {
         });
         return childData;
     },
-    getData: function(id){
+    //从所有数据中找id==id的数据
+    getData: function (id) {
         id = id || 0;
         var data = {};
         $.each(this.params.data, function (i, item) {
-            if(item.id === id){
+            if (item.id === id) {
                 data = item;
                 return false;
             }
@@ -126,24 +148,38 @@ var tree = {
     },
 
     //方法
+    //选择
     selected: function (id) {
         var s = this;
         var params = s.params;
         var item = tree.getData.call(s, id);
-        if(item.selected !== true){
+        if (item.selected !== true) {
             item.selected = true;
             params.dataChange.call(s);
         }
     },
+    //取消选择
     unSelected: function (id) {
         var s = this;
         var params = s.params;
         var item = tree.getData.call(s, id);
-        if(item.selected === true){
+        if (item.selected === true) {
             item.selected = false;
+            $('#' + params.name + '_' + id).html(tree.li.call(s, item));
             params.dataChange.call(s);
         }
     },
+    //取所有选中数据
+    getSelected: function () {
+        var data = this.params.data;
+        var selected = [];
+        $.each(data, function (i, item) {
+            if (item.selected) {
+                selected.push(item);
+            }
+        });
+        return selected;
+    }
 };
 
 $.fn.extend({

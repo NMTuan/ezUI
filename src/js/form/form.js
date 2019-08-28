@@ -10,8 +10,8 @@ var form = {
 
         dir: 3, //1上 2右 3下 4左
         data: [],       //数据集
-        selected: {},   //选中数据  {value: {key: value}, }
-        selected_min: 0,    //最小选择数量, 0为不限
+        selected: [],   //选中数据  [{id, title}]
+        // selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
     },
     Select: function (els, params) {
@@ -22,19 +22,19 @@ var form = {
             form.init.call(s, el);
             form.events.call(s, el);
         });
-        // $.log(s);
     },
     init: function (el) {
         var s = this;
         var params = s.params;
         var body = el.find(params.body);
+        // form.renderVal.call(s, el);
         this.tree = new Tree(body, {
             data: params.data,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
-            selectChange: function () {
-                $.log('change');
-                params.selected = this.params.selected;
+            dataChange: function () {
+                params.selected = this.getSelected();
+                console.table(params.selected);
                 form.renderVal.call(s, el);
             }
         });
@@ -52,9 +52,9 @@ var form = {
         var label = $('<span>').addClass('ez-form-label');
         var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
         $.each(params.selected, function (i, item) {
-            head.append(label.clone().html(item.key + ' ').append(removeBtn.clone().data('value', item.value)));
+            head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
             head.append(' ');
-            field.append('<option value="' + item.value + '">' + item.key + '</option>')
+            field.append('<option value="' + item.id + '">' + item.title + '</option>')
         });
     },
     events: function (el) {
@@ -73,7 +73,7 @@ var form = {
         });
         head.on('click', params.removeBtn, function (e) {
             e.stopPropagation();
-            s.tree.unSelected($(this).data('value'));
+            s.tree.unSelected($(this).data('id'));
         });
         body.on('click', function (e) {
             e.stopPropagation();
