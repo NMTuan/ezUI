@@ -45,7 +45,6 @@ var tree = {
         var data = this.params.data;
         var selected = this.params.selected;
         $.each(selected, function (i, item) {
-            $.log(i, item);
             item.selected = true;
             $.each(data, function (index) {
                 if (this.id == item.id) {
@@ -99,11 +98,11 @@ var tree = {
         li.append(item);
         return li;
     },
-    //把pid==id的数据构建为dom结构, 包括子集.
-    render: function (id) {
+    //把pid==pid的数据构建为dom结构, 包括子集.
+    render: function (pid) {
         var s = this;
-        id = id || 0;
-        var child = tree.getChildData.call(this, id);
+        pid = pid || 0;
+        var child = tree.getChildData.call(this, pid);
         if (child.length === 0) {
             return;
         }
@@ -124,11 +123,11 @@ var tree = {
         return dom;
     },
     //从所有数据中找pid==id的数据
-    getChildData: function (id) {
-        id = id || 0;
+    getChildData: function (pid) {
+        pid = pid || 0;
         var childData = [];
         $.each(this.params.data, function (i, item) {
-            if (item.pid === id) {
+            if (item.pid === pid) {
                 childData.push(item);
             }
         });
@@ -165,7 +164,11 @@ var tree = {
         var item = tree.getData.call(s, id);
         if (item.selected === true) {
             item.selected = false;
-            $('#' + params.name + '_' + id).html(tree.li.call(s, item));
+            var li = tree.li.call(s, item);
+            var child = tree.render.call(s, id);
+            var current = $('#' + params.name + '_' + id);
+            current.html('');
+            current.append(li).append(child);
             params.dataChange.call(s);
         }
     },

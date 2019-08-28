@@ -34,7 +34,6 @@ var form = {
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
             dataChange: function () {
                 params.selected = this.getSelected();
-                console.table(params.selected);
                 form.renderVal.call(s, el);
             }
         });

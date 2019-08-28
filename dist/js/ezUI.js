@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8b1a24b0.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_62d05993.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14090,7 +14090,6 @@ var form = {
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
       dataChange: function dataChange() {
         params.selected = this.getSelected();
-        console.table(params.selected);
         form.renderVal.call(s, el);
       }
     });
@@ -15554,7 +15553,6 @@ var tree = {
     var data = this.params.data;
     var selected = this.params.selected;
     $.each(selected, function (i, item) {
-      $.log(i, item);
       item.selected = true;
       $.each(data, function (index) {
         if (this.id == item.id) {
@@ -15616,11 +15614,11 @@ var tree = {
     li.append(item);
     return li;
   },
-  //把pid==id的数据构建为dom结构, 包括子集.
-  render: function render(id) {
+  //把pid==pid的数据构建为dom结构, 包括子集.
+  render: function render(pid) {
     var s = this;
-    id = id || 0;
-    var child = tree.getChildData.call(this, id);
+    pid = pid || 0;
+    var child = tree.getChildData.call(this, pid);
 
     if (child.length === 0) {
       return;
@@ -15646,11 +15644,11 @@ var tree = {
     return dom;
   },
   //从所有数据中找pid==id的数据
-  getChildData: function getChildData(id) {
-    id = id || 0;
+  getChildData: function getChildData(pid) {
+    pid = pid || 0;
     var childData = [];
     $.each(this.params.data, function (i, item) {
-      if (item.pid === id) {
+      if (item.pid === pid) {
         childData.push(item);
       }
     });
@@ -15688,7 +15686,11 @@ var tree = {
 
     if (item.selected === true) {
       item.selected = false;
-      $('#' + params.name + '_' + id).html(tree.li.call(s, item));
+      var li = tree.li.call(s, item);
+      var child = tree.render.call(s, id);
+      var current = $('#' + params.name + '_' + id);
+      current.html('');
+      current.append(li).append(child);
       params.dataChange.call(s);
     }
   },
