@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7beed60b.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ed603b5c.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14067,7 +14067,9 @@ var form = {
     selected: [],
     //选中数据  [{id, title}]
     // selected_min: 0,    //最小选择数量, 0为不限
-    selected_max: 1 //最大选择数量, 0为不限
+    selected_max: 1,
+    //最大选择数量, 0为不限
+    bodyHeight: 180 //body高度
 
   },
   Select: function Select(els, params) {
@@ -14082,7 +14084,8 @@ var form = {
   init: function init(el) {
     var s = this;
     var params = s.params;
-    var body = el.find(params.body); // form.renderVal.call(s, el);
+    var body = el.find(params.body);
+    body.css('max-height', this.params.bodyHeight); // form.renderVal.call(s, el);
 
     this.tree = new Tree(body, {
       data: params.data,

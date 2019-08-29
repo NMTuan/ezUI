@@ -521,7 +521,7 @@ body {
 
 .ez-form-select-body {
   display: none;
-  overflow: hidden;
+  overflow: auto;
   margin: 0;
   padding: 0;
   background-color: #fff;

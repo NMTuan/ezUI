@@ -13,6 +13,7 @@ var form = {
         selected: [],   //选中数据  [{id, title}]
         // selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
+        bodyHeight: 180, //body高度
     },
     Select: function (els, params) {
         var s = this;
@@ -27,6 +28,7 @@ var form = {
         var s = this;
         var params = s.params;
         var body = el.find(params.body);
+        body.css('max-height', this.params.bodyHeight);
         // form.renderVal.call(s, el);
         this.tree = new Tree(body, {
             data: params.data,
