@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b28329b8.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_90c56ea3.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -15550,6 +15550,8 @@ var tree = {
     //选中数据
     searchKeys: [],
     //本地搜索的keys
+    searchValue: '',
+    //本地搜索的value
     searchData: [],
     //搜索的数据
     beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
@@ -15663,37 +15665,14 @@ var tree = {
   render: function render(pid) {
     var s = this;
     pid = pid || 0;
-    var child = s.params.searchData.length > 0 ? s.params.searchData : tree.getChildData.call(this, pid);
-
-    if (child.length === 0) {
-      return;
-    }
-
+    var child = s.params.searchValue ? s.params.searchData : tree.getChildData.call(this, pid);
     var dom = tree.ul.call(this);
 
     var get = function get(data, html) {
       $.each(data, function (i, item) {
-        // if (s.params.searchValue) { //如果有搜索, 进入搜索流程
-        //     var pass = true;    //跳过当前数据, 准备渲染下一个
-        //     $.each(s.params.searchKeys, function (index, key) { //循环所有可搜索key,
-        //         if (typeof item[key] === 'number' && item[key] === s.params.searchValue) { //如果是数字, 则相等为命中
-        //             console.log('number', item[key], s.params.searchValue)
-        //             pass = false;
-        //             return false;   //命中直接跳出当前each
-        //         }
-        //         if (typeof item[key] === 'string' && item[key].indexOf(s.params.searchValue) >= 0) {  //如果是字符串, 则包含为命中
-        //             console.log('string', item[key], s.params.searchValue)
-        //             pass = false;
-        //             return false;
-        //         }
-        //     });
-        //     if (pass) {
-        //         return; //true表示没命中搜索, 跳过当前each
-        //     }
-        // }
         var li = tree.li.call(s, item);
         html.append(li);
-        var child = s.params.searchData.length > 0 ? [] : tree.getChildData.call(s, item.id);
+        var child = s.params.searchValue ? [] : tree.getChildData.call(s, item.id);
 
         if (child.length > 0) {
           var ul = tree.ul.call(s);
@@ -15709,10 +15688,7 @@ var tree = {
   //从所有数据中找pid==id的数据
   getChildData: function getChildData(pid) {
     pid = pid || 0;
-    var childData = []; //有search用search的data, 没有用默认数据
-    // var data = this.params.searchData.length > 0 ? this.params.searchData : this.params.data;
-    // console.log(data);
-
+    var childData = [];
     $.each(this.params.data, function (i, item) {
       if (item.pid === pid) {
         childData.push(item);
@@ -15753,10 +15729,15 @@ var tree = {
     if (item.selected === true) {
       item.selected = false;
       var li = tree.li.call(s, item);
-      var child = tree.render.call(s, id);
-      var current = $('#' + params.name + '_' + id);
-      current.html('');
-      current.append(li).append(child);
+
+      if (!params.searchValue) {
+        //有搜索的时候平级显示,所以不需要找下级.
+        var child = tree.render.call(s, id);
+        var current = $('#' + params.name + '_' + id);
+        current.html('');
+        current.append(li).append(child);
+      }
+
       params.dataChange.call(s);
     }
   },
@@ -15775,17 +15756,17 @@ var tree = {
   search: function search(value) {
     var s = this;
     var params = s.params;
-    params.searchData = [];
+    params.searchValue = $.trim(value);
+    params.searchData = []; //清空搜索数据, 下面重构数据
 
-    if ($.trim(value)) {
-      //先找到所有查询结果
+    if (params.searchValue) {
       $.each(s.params.data, function () {
         var item = this;
         $.each(s.params.searchKeys, function () {
           var key = this;
 
           if (typeof item[key] === 'number' && item[key] === value) {
-            params.searchValue.push(item);
+            params.searchData.push(item);
             return false;
           }
 
@@ -15793,8 +15774,13 @@ var tree = {
             params.searchData.push(item);
             return false;
           }
+
+          if (typeof item[key] === 'boolean' && item[key].toString() === value) {
+            params.searchData.push(item);
+            return false;
+          }
         });
-      }); //根据查询结果把所有父级找到 todo
+      });
     }
 
     $.each(s.els, function () {

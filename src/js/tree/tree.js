@@ -9,6 +9,7 @@ var tree = {
         data: [],   //数据
         selected: [], //选中数据
         searchKeys: [], //本地搜索的keys
+        searchValue: '', //本地搜索的value
         searchData: [],   //搜索的数据
         beforeChoose: function (input, el) {    //选中事件前执行, 返回false则不改变input值
         },
@@ -107,34 +108,13 @@ var tree = {
     render: function (pid) {
         var s = this;
         pid = pid || 0;
-        var child = s.params.searchData.length > 0 ? s.params.searchData : tree.getChildData.call(this, pid);
-        if (child.length === 0) {
-            return;
-        }
+        var child = s.params.searchValue ? s.params.searchData : tree.getChildData.call(this, pid);
         var dom = tree.ul.call(this);
         var get = function (data, html) {
             $.each(data, function (i, item) {
-                // if (s.params.searchValue) { //如果有搜索, 进入搜索流程
-                //     var pass = true;    //跳过当前数据, 准备渲染下一个
-                //     $.each(s.params.searchKeys, function (index, key) { //循环所有可搜索key,
-                //         if (typeof item[key] === 'number' && item[key] === s.params.searchValue) { //如果是数字, 则相等为命中
-                //             console.log('number', item[key], s.params.searchValue)
-                //             pass = false;
-                //             return false;   //命中直接跳出当前each
-                //         }
-                //         if (typeof item[key] === 'string' && item[key].indexOf(s.params.searchValue) >= 0) {  //如果是字符串, 则包含为命中
-                //             console.log('string', item[key], s.params.searchValue)
-                //             pass = false;
-                //             return false;
-                //         }
-                //     });
-                //     if (pass) {
-                //         return; //true表示没命中搜索, 跳过当前each
-                //     }
-                // }
                 var li = tree.li.call(s, item);
                 html.append(li);
-                var child = s.params.searchData.length > 0 ? [] : tree.getChildData.call(s, item.id);
+                var child = s.params.searchValue ? [] : tree.getChildData.call(s, item.id);
                 if (child.length > 0) {
                     var ul = tree.ul.call(s);
                     li.append(ul);
@@ -149,9 +129,6 @@ var tree = {
     getChildData: function (pid) {
         pid = pid || 0;
         var childData = [];
-        //有search用search的data, 没有用默认数据
-        // var data = this.params.searchData.length > 0 ? this.params.searchData : this.params.data;
-        // console.log(data);
         $.each(this.params.data, function (i, item) {
             if (item.pid === pid) {
                 childData.push(item);
@@ -191,10 +168,12 @@ var tree = {
         if (item.selected === true) {
             item.selected = false;
             var li = tree.li.call(s, item);
-            var child = tree.render.call(s, id);
-            var current = $('#' + params.name + '_' + id);
-            current.html('');
-            current.append(li).append(child);
+            if (!params.searchValue) { //有搜索的时候平级显示,所以不需要找下级.
+                var child = tree.render.call(s, id);
+                var current = $('#' + params.name + '_' + id);
+                current.html('');
+                current.append(li).append(child);
+            }
             params.dataChange.call(s);
         }
     },
@@ -213,24 +192,27 @@ var tree = {
     search: function (value) {
         var s = this;
         var params = s.params;
-        params.searchData = [];
-        if ($.trim(value)) {
-            //先找到所有查询结果
+        params.searchValue = $.trim(value);
+        params.searchData = []; //清空搜索数据, 下面重构数据
+        if (params.searchValue) {
             $.each(s.params.data, function () {
                 var item = this;
                 $.each(s.params.searchKeys, function () {
                     var key = this;
                     if (typeof item[key] === 'number' && item[key] === value) {
-                        params.searchValue.push(item);
+                        params.searchData.push(item);
                         return false;
                     }
                     if (typeof item[key] === 'string' && item[key].indexOf(value) >= 0) {
                         params.searchData.push(item);
                         return false;
                     }
+                    if (typeof item[key] === 'boolean' && item[key].toString() === value) {
+                        params.searchData.push(item);
+                        return false;
+                    }
                 });
             });
-            //根据查询结果把所有父级找到 todo
         }
         $.each(s.els, function () {
             var el = $(this);
