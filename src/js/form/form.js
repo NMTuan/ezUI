@@ -4,16 +4,17 @@ var form = {
         icon: '.ez-form-select-icon',       //下拉的图标按钮
         item: '.ez-form-select-item',       //整个select
         head: '.ez-form-select-head',       //下拉显示框区域
-        body: '.ez-form-select-body',       //下拉菜单
+        body: '.ez-form-select-body',       //下拉区域
+        list: '.ez-form-select-list',       //下拉列表
         field: '.ez-form-select-field',     //隐藏域
         removeBtn: '.ez-form-label-remove', //移除按钮
-
         dir: 3, //1上 2右 3下 4左
         data: [],       //数据集
         selected: [],   //选中数据  [{id, title}]
         // selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
-        bodyHeight: 180, //body高度
+        listHeight: 220, //body高度
+        searchKeys: [], //需要搜索的key
     },
     Select: function (els, params) {
         var s = this;
@@ -27,13 +28,17 @@ var form = {
     init: function (el) {
         var s = this;
         var params = s.params;
-        var body = el.find(params.body);
-        body.css('max-height', this.params.bodyHeight);
-        // form.renderVal.call(s, el);
-        this.tree = new Tree(body, {
+        var list = el.find(params.list);
+        list.css('max-height', this.params.listHeight);
+        if (params.searchKeys.length > 0) {
+            form.renderSearch.call(s, el);
+        }
+        this.tree = new Tree(list, {
             data: params.data,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
+            searchKeys: params.searchKeys,
+
             dataChange: function () {
                 params.selected = this.getSelected();
                 form.renderVal.call(s, el);
@@ -56,6 +61,26 @@ var form = {
             head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
             head.append(' ');
             field.append('<option value="' + item.id + '">' + item.title + '</option>')
+        });
+    },
+    renderSearch: function (el) {
+        var s = this;
+        var search = $('<div>').addClass('ez-form-select-search');
+        var ipt = $('<input>').attr({
+            type: 'text',
+            placeholder: '搜索...',
+        }).addClass('ez-form-control ez-form-control-sm');
+        var body = el.find(this.params.body);
+        var timer; //定时器
+        body.prepend(search.append(ipt));
+
+        ipt.on('keyup', function () {
+            var that = $(this);
+            timer = setTimeout(function () {
+                clearTimeout(timer);
+                var value = $.trim(that.val());
+                form.search.call(s, value);
+            }, 300);
         });
     },
     events: function (el) {
@@ -85,15 +110,20 @@ var form = {
         });
         //任意位置, 关闭
         $(document).on('click', function (e) {
-            if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
+            if (e.target !== el[0] && $(e.target).closest(el).length === 0 && body.css('display') !== 'none') {
                 form.hide.call(s, el);
             }
         });
     },
+    search: function (val) {
+        var tree = this.tree;
+        tree.search.call(tree, val)
+    },
     showWhere: function (el, ref) {   //当前元素, 参照物
-        var ov = $('body').css('overflow'); //记录body的overflow状态, 后面还原
-        $('body').css('overflow', 'hidden');
-        var win = $(window).height() > $("body").height() ? $(window).height() : $("body").height();
+        var body = $('body');
+        var ov = body.css('overflow'); //记录body的overflow状态, 后面还原, 防止出现滚动条导致元素变动.
+        body.css('overflow', 'hidden');
+        var win = $(window).height() > body.height() ? $(window).height() : body.height();
         var rs = {};
         rs.bottom = win - el.offset().top > el.height();
         // $.log(win - el.offset().top , el.height())
@@ -103,7 +133,7 @@ var form = {
         // $.log(ref.offset().left + ref.width() , el.width())
         rs.left = ref.offset().left > el.width();    //未校验正确性
         // $.log(ref.offset().left , el.width())
-        $('body').css('overflow', ov);
+        body.css('overflow', ov);
         return rs;
     },
     show: function (el) {

@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ed603b5c.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b28329b8.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14055,7 +14055,9 @@ var form = {
     head: '.ez-form-select-head',
     //下拉显示框区域
     body: '.ez-form-select-body',
-    //下拉菜单
+    //下拉区域
+    list: '.ez-form-select-list',
+    //下拉列表
     field: '.ez-form-select-field',
     //隐藏域
     removeBtn: '.ez-form-label-remove',
@@ -14069,7 +14071,9 @@ var form = {
     // selected_min: 0,    //最小选择数量, 0为不限
     selected_max: 1,
     //最大选择数量, 0为不限
-    bodyHeight: 180 //body高度
+    listHeight: 220,
+    //body高度
+    searchKeys: [] //需要搜索的key
 
   },
   Select: function Select(els, params) {
@@ -14084,13 +14088,18 @@ var form = {
   init: function init(el) {
     var s = this;
     var params = s.params;
-    var body = el.find(params.body);
-    body.css('max-height', this.params.bodyHeight); // form.renderVal.call(s, el);
+    var list = el.find(params.list);
+    list.css('max-height', this.params.listHeight);
 
-    this.tree = new Tree(body, {
+    if (params.searchKeys.length > 0) {
+      form.renderSearch.call(s, el);
+    }
+
+    this.tree = new Tree(list, {
       data: params.data,
       selected: params.selected,
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
+      searchKeys: params.searchKeys,
       dataChange: function dataChange() {
         params.selected = this.getSelected();
         form.renderVal.call(s, el);
@@ -14115,6 +14124,26 @@ var form = {
       head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
       head.append(' ');
       field.append('<option value="' + item.id + '">' + item.title + '</option>');
+    });
+  },
+  renderSearch: function renderSearch(el) {
+    var s = this;
+    var search = $('<div>').addClass('ez-form-select-search');
+    var ipt = $('<input>').attr({
+      type: 'text',
+      placeholder: '搜索...'
+    }).addClass('ez-form-control ez-form-control-sm');
+    var body = el.find(this.params.body);
+    var timer; //定时器
+
+    body.prepend(search.append(ipt));
+    ipt.on('keyup', function () {
+      var that = $(this);
+      timer = setTimeout(function () {
+        clearTimeout(timer);
+        var value = $.trim(that.val());
+        form.search.call(s, value);
+      }, 300);
     });
   },
   events: function events(el) {
@@ -14143,17 +14172,22 @@ var form = {
     }); //任意位置, 关闭
 
     $(document).on('click', function (e) {
-      if (e.target != el[0] && $(e.target).closest(el).length == 0 && body.css('display') != 'none') {
+      if (e.target !== el[0] && $(e.target).closest(el).length === 0 && body.css('display') !== 'none') {
         form.hide.call(s, el);
       }
     });
   },
+  search: function search(val) {
+    var tree = this.tree;
+    tree.search.call(tree, val);
+  },
   showWhere: function showWhere(el, ref) {
     //当前元素, 参照物
-    var ov = $('body').css('overflow'); //记录body的overflow状态, 后面还原
+    var body = $('body');
+    var ov = body.css('overflow'); //记录body的overflow状态, 后面还原, 防止出现滚动条导致元素变动.
 
-    $('body').css('overflow', 'hidden');
-    var win = $(window).height() > $("body").height() ? $(window).height() : $("body").height();
+    body.css('overflow', 'hidden');
+    var win = $(window).height() > body.height() ? $(window).height() : body.height();
     var rs = {};
     rs.bottom = win - el.offset().top > el.height(); // $.log(win - el.offset().top , el.height())
 
@@ -14165,7 +14199,7 @@ var form = {
     rs.left = ref.offset().left > el.width(); //未校验正确性
     // $.log(ref.offset().left , el.width())
 
-    $('body').css('overflow', ov);
+    body.css('overflow', ov);
     return rs;
   },
   show: function show(el) {
@@ -15514,6 +15548,10 @@ var tree = {
     //数据
     selected: [],
     //选中数据
+    searchKeys: [],
+    //本地搜索的keys
+    searchData: [],
+    //搜索的数据
     beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
     },
     choose: function choose(input, el) {//选中后执行
@@ -15541,6 +15579,10 @@ var tree = {
 
     s.getSelected = function () {
       return tree.getSelected.call(s);
+    };
+
+    s.search = function () {
+      return tree.search.apply(s, arguments);
     };
 
     s.params.dataChange.call(this);
@@ -15621,7 +15663,7 @@ var tree = {
   render: function render(pid) {
     var s = this;
     pid = pid || 0;
-    var child = tree.getChildData.call(this, pid);
+    var child = s.params.searchData.length > 0 ? s.params.searchData : tree.getChildData.call(this, pid);
 
     if (child.length === 0) {
       return;
@@ -15631,9 +15673,27 @@ var tree = {
 
     var get = function get(data, html) {
       $.each(data, function (i, item) {
+        // if (s.params.searchValue) { //如果有搜索, 进入搜索流程
+        //     var pass = true;    //跳过当前数据, 准备渲染下一个
+        //     $.each(s.params.searchKeys, function (index, key) { //循环所有可搜索key,
+        //         if (typeof item[key] === 'number' && item[key] === s.params.searchValue) { //如果是数字, 则相等为命中
+        //             console.log('number', item[key], s.params.searchValue)
+        //             pass = false;
+        //             return false;   //命中直接跳出当前each
+        //         }
+        //         if (typeof item[key] === 'string' && item[key].indexOf(s.params.searchValue) >= 0) {  //如果是字符串, 则包含为命中
+        //             console.log('string', item[key], s.params.searchValue)
+        //             pass = false;
+        //             return false;
+        //         }
+        //     });
+        //     if (pass) {
+        //         return; //true表示没命中搜索, 跳过当前each
+        //     }
+        // }
         var li = tree.li.call(s, item);
         html.append(li);
-        var child = tree.getChildData.call(s, item.id);
+        var child = s.params.searchData.length > 0 ? [] : tree.getChildData.call(s, item.id);
 
         if (child.length > 0) {
           var ul = tree.ul.call(s);
@@ -15649,7 +15709,10 @@ var tree = {
   //从所有数据中找pid==id的数据
   getChildData: function getChildData(pid) {
     pid = pid || 0;
-    var childData = [];
+    var childData = []; //有search用search的data, 没有用默认数据
+    // var data = this.params.searchData.length > 0 ? this.params.searchData : this.params.data;
+    // console.log(data);
+
     $.each(this.params.data, function (i, item) {
       if (item.pid === pid) {
         childData.push(item);
@@ -15707,6 +15770,37 @@ var tree = {
       }
     });
     return selected;
+  },
+  //搜索
+  search: function search(value) {
+    var s = this;
+    var params = s.params;
+    params.searchData = [];
+
+    if ($.trim(value)) {
+      //先找到所有查询结果
+      $.each(s.params.data, function () {
+        var item = this;
+        $.each(s.params.searchKeys, function () {
+          var key = this;
+
+          if (typeof item[key] === 'number' && item[key] === value) {
+            params.searchValue.push(item);
+            return false;
+          }
+
+          if (typeof item[key] === 'string' && item[key].indexOf(value) >= 0) {
+            params.searchData.push(item);
+            return false;
+          }
+        });
+      }); //根据查询结果把所有父级找到 todo
+    }
+
+    $.each(s.els, function () {
+      var el = $(this);
+      tree.init.call(s, el);
+    });
   }
 };
 $.fn.extend({
