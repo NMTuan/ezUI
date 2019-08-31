@@ -145,6 +145,13 @@ gulp.task('static', function () {
     return task;
 });
 
+//data
+gulp.task('data', function () {
+    var task = gulp.src(config.srcPath + '/data/**/*.*')
+        .pipe(gulp.dest(config.distPath + 'data/'));
+    return task;
+});
+
 //watch
 gulp.task('watch', function () {
     browserSync.init({
@@ -160,6 +167,7 @@ gulp.task('watch', function () {
     gulp.watch(config.srcPath + 'scss/**/*.scss', ['css']);
     gulp.watch(config.srcPath + 'js/**/*.js', sync(['babel', 'js']));
     gulp.watch(config.srcPath + '**/*.ejs', ['html']);
+    gulp.watch(config.srcPath + 'data/**/*.json', ['data']);
 });
 
 //rev
@@ -197,5 +205,5 @@ gulp.task('rev:js', function () {
         ;
 });
 
-gulp.task('serve', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'watch']));
-gulp.task('release', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'rev']));
+gulp.task('serve', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'data', 'watch']));
+gulp.task('release', sync(['del', 'css', 'babel', 'js', 'html', 'static', 'data', 'rev']));

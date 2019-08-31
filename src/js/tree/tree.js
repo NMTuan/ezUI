@@ -4,9 +4,11 @@ var tree = {
         ul: 'ez-tree-ul',
         li: 'ez-tree-li',
         item: 'ez-tree-item',
+        empty: 'ez-tree-empty',
         name: '',   //input的name, 不指定则随机
         type: '',   //前置input框, radio, checkbox, 留空则没前置
         data: [],   //数据
+        dataUrl: '', //异步加载
         selected: [], //选中数据
         searchKeys: [], //本地搜索的keys
         searchValue: '', //本地搜索的value
@@ -24,11 +26,40 @@ var tree = {
         var s = this;
         s.els = els;
         s.params = $.extend(true, {}, tree.defaults, {name: 'tree' + random(100)}, params);
-        tree.concat.call(s);
-        $.each(els, function () {
-            var el = $(this);
-            tree.init.call(s, el);
-        });
+        tree.concatSelected.call(s);    //合并selectedData 到 data
+        //异步
+        if (s.params.dataUrl) {
+            var loading = tree.tips.call(s, '努力加载中');
+            els.html(loading);
+            $.getJSON(s.params.dataUrl)
+                .done(function (res) { //success
+                    if (res.code !== '40000') {
+                        var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+                        els.html(error);
+                        return;
+                    }
+                    tree.concat.call(s, res.result);
+                    $.each(els, function () {
+                        var el = $(this);
+                        tree.init.call(s, el);
+                    });
+                    s.params.dataChange.call(s);
+                })
+                .fail(function () { //error
+                    var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+                    els.html(error);
+                })
+                .always(function () {   //complete
+                    loading.remove();
+                })
+            ;
+        } else {
+            $.each(els, function () {
+                var el = $(this);
+                tree.init.call(s, el);
+            });
+            s.params.dataChange.call(s);
+        }
         s.unSelected = function (id) {
             tree.unSelected.call(s, id);
         };
@@ -38,20 +69,19 @@ var tree = {
         s.search = function () {
             return tree.search.apply(s, arguments);
         };
-        s.params.dataChange.call(this);
     },
     //初始化
     init: function (el) {
+        var s = this;
         var html = tree.render.call(this);
-        if(html.html() === ''){
-            html = $('<div>').addClass('ez-tree-empty');
-            html.html('暂无内容');
+        if (html.html() === '') {
+            html = tree.tips.call(s, '暂无内容');
         }
         el.html(html);
         tree.events.call(this, el);
     },
     //拼合selected到data
-    concat: function () {
+    concatSelected: function () {
         var data = this.params.data;
         var selected = this.params.selected;
         $.each(selected, function (i, item) {
@@ -63,6 +93,27 @@ var tree = {
                 }
             })
         });
+    },
+    concat: function (data) {
+        var s = this;
+        if (data.length === 0) {
+            return;
+        }
+        $.each(data, function () {
+            var newItem = this;
+            var existence = false;  //本数据是否已经存在
+            $.each(s.params.data, function () {
+                var item = this;
+                if (item.id == newItem.id) {
+                    $.extend(item, newItem);
+                    existence = true;
+                    return false;
+                }
+            });
+            if (!existence) {
+                s.params.data.push(newItem);
+            }
+        })
     },
     //事件
     events: function (el) {
@@ -107,6 +158,13 @@ var tree = {
         item.html(html);
         li.append(item);
         return li;
+    },
+    //提示区域
+    tips: function (content) {
+        var dom = $('<div>');
+        dom.addClass(this.params.empty);
+        dom.html(content);
+        return dom;
     },
     //把pid==pid的数据构建为dom结构, 包括子集.
     render: function (pid) {

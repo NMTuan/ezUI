@@ -10,6 +10,7 @@ var form = {
         removeBtn: '.ez-form-label-remove', //移除按钮
         dir: 3, //1上 2右 3下 4左
         data: [],       //数据集
+        dataUrl: '',    //异步数据集
         selected: [],   //选中数据  [{id, title}]
         // selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
@@ -19,7 +20,9 @@ var form = {
     },
     Select: function (els, params) {
         var s = this;
+        s.els = els;
         s.params = $.extend(true, {}, form.defaults, params);
+        form.renderTree.call(s);
         $.each(els, function () {
             var el = $(this);
             form.init.call(s, el);
@@ -34,15 +37,22 @@ var form = {
         if (params.searchKeys.length > 0) {
             form.renderSearch.call(s, el);
         }
-        this.tree = new Tree(list, {
+    },
+    renderTree: function(){
+        if(this.tree){
+            return;
+        }
+        var s = this;
+        var params = s.params;
+        this.tree = new Tree(s.els.find(params.list), {
             data: params.data,
+            dataUrl: params.dataUrl,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
             searchKeys: params.searchKeys,
-
             dataChange: function () {
                 params.selected = this.getSelected();
-                form.renderVal.call(s, el);
+                form.renderVal.call(s, s.els);
             }
         });
     },
