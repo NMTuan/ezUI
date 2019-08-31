@@ -36,7 +36,7 @@ var form = {
         var params = s.params;
         var list = el.find(params.list);
         list.css('max-height', this.params.listHeight);
-        if (params.searchKeys.length > 0) {
+        if (params.searchKeys.length > 0 || params.searchUrl) {
             form.renderSearch.call(s, el);
         }
     },
@@ -131,7 +131,7 @@ var form = {
     },
     search: function (val) {
         var tree = this.tree;
-        tree.search.call(tree, val)
+        tree.search.call(tree, val);
     },
     showWhere: function (el, ref) {   //当前元素, 参照物
         var body = $('body');

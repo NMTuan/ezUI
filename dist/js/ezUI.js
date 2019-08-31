@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_16cc69f4.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_118e54f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14101,7 +14101,7 @@ var form = {
     var list = el.find(params.list);
     list.css('max-height', this.params.listHeight);
 
-    if (params.searchKeys.length > 0) {
+    if (params.searchKeys.length > 0 || params.searchUrl) {
       form.renderSearch.call(s, el);
     }
   },
@@ -15565,7 +15565,7 @@ var tree = {
     ul: 'ez-tree-ul',
     li: 'ez-tree-li',
     item: 'ez-tree-item',
-    empty: 'ez-tree-empty',
+    tips: 'ez-tree-tips',
     name: '',
     //input的name, 不指定则随机
     type: '',
@@ -15668,7 +15668,13 @@ var tree = {
     var html = tree.render.call(this);
 
     if (html.html() === '') {
-      html = tree.tips.call(s, '暂无内容');
+      var tips = '暂无内容';
+
+      if (s.params.searchUrl) {
+        tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
+      }
+
+      html = tree.tips.call(s, tips);
     }
 
     el.html(html);
@@ -15734,10 +15740,12 @@ var tree = {
   },
   //事件
   events: function events(el) {
+    console.log('event');
     var s = this;
     var params = s.params;
     el.on('click', 'input', function () {
-      //插入事件, 若返回false, 则返回
+      console.log('x'); //插入事件, 若返回false, 则返回
+
       var before = params.beforeChoose($(this), el);
 
       if (before === false) {
@@ -15787,7 +15795,7 @@ var tree = {
   //提示区域
   tips: function tips(content) {
     var dom = $('<div>');
-    dom.addClass(this.params.empty);
+    dom.addClass(this.params.tips);
     dom.html(content);
     return dom;
   },
@@ -15827,10 +15835,11 @@ var tree = {
     return childData;
   },
   //从所有数据中找id==id的数据
-  getData: function getData(id) {
+  getData: function getData(id, data) {
+    data = data || this.params.data;
     id = id || 0;
     var data = [];
-    $.each(this.params.data, function (i, item) {
+    $.each(data, function (i, item) {
       if (item.id === id) {
         data.push(item);
         return false;
@@ -15841,9 +15850,11 @@ var tree = {
   //方法
   //选择
   selected: function selected(id) {
+    console.log('selected');
     var s = this;
     var params = s.params;
     var currentData = tree.getData.call(s, id);
+    console.table(currentData);
     tree.concat(params.selected, currentData);
     $.each(currentData, function () {
       if (this.selected !== true) {
@@ -15854,6 +15865,7 @@ var tree = {
   },
   //取消选择
   unSelected: function unSelected(id) {
+    console.log('un');
     var s = this;
     var params = s.params;
     var currentData = tree.getData.call(s, id);
@@ -15885,7 +15897,45 @@ var tree = {
     params.searchValue = $.trim(value);
     params.searchData = []; //清空搜索数据, 下面重构数据
 
+    console.log('search key: ' + value);
+
     if (params.searchValue) {
+      if (params.searchUrl) {
+        //异步查询模式
+        var loading = tree.tips.call(s, '努力加载中');
+        s.els.html(loading);
+        $.getJSON(params.searchUrl, {
+          data: new Date().getTime()
+        }).done(function (res) {
+          if (res.code !== '40000') {
+            var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+            els.html(error);
+            return;
+          }
+
+          s.params.searchData = res.result;
+          s.params.data = res.result;
+          tree.concat.call(s, s.params.selected, res.result, {
+            push_existence: false
+          });
+          tree.concat.call(s, s.params.searchData, s.params.selected, {
+            push_existence: false
+          });
+          $.each(s.els, function () {
+            var el = $(this);
+            tree.init.call(s, el);
+          });
+          s.params.dataChange.call(s);
+        }).fail(function () {
+          var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+          s.els.html(error);
+        }).always(function () {
+          loading.remove();
+        });
+        return;
+      } //本地查询
+
+
       $.each(s.params.data, function () {
         var item = this;
         $.each(s.params.searchKeys, function () {

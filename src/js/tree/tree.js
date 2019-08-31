@@ -4,7 +4,7 @@ var tree = {
         ul: 'ez-tree-ul',
         li: 'ez-tree-li',
         item: 'ez-tree-item',
-        empty: 'ez-tree-empty',
+        tips: 'ez-tree-tips',
         name: '',   //input的name, 不指定则随机
         type: '',   //前置input框, radio, checkbox, 留空则没前置
         data: [],   //数据
@@ -38,7 +38,7 @@ var tree = {
         };
 
         //处理默认选中的数据
-        if(s.params.selected.length > 0){
+        if (s.params.selected.length > 0) {
             $.each(s.params.selected, function () {
                 this.selected = true;
             });
@@ -88,7 +88,11 @@ var tree = {
         var s = this;
         var html = tree.render.call(this);
         if (html.html() === '') {
-            html = tree.tips.call(s, '暂无内容');
+            var tips = '暂无内容';
+            if (s.params.searchUrl) {
+                tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
+            }
+            html = tree.tips.call(s, tips);
         }
         el.html(html);
         tree.events.call(this, el);
@@ -144,9 +148,11 @@ var tree = {
     },
     //事件
     events: function (el) {
+        console.log('event');
         var s = this;
         var params = s.params;
         el.on('click', 'input', function () {
+            console.log('x')
             //插入事件, 若返回false, 则返回
             var before = params.beforeChoose($(this), el);
             if (before === false) {
@@ -189,7 +195,7 @@ var tree = {
     //提示区域
     tips: function (content) {
         var dom = $('<div>');
-        dom.addClass(this.params.empty);
+        dom.addClass(this.params.tips);
         dom.html(content);
         return dom;
     },
@@ -226,10 +232,11 @@ var tree = {
         return childData;
     },
     //从所有数据中找id==id的数据
-    getData: function (id) {
+    getData: function (id, data) {
+        data = data || this.params.data;
         id = id || 0;
         var data = [];
-        $.each(this.params.data, function (i, item) {
+        $.each(data, function (i, item) {
             if (item.id === id) {
                 data.push(item);
                 return false;
@@ -241,9 +248,11 @@ var tree = {
     //方法
     //选择
     selected: function (id) {
+        console.log('selected')
         var s = this;
         var params = s.params;
         var currentData = tree.getData.call(s, id);
+        console.table(currentData);
         tree.concat(params.selected, currentData);
         $.each(currentData, function () {
             if (this.selected !== true) {
@@ -254,6 +263,7 @@ var tree = {
     },
     //取消选择
     unSelected: function (id) {
+        console.log('un')
         var s = this;
         var params = s.params;
         var currentData = tree.getData.call(s, id);
@@ -282,7 +292,41 @@ var tree = {
         var params = s.params;
         params.searchValue = $.trim(value);
         params.searchData = []; //清空搜索数据, 下面重构数据
+        console.log('search key: ' + value);
         if (params.searchValue) {
+            if (params.searchUrl) {   //异步查询模式
+                var loading = tree.tips.call(s, '努力加载中');
+                s.els.html(loading);
+                $.getJSON(params.searchUrl, {data: new Date().getTime()})
+                    .done(function (res) {
+                        if (res.code !== '40000') {
+                            var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+                            els.html(error);
+                            return;
+                        }
+                        s.params.searchData = res.result;
+                        s.params.data = res.result;
+                        tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
+                        tree.concat.call(s, s.params.searchData, s.params.selected, {push_existence: false});
+
+                        $.each(s.els, function () {
+                            var el = $(this);
+                            tree.init.call(s, el);
+                        });
+                        s.params.dataChange.call(s);
+
+                    })
+                    .fail(function () {
+                        var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+                        s.els.html(error);
+                    })
+                    .always(function () {
+                        loading.remove();
+                    })
+                ;
+                return;
+            }
+            //本地查询
             $.each(s.params.data, function () {
                 var item = this;
                 $.each(s.params.searchKeys, function () {
