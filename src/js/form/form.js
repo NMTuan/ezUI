@@ -15,6 +15,7 @@ var form = {
         selected_max: 1,    //最大选择数量, 0为不限
         listHeight: 220, //body高度
         searchKeys: [], //需要搜索的key
+        searchTime: 300, //延时搜索
     },
     Select: function (els, params) {
         var s = this;
@@ -80,7 +81,7 @@ var form = {
                 clearTimeout(timer);
                 var value = $.trim(that.val());
                 form.search.call(s, value);
-            }, 300);
+            }, s.params.searchTime);
         });
     },
     events: function (el) {

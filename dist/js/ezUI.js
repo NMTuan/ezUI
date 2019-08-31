@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_90c56ea3.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ffd66dd6.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14073,7 +14073,9 @@ var form = {
     //最大选择数量, 0为不限
     listHeight: 220,
     //body高度
-    searchKeys: [] //需要搜索的key
+    searchKeys: [],
+    //需要搜索的key
+    searchTime: 300 //延时搜索
 
   },
   Select: function Select(els, params) {
@@ -14143,7 +14145,7 @@ var form = {
         clearTimeout(timer);
         var value = $.trim(that.val());
         form.search.call(s, value);
-      }, 300);
+      }, s.params.searchTime);
     });
   },
   events: function events(el) {
@@ -15592,6 +15594,12 @@ var tree = {
   //初始化
   init: function init(el) {
     var html = tree.render.call(this);
+
+    if (html.html() === '') {
+      html = $('<div>').addClass('ez-tree-empty');
+      html.html('暂无内容');
+    }
+
     el.html(html);
     tree.events.call(this, el);
   },

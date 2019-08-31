@@ -43,6 +43,10 @@ var tree = {
     //初始化
     init: function (el) {
         var html = tree.render.call(this);
+        if(html.html() === ''){
+            html = $('<div>').addClass('ez-tree-empty');
+            html.html('暂无内容');
+        }
         el.html(html);
         tree.events.call(this, el);
     },
