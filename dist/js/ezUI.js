@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_64bd6031.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_16cc69f4.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -15610,10 +15610,18 @@ var tree = {
 
     s.search = function () {
       return tree.search.apply(s, arguments);
-    };
+    }; //处理默认选中的数据
 
-    tree.concatSelected.call(s); //合并selectedData 到 data
-    //异步
+
+    if (s.params.selected.length > 0) {
+      $.each(s.params.selected, function () {
+        this.selected = true;
+      });
+    }
+
+    tree.concat.call(s, s.params.data, s.params.selected, {
+      push_existence: false
+    }); //异步
 
     if (s.params.dataUrl) {
       var loading = tree.tips.call(s, '努力加载中');
@@ -15628,6 +15636,9 @@ var tree = {
 
         tree.concat.call(s, s.params.data, res.result);
         tree.concat.call(s, s.params.selected, res.result, {
+          push_existence: false
+        });
+        tree.concat.call(s, s.params.data, s.params.selected, {
           push_existence: false
         });
         $.each(els, function () {

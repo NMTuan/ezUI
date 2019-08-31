@@ -37,7 +37,14 @@ var tree = {
             return tree.search.apply(s, arguments);
         };
 
-        tree.concatSelected.call(s);    //合并selectedData 到 data
+        //处理默认选中的数据
+        if(s.params.selected.length > 0){
+            $.each(s.params.selected, function () {
+                this.selected = true;
+            });
+        }
+
+        tree.concat.call(s, s.params.data, s.params.selected, {push_existence: false});
 
         //异步
         if (s.params.dataUrl) {
@@ -52,6 +59,7 @@ var tree = {
                     }
                     tree.concat.call(s, s.params.data, res.result);
                     tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
+                    tree.concat.call(s, s.params.data, s.params.selected, {push_existence: false});
 
                     $.each(els, function () {
                         var el = $(this);
