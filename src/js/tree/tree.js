@@ -13,6 +13,7 @@ var tree = {
         searchKeys: [], //本地搜索的keys
         searchValue: '', //本地搜索的value
         searchData: [],   //搜索的数据
+        searchUrl: '',  //异步搜索
         beforeChoose: function (input, el) {    //选中事件前执行, 返回false则不改变input值
         },
         choose: function (input, el) {  //选中后执行
@@ -49,7 +50,9 @@ var tree = {
                         els.html(error);
                         return;
                     }
-                    tree.concat.call(s, res.result);
+                    tree.concat.call(s, s.params.data, res.result);
+                    tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
+
                     $.each(els, function () {
                         var el = $(this);
                         tree.init.call(s, el);
@@ -84,19 +87,18 @@ var tree = {
     },
     //拼合selected到data
     concatSelected: function () {
-        var data = this.params.data;
         var selected = this.params.selected;
         $.each(selected, function (i, item) {
             item.selected = true;
-            $.each(data, function (index) {
-                if (this.id == item.id) {
-                    $.extend(data[index], item);
-                    return false;
-                }
-            })
         });
+        tree.concat.call(this, this.params.data, selected);
     },
-    concat: function (data) {
+    //循环data往target里插入, 存在则更新, 否则插入.
+    concat: function (target, data, options) {
+        var defaults = {
+            push_existence: true
+        };
+        options = $.extend(true, {}, defaults, options);
         var s = this;
         if (data.length === 0) {
             return;
@@ -104,18 +106,33 @@ var tree = {
         $.each(data, function () {
             var newItem = this;
             var existence = false;  //本数据是否已经存在
-            $.each(s.params.data, function () {
+            $.each(target, function () {
                 var item = this;
-                if (item.id == newItem.id) {
+                if (item.id == newItem.id) {    //存在更新
                     $.extend(item, newItem);
                     existence = true;
                     return false;
                 }
             });
-            if (!existence) {
-                s.params.data.push(newItem);
+            if (options.push_existence && !existence) {   //不存在插入
+                target.push(newItem);
             }
-        })
+        });
+    },
+    delete: function (target, data) {
+        var s = this;
+        if (data.length === 0) {
+            return;
+        }
+        $.each(data, function () {
+            var newItem = this;
+            $.each(target, function (i, item) {
+                if (item.id == newItem.id) {
+                    target.splice(i, 1);
+                    return false;
+                }
+            });
+        });
     },
     //事件
     events: function (el) {
@@ -203,10 +220,10 @@ var tree = {
     //从所有数据中找id==id的数据
     getData: function (id) {
         id = id || 0;
-        var data = {};
+        var data = [];
         $.each(this.params.data, function (i, item) {
             if (item.id === id) {
-                data = item;
+                data.push(item);
                 return false;
             }
         });
@@ -218,39 +235,38 @@ var tree = {
     selected: function (id) {
         var s = this;
         var params = s.params;
-        var item = tree.getData.call(s, id);
-        if (item.selected !== true) {
-            item.selected = true;
-            params.dataChange.call(s);
-        }
+        var currentData = tree.getData.call(s, id);
+        tree.concat(params.selected, currentData);
+        $.each(currentData, function () {
+            if (this.selected !== true) {
+                this.selected = true;
+            }
+        });
+        params.dataChange.call(s);
     },
     //取消选择
     unSelected: function (id) {
         var s = this;
         var params = s.params;
-        var item = tree.getData.call(s, id);
-        if (item.selected === true) {
-            item.selected = false;
-            var li = tree.li.call(s, item);
-            if (!params.searchValue) { //有搜索的时候平级显示,所以不需要找下级.
-                var child = tree.render.call(s, id);
-                var current = $('#' + params.name + '_' + id);
-                current.html('');
-                current.append(li).append(child);
+        var currentData = tree.getData.call(s, id);
+        tree.delete(params.selected, currentData);
+        $.each(currentData, function () {
+            if (this.selected === true) {
+                this.selected = false;
+                var li = tree.li.call(s, this);
+                if (!params.searchValue) { //有搜索的时候平级显示,所以不需要找下级.
+                    var child = tree.render.call(s, id);
+                    var current = $('#' + params.name + '_' + id);
+                    current.html('');
+                    current.append(li).append(child);
+                }
             }
-            params.dataChange.call(s);
-        }
+        });
+        params.dataChange.call(s);
     },
     //取所有选中数据
     getSelected: function () {
-        var data = this.params.data;
-        var selected = [];
-        $.each(data, function (i, item) {
-            if (item.selected) {
-                selected.push(item);
-            }
-        });
-        return selected;
+        return this.params.selected;
     },
     //搜索
     search: function (value) {

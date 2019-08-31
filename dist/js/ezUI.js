@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e11ad9af.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_64bd6031.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14056,6 +14056,8 @@ var form = {
     //下拉显示框区域
     body: '.ez-form-select-body',
     //下拉区域
+    search: '.ez-form-select-search',
+    //搜索
     list: '.ez-form-select-list',
     //下拉列表
     field: '.ez-form-select-field',
@@ -14067,7 +14069,7 @@ var form = {
     data: [],
     //数据集
     dataUrl: '',
-    //异步数据集
+    //异步加载
     selected: [],
     //选中数据  [{id, title}]
     // selected_min: 0,    //最小选择数量, 0为不限
@@ -14077,7 +14079,9 @@ var form = {
     //body高度
     searchKeys: [],
     //需要搜索的key
-    searchTime: 300 //延时搜索
+    searchTime: 300,
+    //延时搜索
+    searchUrl: '' //异步搜索
 
   },
   Select: function Select(els, params) {
@@ -14115,6 +14119,7 @@ var form = {
       selected: params.selected,
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
       searchKeys: params.searchKeys,
+      searchUrl: params.searchUrl,
       dataChange: function dataChange() {
         params.selected = this.getSelected();
         form.renderVal.call(s, s.els);
@@ -14143,7 +14148,7 @@ var form = {
   },
   renderSearch: function renderSearch(el) {
     var s = this;
-    var search = $('<div>').addClass('ez-form-select-search');
+    var search = $('<div>').addClass(s.params.search.replace('.', ''));
     var ipt = $('<input>').attr({
       type: 'text',
       placeholder: '搜索...'
@@ -14234,6 +14239,11 @@ var form = {
       body.css('bottom', height);
     } else {
       body.css('top', height);
+    } //如果有搜索, 默认聚焦
+
+
+    if (params.searchKeys.length > 0) {
+      el.find(params.search).find('input').focus();
     }
   },
   hide: function hide(el) {
@@ -15572,6 +15582,8 @@ var tree = {
     //本地搜索的value
     searchData: [],
     //搜索的数据
+    searchUrl: '',
+    //异步搜索
     beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
     },
     choose: function choose(input, el) {//选中后执行
@@ -15614,7 +15626,10 @@ var tree = {
           return;
         }
 
-        tree.concat.call(s, res.result);
+        tree.concat.call(s, s.params.data, res.result);
+        tree.concat.call(s, s.params.selected, res.result, {
+          push_existence: false
+        });
         $.each(els, function () {
           var el = $(this);
           tree.init.call(s, el);
@@ -15650,19 +15665,18 @@ var tree = {
   },
   //拼合selected到data
   concatSelected: function concatSelected() {
-    var data = this.params.data;
     var selected = this.params.selected;
     $.each(selected, function (i, item) {
       item.selected = true;
-      $.each(data, function (index) {
-        if (this.id == item.id) {
-          $.extend(data[index], item);
-          return false;
-        }
-      });
     });
+    tree.concat.call(this, this.params.data, selected);
   },
-  concat: function concat(data) {
+  //循环data往target里插入, 存在则更新, 否则插入.
+  concat: function concat(target, data, options) {
+    var defaults = {
+      push_existence: true
+    };
+    options = $.extend(true, {}, defaults, options);
     var s = this;
 
     if (data.length === 0) {
@@ -15673,19 +15687,38 @@ var tree = {
       var newItem = this;
       var existence = false; //本数据是否已经存在
 
-      $.each(s.params.data, function () {
+      $.each(target, function () {
         var item = this;
 
         if (item.id == newItem.id) {
+          //存在更新
           $.extend(item, newItem);
           existence = true;
           return false;
         }
       });
 
-      if (!existence) {
-        s.params.data.push(newItem);
+      if (options.push_existence && !existence) {
+        //不存在插入
+        target.push(newItem);
       }
+    });
+  },
+  delete: function _delete(target, data) {
+    var s = this;
+
+    if (data.length === 0) {
+      return;
+    }
+
+    $.each(data, function () {
+      var newItem = this;
+      $.each(target, function (i, item) {
+        if (item.id == newItem.id) {
+          target.splice(i, 1);
+          return false;
+        }
+      });
     });
   },
   //事件
@@ -15785,10 +15818,10 @@ var tree = {
   //从所有数据中找id==id的数据
   getData: function getData(id) {
     id = id || 0;
-    var data = {};
+    var data = [];
     $.each(this.params.data, function (i, item) {
       if (item.id === id) {
-        data = item;
+        data.push(item);
         return false;
       }
     });
@@ -15799,44 +15832,40 @@ var tree = {
   selected: function selected(id) {
     var s = this;
     var params = s.params;
-    var item = tree.getData.call(s, id);
-
-    if (item.selected !== true) {
-      item.selected = true;
-      params.dataChange.call(s);
-    }
+    var currentData = tree.getData.call(s, id);
+    tree.concat(params.selected, currentData);
+    $.each(currentData, function () {
+      if (this.selected !== true) {
+        this.selected = true;
+      }
+    });
+    params.dataChange.call(s);
   },
   //取消选择
   unSelected: function unSelected(id) {
     var s = this;
     var params = s.params;
-    var item = tree.getData.call(s, id);
+    var currentData = tree.getData.call(s, id);
+    tree.delete(params.selected, currentData);
+    $.each(currentData, function () {
+      if (this.selected === true) {
+        this.selected = false;
+        var li = tree.li.call(s, this);
 
-    if (item.selected === true) {
-      item.selected = false;
-      var li = tree.li.call(s, item);
-
-      if (!params.searchValue) {
-        //有搜索的时候平级显示,所以不需要找下级.
-        var child = tree.render.call(s, id);
-        var current = $('#' + params.name + '_' + id);
-        current.html('');
-        current.append(li).append(child);
+        if (!params.searchValue) {
+          //有搜索的时候平级显示,所以不需要找下级.
+          var child = tree.render.call(s, id);
+          var current = $('#' + params.name + '_' + id);
+          current.html('');
+          current.append(li).append(child);
+        }
       }
-
-      params.dataChange.call(s);
-    }
+    });
+    params.dataChange.call(s);
   },
   //取所有选中数据
   getSelected: function getSelected() {
-    var data = this.params.data;
-    var selected = [];
-    $.each(data, function (i, item) {
-      if (item.selected) {
-        selected.push(item);
-      }
-    });
-    return selected;
+    return this.params.selected;
   },
   //搜索
   search: function search(value) {

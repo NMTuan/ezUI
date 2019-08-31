@@ -40,18 +40,19 @@
         {id: 4, pid: 0, title: '中呼服务协议'},
         {id: 5, pid: 2, title: '22'},
         {id: 6, pid: 2, title: '23'},
-        {id: 7, pid: 2, selected: true, title: '24'},
+        {id: 7, pid: 2, title: '24'},
     ];
     for(var i = 8; i < 50; i++){
         d.push({id: i, pid: 0, title: 'title_' + i})
     }
     $('.ez-form-select').eq(0).ez_form_select({
         selected_max: 0,
-        data: d,
+        data: d,    //[],
         selected: [
             {id: 3, pid: 0, title: '333经办人手持营业执照及身份证'},
         ],
         dataUrl: '/data/select_tree.json',
+        // searchUrl: '/data/select_tree.json',
         searchKeys: ['title', 'selected']
     }).click();
     // $('.ez-form-select').eq(1).ez_form_select({

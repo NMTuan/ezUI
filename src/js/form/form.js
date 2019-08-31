@@ -5,18 +5,20 @@ var form = {
         item: '.ez-form-select-item',       //整个select
         head: '.ez-form-select-head',       //下拉显示框区域
         body: '.ez-form-select-body',       //下拉区域
+        search: '.ez-form-select-search',   //搜索
         list: '.ez-form-select-list',       //下拉列表
         field: '.ez-form-select-field',     //隐藏域
         removeBtn: '.ez-form-label-remove', //移除按钮
         dir: 3, //1上 2右 3下 4左
         data: [],       //数据集
-        dataUrl: '',    //异步数据集
+        dataUrl: '',    //异步加载
         selected: [],   //选中数据  [{id, title}]
         // selected_min: 0,    //最小选择数量, 0为不限
         selected_max: 1,    //最大选择数量, 0为不限
         listHeight: 220, //body高度
         searchKeys: [], //需要搜索的key
         searchTime: 300, //延时搜索
+        searchUrl: '',  //异步搜索
     },
     Select: function (els, params) {
         var s = this;
@@ -50,6 +52,7 @@ var form = {
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
             searchKeys: params.searchKeys,
+            searchUrl: params.searchUrl,
             dataChange: function () {
                 params.selected = this.getSelected();
                 form.renderVal.call(s, s.els);
@@ -76,7 +79,7 @@ var form = {
     },
     renderSearch: function (el) {
         var s = this;
-        var search = $('<div>').addClass('ez-form-select-search');
+        var search = $('<div>').addClass(s.params.search.replace('.', ''));
         var ipt = $('<input>').attr({
             type: 'text',
             placeholder: '搜索...',
@@ -162,6 +165,10 @@ var form = {
             body.css('bottom', height);
         } else {
             body.css('top', height);
+        }
+        //如果有搜索, 默认聚焦
+        if(params.searchKeys.length > 0){
+            el.find(params.search).find('input').focus();
         }
     },
     hide: function (el) {
