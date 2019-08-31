@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.form = require('./form/form'); //表单
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_97b60964.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e11ad9af.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14102,13 +14102,14 @@ var form = {
     }
   },
   renderTree: function renderTree() {
+    var s = this;
+    var params = s.params;
+
     if (this.tree) {
       return;
     }
 
-    var s = this;
-    var params = s.params;
-    this.tree = new Tree(s.els.find(params.list), {
+    s.tree = new Tree(s.els.find(params.list), {
       data: params.data,
       dataUrl: params.dataUrl,
       selected: params.selected,
@@ -15586,6 +15587,19 @@ var tree = {
     s.params = $.extend(true, {}, tree.defaults, {
       name: 'tree' + random(100)
     }, params);
+
+    s.unSelected = function (id) {
+      tree.unSelected.call(s, id);
+    };
+
+    s.getSelected = function () {
+      return tree.getSelected.call(s);
+    };
+
+    s.search = function () {
+      return tree.search.apply(s, arguments);
+    };
+
     tree.concatSelected.call(s); //合并selectedData 到 data
     //异步
 
@@ -15621,18 +15635,6 @@ var tree = {
       });
       s.params.dataChange.call(s);
     }
-
-    s.unSelected = function (id) {
-      tree.unSelected.call(s, id);
-    };
-
-    s.getSelected = function () {
-      return tree.getSelected.call(s);
-    };
-
-    s.search = function () {
-      return tree.search.apply(s, arguments);
-    };
   },
   //初始化
   init: function init(el) {

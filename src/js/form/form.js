@@ -39,12 +39,12 @@ var form = {
         }
     },
     renderTree: function(){
+        var s = this;
+        var params = s.params;
         if(this.tree){
             return;
         }
-        var s = this;
-        var params = s.params;
-        this.tree = new Tree(s.els.find(params.list), {
+        s.tree = new Tree(s.els.find(params.list), {
             data: params.data,
             dataUrl: params.dataUrl,
             selected: params.selected,

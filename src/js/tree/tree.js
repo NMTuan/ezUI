@@ -26,7 +26,18 @@ var tree = {
         var s = this;
         s.els = els;
         s.params = $.extend(true, {}, tree.defaults, {name: 'tree' + random(100)}, params);
+        s.unSelected = function (id) {
+            tree.unSelected.call(s, id);
+        };
+        s.getSelected = function () {
+            return tree.getSelected.call(s);
+        };
+        s.search = function () {
+            return tree.search.apply(s, arguments);
+        };
+
         tree.concatSelected.call(s);    //合并selectedData 到 data
+
         //异步
         if (s.params.dataUrl) {
             var loading = tree.tips.call(s, '努力加载中');
@@ -60,15 +71,6 @@ var tree = {
             });
             s.params.dataChange.call(s);
         }
-        s.unSelected = function (id) {
-            tree.unSelected.call(s, id);
-        };
-        s.getSelected = function () {
-            return tree.getSelected.call(s);
-        };
-        s.search = function () {
-            return tree.search.apply(s, arguments);
-        };
     },
     //初始化
     init: function (el) {
