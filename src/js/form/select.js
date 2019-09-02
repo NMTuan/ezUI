@@ -1,5 +1,5 @@
 var Tree = require('../tree/tree');
-var form = {
+var select = {
     defaults: {
         icon: '.ez-form-select-icon',       //下拉的图标按钮
         item: '.ez-form-select-item',       //整个select
@@ -23,12 +23,12 @@ var form = {
     Select: function (els, params) {
         var s = this;
         s.els = els;
-        s.params = $.extend(true, {}, form.defaults, params);
-        form.renderTree.call(s);
+        s.params = $.extend(true, {}, select.defaults, params);
+        select.renderTree.call(s);
         $.each(els, function () {
             var el = $(this);
-            form.init.call(s, el);
-            form.events.call(s, el);
+            select.init.call(s, el);
+            select.events.call(s, el);
         });
     },
     init: function (el) {
@@ -37,7 +37,7 @@ var form = {
         var list = el.find(params.list);
         list.css('max-height', this.params.listHeight);
         if (params.searchKeys.length > 0 || params.searchUrl) {
-            form.renderSearch.call(s, el);
+            select.renderSearch.call(s, el);
         }
     },
     renderTree: function(){
@@ -56,7 +56,7 @@ var form = {
             dataChange: function () {
                 console.log('change');
                 params.selected = this.getSelected();
-                form.renderVal.call(s, s.els);
+                select.renderVal.call(s, s.els);
             }
         });
     },
@@ -94,7 +94,7 @@ var form = {
             timer = setTimeout(function () {
                 clearTimeout(timer);
                 var value = $.trim(that.val());
-                form.search.call(s, value);
+                select.search.call(s, value);
             }, s.params.searchTime);
         });
     },
@@ -106,11 +106,11 @@ var form = {
         var body = el.find(params.body);
 
         el.on('click', function () {
-            form.show.call(s, el);
+            select.show.call(s, el);
         });
         head.on('click', function (e) {
             e.stopPropagation();
-            form.show.call(s, el);
+            select.show.call(s, el);
         });
         head.on('click', params.removeBtn, function (e) {
             e.stopPropagation();
@@ -121,12 +121,12 @@ var form = {
         });
         icon.on('click', function (e) {
             e.stopPropagation();
-            form.toggle.call(s, el);
+            select.toggle.call(s, el);
         });
         //任意位置, 关闭
         $(document).on('click', function (e) {
             if (e.target !== el[0] && $(e.target).closest(el).length === 0 && body.css('display') !== 'none') {
-                form.hide.call(s, el);
+                select.hide.call(s, el);
             }
         });
     },
@@ -160,7 +160,7 @@ var form = {
             return;
         }
         body.show();
-        var dir = form.showWhere(body, el);
+        var dir = select.showWhere(body, el);
         //向上显示
         if ((params.dir === 1 && dir.top === true) || (dir.bottom === false && dir.top === true)) {
             body.css('bottom', height);
@@ -168,7 +168,7 @@ var form = {
             body.css('top', height);
         }
         //如果有搜索, 默认聚焦
-        if(params.searchKeys.length > 0){
+        if(params.searchKeys.length > 0 || params.searchUrl){
             el.find(params.search).find('input').focus();
         }
     },
@@ -181,9 +181,9 @@ var form = {
     toggle: function (el) {
         var body = el.find(this.params.body);
         if (body.css('display') === 'none') {
-            form.show.apply(this, arguments);
+            select.show.apply(this, arguments);
         } else {
-            form.hide.apply(this, arguments);
+            select.hide.apply(this, arguments);
         }
     },
 
@@ -192,11 +192,11 @@ var form = {
 
 $.fn.extend({
     ez_form_select: function (params) {
-        new form.Select(this, params);
+        new select.Select(this, params);
         return this;
     }
 });
 
 module.exports = {
-    select: form.Select
+    select: select.Select
 };

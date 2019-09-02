@@ -13997,11 +13997,11 @@ ez.role = require('./role/role'); //权限的布局结构
 
 ez.msg = require('./msg/msg'); //消息
 
-ez.form = require('./form/form'); //表单
+ez.select = require('./form/select'); //表单, select
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8ae61676.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/form":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5880ea31.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/select":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14046,7 +14046,7 @@ module.exports = _fixedContainer.fixedContainer;
 
 var Tree = require('../tree/tree');
 
-var form = {
+var select = {
   defaults: {
     icon: '.ez-form-select-icon',
     //下拉的图标按钮
@@ -14087,12 +14087,12 @@ var form = {
   Select: function Select(els, params) {
     var s = this;
     s.els = els;
-    s.params = $.extend(true, {}, form.defaults, params);
-    form.renderTree.call(s);
+    s.params = $.extend(true, {}, select.defaults, params);
+    select.renderTree.call(s);
     $.each(els, function () {
       var el = $(this);
-      form.init.call(s, el);
-      form.events.call(s, el);
+      select.init.call(s, el);
+      select.events.call(s, el);
     });
   },
   init: function init(el) {
@@ -14102,7 +14102,7 @@ var form = {
     list.css('max-height', this.params.listHeight);
 
     if (params.searchKeys.length > 0 || params.searchUrl) {
-      form.renderSearch.call(s, el);
+      select.renderSearch.call(s, el);
     }
   },
   renderTree: function renderTree() {
@@ -14123,7 +14123,7 @@ var form = {
       dataChange: function dataChange() {
         console.log('change');
         params.selected = this.getSelected();
-        form.renderVal.call(s, s.els);
+        select.renderVal.call(s, s.els);
       }
     });
   },
@@ -14163,7 +14163,7 @@ var form = {
       timer = setTimeout(function () {
         clearTimeout(timer);
         var value = $.trim(that.val());
-        form.search.call(s, value);
+        select.search.call(s, value);
       }, s.params.searchTime);
     });
   },
@@ -14174,11 +14174,11 @@ var form = {
     var head = el.find(params.head);
     var body = el.find(params.body);
     el.on('click', function () {
-      form.show.call(s, el);
+      select.show.call(s, el);
     });
     head.on('click', function (e) {
       e.stopPropagation();
-      form.show.call(s, el);
+      select.show.call(s, el);
     });
     head.on('click', params.removeBtn, function (e) {
       e.stopPropagation();
@@ -14189,12 +14189,12 @@ var form = {
     });
     icon.on('click', function (e) {
       e.stopPropagation();
-      form.toggle.call(s, el);
+      select.toggle.call(s, el);
     }); //任意位置, 关闭
 
     $(document).on('click', function (e) {
       if (e.target !== el[0] && $(e.target).closest(el).length === 0 && body.css('display') !== 'none') {
-        form.hide.call(s, el);
+        select.hide.call(s, el);
       }
     });
   },
@@ -14234,7 +14234,7 @@ var form = {
     }
 
     body.show();
-    var dir = form.showWhere(body, el); //向上显示
+    var dir = select.showWhere(body, el); //向上显示
 
     if (params.dir === 1 && dir.top === true || dir.bottom === false && dir.top === true) {
       body.css('bottom', height);
@@ -14243,7 +14243,7 @@ var form = {
     } //如果有搜索, 默认聚焦
 
 
-    if (params.searchKeys.length > 0) {
+    if (params.searchKeys.length > 0 || params.searchUrl) {
       el.find(params.search).find('input').focus();
     }
   },
@@ -14257,22 +14257,22 @@ var form = {
     var body = el.find(this.params.body);
 
     if (body.css('display') === 'none') {
-      form.show.apply(this, arguments);
+      select.show.apply(this, arguments);
     } else {
-      form.hide.apply(this, arguments);
+      select.hide.apply(this, arguments);
     }
   }
 };
 $.fn.extend({
   ez_form_select: function ez_form_select(params) {
-    new form.Select(this, params);
+    new select.Select(this, params);
     return this;
   }
 });
 module.exports = {
-  select: form.Select
+  select: select.Select
 };
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\form.js","/form")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
 },{"../tree/tree":30,"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
