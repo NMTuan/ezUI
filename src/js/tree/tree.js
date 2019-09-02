@@ -25,7 +25,7 @@ var tree = {
     },
     Tree: function (els, params) {
         var s = this;
-        s.els = els;
+        s.el = els.first();
         s.params = $.extend(true, {}, tree.defaults, {name: 'tree' + random(100)}, params);
         s.unSelected = function (id) {
             tree.unSelected.call(s, id);
@@ -36,66 +36,35 @@ var tree = {
         s.search = function () {
             return tree.search.apply(s, arguments);
         };
+        tree.init.call(s);
+        tree.events.call(s);
+    },
+    //初始化
+    init: function () {
+        var s = this;
+        var params = s.params;
 
         //处理默认选中的数据
-        if (s.params.selected.length > 0) {
-            $.each(s.params.selected, function () {
+        if (params.selected.length > 0) {
+            $.each(params.selected, function () {
                 this.selected = true;
             });
         }
 
-        tree.concat.call(s, s.params.data, s.params.selected, {push_existence: false});
+        //更新默认数据信息
+        tree.concat.call(s, params.data, params.selected, {push_existence: false});
 
         //异步
-        if (s.params.dataUrl) {
-            var loading = tree.tips.call(s, '努力加载中');
-            els.html(loading);
-            $.getJSON(s.params.dataUrl)
-                .done(function (res) { //success
-                    if (res.code !== '40000') {
-                        var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
-                        els.html(error);
-                        return;
-                    }
-                    tree.concat.call(s, s.params.data, res.result);
-                    tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
-                    tree.concat.call(s, s.params.data, s.params.selected, {push_existence: false});
-
-                    $.each(els, function () {
-                        var el = $(this);
-                        tree.init.call(s, el);
-                    });
-                    s.params.dataChange.call(s);
-                })
-                .fail(function () { //error
-                    var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
-                    els.html(error);
-                })
-                .always(function () {   //complete
-                    loading.remove();
-                })
-            ;
-        } else {
-            $.each(els, function () {
-                var el = $(this);
-                tree.init.call(s, el);
+        if (params.dataUrl) {
+            tree.getJson.call(s, params.dataUrl, function (res) {
+                tree.concat.call(s, params.data, res.result);
+                tree.concat.call(s, params.selected, res.result, {push_existence: false});
+                tree.concat.call(s, params.data, params.selected, {push_existence: false});
+                tree.appendTree.call(s);
             });
-            s.params.dataChange.call(s);
+        } else {
+            tree.appendTree.call(s);
         }
-    },
-    //初始化
-    init: function (el) {
-        var s = this;
-        var html = tree.render.call(this);
-        if (html.html() === '') {
-            var tips = '暂无内容';
-            if (s.params.searchUrl) {
-                tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
-            }
-            html = tree.tips.call(s, tips);
-        }
-        el.html(html);
-        tree.events.call(this, el);
     },
     //拼合selected到data
     concatSelected: function () {
@@ -108,10 +77,9 @@ var tree = {
     //循环data往target里插入, 存在则更新, 否则插入.
     concat: function (target, data, options) {
         var defaults = {
-            push_existence: true
+            push_existence: true,
         };
         options = $.extend(true, {}, defaults, options);
-        var s = this;
         if (data.length === 0) {
             return;
         }
@@ -147,12 +115,11 @@ var tree = {
         });
     },
     //事件
-    events: function (el) {
-        console.log('event');
+    events: function () {
         var s = this;
+        var el = s.el;
         var params = s.params;
         el.on('click', 'input', function () {
-            console.log('x')
             //插入事件, 若返回false, 则返回
             var before = params.beforeChoose($(this), el);
             if (before === false) {
@@ -194,10 +161,26 @@ var tree = {
     },
     //提示区域
     tips: function (content) {
+        var el = this.el;
         var dom = $('<div>');
         dom.addClass(this.params.tips);
         dom.html(content);
+        el.html(dom);
         return dom;
+    },
+    appendTree: function () {
+        var s = this;
+        var html = tree.render.call(s);
+        if (html.html() === '') {
+            var tips = '暂无内容';
+            if (s.params.searchUrl) {
+                tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
+            }
+            tree.tips.call(s, tips);
+        } else {
+            s.el.html(html);
+        }
+        s.params.dataChange.call(s);
     },
     //把pid==pid的数据构建为dom结构, 包括子集.
     render: function (pid) {
@@ -209,7 +192,10 @@ var tree = {
             $.each(data, function (i, item) {
                 var li = tree.li.call(s, item);
                 html.append(li);
-                var child = s.params.searchValue ? [] : tree.getChildData.call(s, item.id);
+                if (s.params.searchValue) {
+                    return;
+                }
+                var child = tree.getChildData.call(s, item.id);
                 if (child.length > 0) {
                     var ul = tree.ul.call(s);
                     li.append(ul);
@@ -235,24 +221,48 @@ var tree = {
     getData: function (id, data) {
         data = data || this.params.data;
         id = id || 0;
-        var data = [];
+        var _data = [];
         $.each(data, function (i, item) {
             if (item.id === id) {
-                data.push(item);
+                _data.push(item);
                 return false;
             }
         });
-        return data;
+        return _data;
+    },
+    //取数据
+    getJson: function (url, success) {
+        var s = this;
+        if (!url && typeof success === 'function') {
+            success({});
+            return;
+        }
+        var loading = tree.tips.call(s, '努力加载中');
+        $.getJSON(url)
+            .done(function (res) { //success
+                if (res.code !== '40000') {
+                    tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+                    return;
+                }
+                if (typeof success === 'function') {
+                    success(res);
+                }
+            })
+            .fail(function () { //error
+                tree.tips.call(s, '数据加载失败, 请刷新后重试!');
+            })
+            .always(function () {   //complete
+                loading.remove();
+            })
+        ;
     },
 
     //方法
     //选择
     selected: function (id) {
-        console.log('selected')
         var s = this;
         var params = s.params;
         var currentData = tree.getData.call(s, id);
-        console.table(currentData);
         tree.concat(params.selected, currentData);
         $.each(currentData, function () {
             if (this.selected !== true) {
@@ -263,24 +273,26 @@ var tree = {
     },
     //取消选择
     unSelected: function (id) {
-        console.log('un')
         var s = this;
         var params = s.params;
+        var selectedData = tree.getData.call(s, id, params.selected);
         var currentData = tree.getData.call(s, id);
-        tree.delete(params.selected, currentData);
+
+        tree.delete(params.selected, selectedData);
         $.each(currentData, function () {
             if (this.selected === true) {
                 this.selected = false;
                 var li = tree.li.call(s, this);
-                if (!params.searchValue) { //有搜索的时候平级显示,所以不需要找下级.
-                    var child = tree.render.call(s, id);
-                    var current = $('#' + params.name + '_' + id);
-                    current.html('');
-                    current.append(li).append(child);
+                var child = tree.render.call(s, id);
+                var current = $('#' + params.name + '_' + id);
+                current.html('');
+                current.append(li);
+                if (!params.searchValue) {
+                    current.append(child);
                 }
             }
         });
-        params.dataChange.call(s);
+        tree.appendTree.call(s);
     },
     //取所有选中数据
     getSelected: function () {
@@ -292,63 +304,38 @@ var tree = {
         var params = s.params;
         params.searchValue = $.trim(value);
         params.searchData = []; //清空搜索数据, 下面重构数据
-        console.log('search key: ' + value);
-        if (params.searchValue) {
-            if (params.searchUrl) {   //异步查询模式
-                var loading = tree.tips.call(s, '努力加载中');
-                s.els.html(loading);
-                $.getJSON(params.searchUrl, {data: new Date().getTime()})
-                    .done(function (res) {
-                        if (res.code !== '40000') {
-                            var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
-                            els.html(error);
-                            return;
-                        }
-                        s.params.searchData = res.result;
-                        s.params.data = res.result;
-                        tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
-                        tree.concat.call(s, s.params.searchData, s.params.selected, {push_existence: false});
-
-                        $.each(s.els, function () {
-                            var el = $(this);
-                            tree.init.call(s, el);
-                        });
-                        s.params.dataChange.call(s);
-
-                    })
-                    .fail(function () {
-                        var error = tree.tips.call(s, '数据加载失败, 请刷新后重试!');
-                        s.els.html(error);
-                    })
-                    .always(function () {
-                        loading.remove();
-                    })
-                ;
-                return;
-            }
-            //本地查询
-            $.each(s.params.data, function () {
-                var item = this;
-                $.each(s.params.searchKeys, function () {
-                    var key = this;
-                    if (typeof item[key] === 'number' && item[key] === value) {
-                        params.searchData.push(item);
-                        return false;
-                    }
-                    if (typeof item[key] === 'string' && item[key].indexOf(value) >= 0) {
-                        params.searchData.push(item);
-                        return false;
-                    }
-                    if (typeof item[key] === 'boolean' && item[key].toString() === value) {
-                        params.searchData.push(item);
-                        return false;
-                    }
-                });
-            });
+        if (!params.searchValue) {
+            tree.appendTree.call(s);
+            return;
         }
-        $.each(s.els, function () {
-            var el = $(this);
-            tree.init.call(s, el);
+        if (params.searchUrl) {   //异步查询模式
+            tree.getJson.call(s, params.searchUrl, function (res) {
+                s.params.searchData = res.result;
+                s.params.data = res.result;
+                tree.concat.call(s, s.params.selected, res.result, {push_existence: false});
+                tree.concat.call(s, s.params.searchData, s.params.selected, {push_existence: false});
+                tree.appendTree.call(s);
+            });
+            return;
+        }
+        $.each(s.params.data, function () { //本地查询
+            var item = this;
+            $.each(s.params.searchKeys, function () {
+                var key = this;
+                if (typeof item[key] === 'number' && item[key] === value) {
+                    params.searchData.push(item);
+                    return false;
+                }
+                if (typeof item[key] === 'string' && item[key].indexOf(value) >= 0) {
+                    params.searchData.push(item);
+                    return false;
+                }
+                if (typeof item[key] === 'boolean' && item[key].toString() === value) {
+                    params.searchData.push(item);
+                    return false;
+                }
+            });
+            tree.appendTree.call(s);
         });
     }
 };

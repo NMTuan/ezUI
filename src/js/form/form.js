@@ -54,6 +54,7 @@ var form = {
             searchKeys: params.searchKeys,
             searchUrl: params.searchUrl,
             dataChange: function () {
+                console.log('change');
                 params.selected = this.getSelected();
                 form.renderVal.call(s, s.els);
             }
@@ -105,11 +106,11 @@ var form = {
         var body = el.find(params.body);
 
         el.on('click', function () {
-            form.toggle.call(s, el);
+            form.show.call(s, el);
         });
         head.on('click', function (e) {
             e.stopPropagation();
-            form.toggle.call(s, el);
+            form.show.call(s, el);
         });
         head.on('click', params.removeBtn, function (e) {
             e.stopPropagation();
