@@ -22,17 +22,15 @@ var select = {
     },
     Select: function (els, params) {
         var s = this;
-        s.els = els;
+        s.el = els.first();
         s.params = $.extend(true, {}, select.defaults, params);
         select.renderTree.call(s);
-        $.each(els, function () {
-            var el = $(this);
-            select.init.call(s, el);
-            select.events.call(s, el);
-        });
+        select.init.call(s);
+        select.events.call(s);
     },
-    init: function (el) {
+    init: function () {
         var s = this;
+        var el = s.el;
         var params = s.params;
         var list = el.find(params.list);
         list.css('max-height', this.params.listHeight);
@@ -46,7 +44,7 @@ var select = {
         if(this.tree){
             return;
         }
-        s.tree = new Tree(s.els.find(params.list), {
+        s.tree = new Tree(s.el.find(params.list), {
             data: params.data,
             dataUrl: params.dataUrl,
             selected: params.selected,
@@ -54,14 +52,14 @@ var select = {
             searchKeys: params.searchKeys,
             searchUrl: params.searchUrl,
             dataChange: function () {
-                console.log('change');
                 params.selected = this.getSelected();
-                select.renderVal.call(s, s.els);
+                select.renderVal.call(s);
             }
         });
     },
-    renderVal: function (el) {
+    renderVal: function () {
         var s = this;
+        var el = s.el;
         var params = s.params;
         var head = el.find(params.head);
         head.html('');
@@ -78,8 +76,9 @@ var select = {
             field.append('<option value="' + item.id + '">' + item.title + '</option>')
         });
     },
-    renderSearch: function (el) {
+    renderSearch: function () {
         var s = this;
+        var el = s.el;
         var search = $('<div>').addClass(s.params.search.replace('.', ''));
         var ipt = $('<input>').attr({
             type: 'text',
@@ -98,8 +97,9 @@ var select = {
             }, s.params.searchTime);
         });
     },
-    events: function (el) {
+    events: function () {
         var s = this;
+        var el = s.el;
         var params = s.params;
         var icon = el.find(params.icon);
         var head = el.find(params.head);
@@ -151,8 +151,9 @@ var select = {
         body.css('overflow', ov);
         return rs;
     },
-    show: function (el) {
+    show: function () {
         var s = this;
+        var el = s.el;
         var params = s.params;
         var height = el.height();
         var body = el.find(params.body);
@@ -172,14 +173,14 @@ var select = {
             el.find(params.search).find('input').focus();
         }
     },
-    hide: function (el) {
-        el.find(this.params.body).css({
+    hide: function () {
+        this.el.find(this.params.body).css({
             top: '',
             bottom: ''
         }).hide();
     },
-    toggle: function (el) {
-        var body = el.find(this.params.body);
+    toggle: function () {
+        var body = this.el.find(this.params.body);
         if (body.css('display') === 'none') {
             select.show.apply(this, arguments);
         } else {

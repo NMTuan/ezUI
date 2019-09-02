@@ -14000,7 +14000,7 @@ ez.msg = require('./msg/msg'); //消息
 ez.select = require('./form/select'); //表单, select
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5880ea31.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_44eaabb7.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/select":17,"./headlines/headlines":18,"./iframeTabs/iframeTabs":19,"./imageView/imageView":20,"./log/log":21,"./menuTree/menuTree":22,"./msg/msg":23,"./renderHeight/renderHeight":25,"./role/role":26,"./scrollWheel/scrollWheel":27,"./subNav/subNav":28,"./tabs/tabs":29,"./tree/tree":30,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14086,17 +14086,15 @@ var select = {
   },
   Select: function Select(els, params) {
     var s = this;
-    s.els = els;
+    s.el = els.first();
     s.params = $.extend(true, {}, select.defaults, params);
     select.renderTree.call(s);
-    $.each(els, function () {
-      var el = $(this);
-      select.init.call(s, el);
-      select.events.call(s, el);
-    });
+    select.init.call(s);
+    select.events.call(s);
   },
-  init: function init(el) {
+  init: function init() {
     var s = this;
+    var el = s.el;
     var params = s.params;
     var list = el.find(params.list);
     list.css('max-height', this.params.listHeight);
@@ -14113,7 +14111,7 @@ var select = {
       return;
     }
 
-    s.tree = new Tree(s.els.find(params.list), {
+    s.tree = new Tree(s.el.find(params.list), {
       data: params.data,
       dataUrl: params.dataUrl,
       selected: params.selected,
@@ -14121,14 +14119,14 @@ var select = {
       searchKeys: params.searchKeys,
       searchUrl: params.searchUrl,
       dataChange: function dataChange() {
-        console.log('change');
         params.selected = this.getSelected();
-        select.renderVal.call(s, s.els);
+        select.renderVal.call(s);
       }
     });
   },
-  renderVal: function renderVal(el) {
+  renderVal: function renderVal() {
     var s = this;
+    var el = s.el;
     var params = s.params;
     var head = el.find(params.head);
     head.html('');
@@ -14147,8 +14145,9 @@ var select = {
       field.append('<option value="' + item.id + '">' + item.title + '</option>');
     });
   },
-  renderSearch: function renderSearch(el) {
+  renderSearch: function renderSearch() {
     var s = this;
+    var el = s.el;
     var search = $('<div>').addClass(s.params.search.replace('.', ''));
     var ipt = $('<input>').attr({
       type: 'text',
@@ -14167,8 +14166,9 @@ var select = {
       }, s.params.searchTime);
     });
   },
-  events: function events(el) {
+  events: function events() {
     var s = this;
+    var el = s.el;
     var params = s.params;
     var icon = el.find(params.icon);
     var head = el.find(params.head);
@@ -14223,8 +14223,9 @@ var select = {
     body.css('overflow', ov);
     return rs;
   },
-  show: function show(el) {
+  show: function show() {
     var s = this;
+    var el = s.el;
     var params = s.params;
     var height = el.height();
     var body = el.find(params.body);
@@ -14247,14 +14248,14 @@ var select = {
       el.find(params.search).find('input').focus();
     }
   },
-  hide: function hide(el) {
-    el.find(this.params.body).css({
+  hide: function hide() {
+    this.el.find(this.params.body).css({
       top: '',
       bottom: ''
     }).hide();
   },
-  toggle: function toggle(el) {
-    var body = el.find(this.params.body);
+  toggle: function toggle() {
+    var body = this.el.find(this.params.body);
 
     if (body.css('display') === 'none') {
       select.show.apply(this, arguments);
