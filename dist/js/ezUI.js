@@ -14002,7 +14002,7 @@ ez.select = require('./form/select'); //表单, select
 ez.player = require('./form/player'); //表单, player
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2089f535.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9121da62.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./headlines/headlines":19,"./iframeTabs/iframeTabs":20,"./imageView/imageView":21,"./log/log":22,"./menuTree/menuTree":23,"./msg/msg":24,"./renderHeight/renderHeight":26,"./role/role":27,"./scrollWheel/scrollWheel":28,"./subNav/subNav":29,"./tabs/tabs":30,"./tree/tree":31,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14059,32 +14059,46 @@ var player = {
   //播放器
   playUrl: '',
   //当前播放地址
+  currentEl: '',
+  //当前播放按钮, 如果不同, 即使是playUrl一样, 也要重新处理.
   Play: function Play(el, params) {
     var s = this;
     s.el = $(el);
     s.params = $.extend(true, {}, player.defaults, params);
+    s.target = $(s.el.data('target'));
     player.events.call(s);
+    s.el.on('click', function () {
+      var url = s.el.data('src') || s.el.attr('src') || s.el.attr('href');
+
+      if (s.target.length > 0) {
+        if (s.target.is('select')) {
+          url = s.target.find(':selected').data('src');
+        }
+      }
+
+      if (!url) {
+        return;
+      } //判断是否重载
+
+
+      if (player.currentEl == s.el && player.playUrl === url) {
+        player.playWave.playPause();
+      } else {
+        player.initWavesurfer.call(s);
+        player.changeIcon.call(s, 'loading');
+        player.playWave.load(url);
+        player.currentEl = s.el;
+        player.playUrl = url;
+      }
+    });
   },
   initWavesurfer: function initWavesurfer() {
     var s = this;
-
-    if (player.playWave) {
-      player.playWave.destroy();
-      player.playWave = '';
-    }
-
-    var content = s.el.closest('.ez-form-content');
-    var container = $('<div>').addClass('ez-form-wave').css({
-      marginTop: content.css('paddingTop'),
-      marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
-      marginLeft: content.css('paddingLeft'),
-      height: content.height() - 1
-    });
+    player.destroyWavesurfer.call(s);
+    var container = player.renderWavesurferContainer.call(s);
     var height = s.el.outerHeight();
-    content.find('.ez-form-control').css('z-index', 1);
-    content.find('.ez-form-flex').prepend(container);
     player.playWave = WaveSurfer.create({
-      container: container[0],
+      container: container,
       interact: false,
       //开启鼠标交互
       autoCenter: true,
@@ -14106,7 +14120,6 @@ var player = {
 
     });
     player.playWave.on('ready', function () {
-      console.log('ready');
       player.changeIcon.call(s, 'pause');
 
       if (s.params.autoPlay) {
@@ -14114,15 +14127,12 @@ var player = {
       }
     });
     player.playWave.on('play', function () {
-      console.log('play');
       player.changeIcon.call(s, 'pause');
     });
     player.playWave.on('pause', function () {
-      console.log('pause');
       player.changeIcon.call(s, 'play');
     });
     player.playWave.on('destroy', function () {
-      console.log('destroy');
       player.changeIcon.call(s, 'play');
     });
     player.playWave.on('error', function () {
@@ -14133,41 +14143,38 @@ var player = {
       player.changeIcon.call(s, 'retry');
     });
   },
-  events: function events() {
+  renderWavesurferContainer: function renderWavesurferContainer() {
     var s = this;
-    var el = s.el;
-    el.on('click', function () {
-      var url = el.data('src') || el.attr('src') || el.attr('href');
-
-      if (el.data('target')) {
-        var target = $(el.data('target'));
-
-        if (target.is('select')) {
-          url = target.find(':selected').data('src');
-        }
-      }
-
-      if (!url) {
-        return;
-      } //判断状态
-
-
-      if (player.playUrl === url) {
-        //要播放的就是当前播放的, 则切换播放状态
-        player.playWave.playPause();
-      } else {
-        //否则, 重新加载
-        console.log('loading');
-        player.initWavesurfer.call(s);
-        player.changeIcon.call(s, 'loading');
-        player.playWave.load(url);
-        player.playUrl = url;
-      }
+    var content = s.el.closest('.ez-form-content');
+    var container = $('<div>').addClass('ez-form-wave').css({
+      marginTop: content.css('paddingTop'),
+      marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
+      marginLeft: content.css('paddingLeft'),
+      height: content.height() - 1
     });
+    content.find('.ez-form-control').css('z-index', 1);
+    content.find('.ez-form-flex').prepend(container);
+    return container[0];
   },
-  // position: function () {
-  //
-  // },
+  destroyWavesurfer: function destroyWavesurfer() {
+    if (player.playWave) {
+      player.playWave.destroy();
+      player.playWave = '';
+    }
+  },
+  events: function events() {
+    var s = this; //切换select
+
+    if (s.target && s.target.is('select')) {
+      s.target.on('change', function () {
+        if (!player.playWave) {
+          return;
+        }
+
+        player.playWave.pause();
+      });
+    }
+  },
   changeIcon: function changeIcon(icon) {
     var el = this.el;
 

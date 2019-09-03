@@ -8,30 +8,44 @@ var player = {
     },
     playWave: '',   //播放器
     playUrl: '',    //当前播放地址
+    currentEl: '',  //当前播放按钮, 如果不同, 即使是playUrl一样, 也要重新处理.
     Play: function (el, params) {
         var s = this;
         s.el = $(el);
         s.params = $.extend(true, {}, player.defaults, params);
+        s.target = $(s.el.data('target'));
+
         player.events.call(s);
+        s.el.on('click', function () {
+            var url = s.el.data('src') || s.el.attr('src') || s.el.attr('href');
+            if (s.target.length > 0) {
+                if (s.target.is('select')) {
+                    url = s.target.find(':selected').data('src');
+                }
+            }
+            if (!url) {
+                return;
+            }
+            //判断是否重载
+            if (player.currentEl == s.el && player.playUrl === url) {
+                player.playWave.playPause();
+            } else {
+                player.initWavesurfer.call(s);
+                player.changeIcon.call(s, 'loading');
+                player.playWave.load(url);
+                player.currentEl = s.el;
+                player.playUrl = url;
+            }
+        });
     },
+
     initWavesurfer: function () {
         var s = this;
-        if (player.playWave) {
-            player.playWave.destroy();
-            player.playWave = '';
-        }
-        var content = s.el.closest('.ez-form-content');
-        var container = $('<div>').addClass('ez-form-wave').css({
-            marginTop: content.css('paddingTop'),
-            marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
-            marginLeft: content.css('paddingLeft'),
-            height: content.height() - 1,
-        });
+        player.destroyWavesurfer.call(s);
+        var container = player.renderWavesurferContainer.call(s);
         var height = s.el.outerHeight();
-        content.find('.ez-form-control').css('z-index', 1);
-        content.find('.ez-form-flex').prepend(container);
         player.playWave = WaveSurfer.create({
-            container: container[0],
+            container: container,
             interact: false,    //开启鼠标交互
             autoCenter: true,   //如果存在滚动条，则将波形置于进度的中心。
             barWidth: 1,
@@ -47,22 +61,18 @@ var player = {
 
         });
         player.playWave.on('ready', function () {
-            console.log('ready');
             player.changeIcon.call(s, 'pause');
             if (s.params.autoPlay) {
                 player.playWave.play();
             }
         });
         player.playWave.on('play', function () {
-            console.log('play');
             player.changeIcon.call(s, 'pause');
         });
         player.playWave.on('pause', function () {
-            console.log('pause');
             player.changeIcon.call(s, 'play');
         });
         player.playWave.on('destroy', function () {
-            console.log('destroy');
             player.changeIcon.call(s, 'play');
         });
         player.playWave.on('error', function () {
@@ -74,35 +84,40 @@ var player = {
         });
     },
 
+    renderWavesurferContainer: function () {
+        var s = this;
+        var content = s.el.closest('.ez-form-content');
+        var container = $('<div>').addClass('ez-form-wave').css({
+            marginTop: content.css('paddingTop'),
+            marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
+            marginLeft: content.css('paddingLeft'),
+            height: content.height() - 1,
+        });
+        content.find('.ez-form-control').css('z-index', 1);
+        content.find('.ez-form-flex').prepend(container);
+        return container[0];
+    },
+
+    destroyWavesurfer: function () {
+        if (player.playWave) {
+            player.playWave.destroy();
+            player.playWave = '';
+        }
+    },
+
     events: function () {
         var s = this;
-        var el = s.el;
-        el.on('click', function () {
-            var url = el.data('src') || el.attr('src') || el.attr('href');
-            if (el.data('target')) {
-                var target = $(el.data('target'));
-                if (target.is('select')) {
-                    url = target.find(':selected').data('src');
+        //切换select
+        if (s.target && s.target.is('select')) {
+            s.target.on('change', function () {
+                if (!player.playWave) {
+                    return;
                 }
-            }
-            if (!url) {
-                return;
-            }
-            //判断状态
-            if (player.playUrl === url) { //要播放的就是当前播放的, 则切换播放状态
-                player.playWave.playPause();
-            } else {    //否则, 重新加载
-                console.log('loading');
-                player.initWavesurfer.call(s);
-                player.changeIcon.call(s, 'loading');
-                player.playWave.load(url);
-                player.playUrl = url;
-            }
-        });
+                player.playWave.pause();
+            });
+        }
+
     },
-    // position: function () {
-    //
-    // },
     changeIcon: function (icon) {
         var el = this.el;
         if (icon === 'loading') {
@@ -118,6 +133,7 @@ var player = {
             el.html(this.params.retryIcon);
         }
     },
+
     play: function (els, params) {
         $.each(els, function () {
             new player.Play(this, params);
