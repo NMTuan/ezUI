@@ -1,9 +1,10 @@
 var player = {
     defaults: {
-        loadingIcon: '<i class="remixicon-loader-2-line"></i>',
+        loadingIcon: '<i class="remixicon-loader-2-line fa fa-spin"></i>',
         playIcon: '<i class="remixicon-play-fill"></i>',
         pauseIcon: '<i class="remixicon-pause-fill"></i>',
         retryIcon: '<i class="remixicon-refresh-line"></i>',
+        autoPlay: true, //加载完毕自动播放
     },
     playWave: '',   //播放器
     playUrl: '',    //当前播放地址
@@ -19,27 +20,38 @@ var player = {
             player.playWave.destroy();
             player.playWave = '';
         }
-        var container = s.el.closest('.ez-form-flex').find('.ez-form-wave')[0];
+        var content = s.el.closest('.ez-form-content');
+        var container = $('<div>').addClass('ez-form-wave').css({
+            marginTop: content.css('paddingTop'),
+            marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
+            marginLeft: content.css('paddingLeft'),
+            height: content.height() - 1,
+        });
         var height = s.el.outerHeight();
+        content.find('.ez-form-control').css('z-index', 1);
+        content.find('.ez-form-flex').prepend(container);
         player.playWave = WaveSurfer.create({
-            container: container,
+            container: container[0],
+            interact: false,    //开启鼠标交互
             autoCenter: true,   //如果存在滚动条，则将波形置于进度的中心。
             barWidth: 1,
-            height: height,
+            height: height * 2,
             hideScrollbar: true,    //是否在通常显示水平滚动条时隐藏水平滚动条。
             normalize: true,    //最大峰值算100%
+            waveColor: '#eeeeee',   //频谱颜色
+            progressColor: '#e0e0e0',   //播放后的频谱颜色
+            cursorColor: '#e0e0e0', //指针颜色
             // partialRender: true, //缓存，提高速度，实际使用，发现有时候音谱会不显示。
             // scrollParent: true, //波形图超出容器宽度，是否滚动
             // splitChannels: true,    //分音轨
 
         });
-        // player.playWave.on('loading', function () {
-        //     console.log('loading');
-        // });
         player.playWave.on('ready', function () {
             console.log('ready');
             player.changeIcon.call(s, 'pause');
-            player.playWave.play();
+            if (s.params.autoPlay) {
+                player.playWave.play();
+            }
         });
         player.playWave.on('play', function () {
             console.log('play');
@@ -54,7 +66,10 @@ var player = {
             player.changeIcon.call(s, 'play');
         });
         player.playWave.on('error', function () {
-            console.log('error');
+            s.el.one('click', function () {
+                player.changeIcon.call(s, 'loading');
+                player.playWave.load(player.playUrl);
+            });
             player.changeIcon.call(s, 'retry');
         });
     },
@@ -64,11 +79,17 @@ var player = {
         var el = s.el;
         el.on('click', function () {
             var url = el.data('src') || el.attr('src') || el.attr('href');
-            if(!url){
+            if (el.data('target')) {
+                var target = $(el.data('target'));
+                if (target.is('select')) {
+                    url = target.find(':selected').data('src');
+                }
+            }
+            if (!url) {
                 return;
             }
             //判断状态
-            if(player.playUrl === url){ //要播放的就是当前播放的, 则切换播放状态
+            if (player.playUrl === url) { //要播放的就是当前播放的, 则切换播放状态
                 player.playWave.playPause();
             } else {    //否则, 重新加载
                 console.log('loading');

@@ -8,17 +8,55 @@
 </style>
 <h2><%-title;%></h2>
 <div class="ez-form ez-form-inline ez-form-full">
-    <%-include('./_player.ejs', {url: '/data/music_1.mp3'})%>
+    <div class="ez-form-row">
+        <div class="ez-form-title">多选</div>
+        <div class="ez-form-content">
+            <div class="ez-form-select ez-form-flex">
+                <div class="ez-form-control">
+                    <%- include('./_select_multiple.ejs'); %>
+                </div>
+                <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
+                <select class="ez-form-select-field" name="" multiple>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <%-include('./_input_player.ejs', {url: '/data/music_1.mp3'})%>
+    <%-include('./_select_player.ejs')%>
 </div>
 
 <br>
 
 <div class="ez-form ez-form-inline ez-form-full ez-form-sm">
-    <%-include('./_player.ejs', {url: '/data/music_2.mp3'})%>
+    <%-include('./_input_player.ejs', {url: '/data/music_3.mp3'})%>
 </div>
 
 <script>
-$('.play').ez_form_play();
+$('.input_play').ez_form_play();
+$('.select_play').ez_form_play();
+
+var d = [
+    {id: 1, pid: 0, title: '营业执照复印件'},
+    {id: 2, pid: 0, title: '法人身份证复印件'},
+    {id: 3, pid: 0, title: '经办人手持营业执照及身份证'},
+    {id: 4, pid: 0, title: '中呼服务协议'},
+    {id: 5, pid: 2, title: '22'},
+    {id: 6, pid: 2, title: '23'},
+    {id: 7, pid: 2, title: '24'},
+];
+
+$('.ez-form-select').ez_form_select({
+    selected_max: 0,
+    data: d,
+    selected: [
+        {id: 3, pid: 0, title: '333经办人手持营业执照及身份证'},
+    ],
+    dataUrl: '/data/select_tree.json',
+    // searchUrl: '/data/select_tree.json',
+    searchKeys: ['title', 'selected']
+});
+
 </script>
 
 

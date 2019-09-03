@@ -22,14 +22,49 @@
     <h2>表单试听</h2>
     <div class="ez-form ez-form-inline ez-form-full">
         <div class="ez-form-row">
+            <div class="ez-form-title">多选</div>
+            <div class="ez-form-content">
+                <div class="ez-form-select ez-form-flex">
+                    <div class="ez-form-control">
+                        <dl class="ez-form-select-item">
+                            <dt class="ez-form-select-head"></dt>
+                            <dd class="ez-form-select-body">
+                                <div class="ez-form-select-list"></div>
+                            </dd>
+                        </dl>
+                    </div>
+                    <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
+                    <select class="ez-form-select-field" name="" multiple>
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="ez-form-row">
             <div class="ez-form-title">这是个播放器囔</div>
             <div class="ez-form-content">
                 <div class="ez-form-flex">
-                    <input type="text" class="ez-form-control">
-                    <span class="play ez-form-addon" data-src="/data/music_1.mp3">
+                    <input type="text" class="ez-form-control" value="这里是我选择的音频的路径啊/dist/meida/2012/12/12/name_1.mp3">
+                    <span class="input_play ez-form-addon" data-src="/data/music_1.mp3">
                         <i class="remixicon-play-fill"></i>
                     </span>
-                    <div class="ez-form-wave">wave</div>
+                </div>
+            </div>
+        </div>
+        <div class="ez-form-row">
+            <div class="ez-form-title">这是个播放器囔</div>
+            <div class="ez-form-content">
+                <div class="ez-form-flex">
+                    <select name="" id="select" class="ez-form-control">
+                        <option value="">请选择...</option>
+                        <option value="1" data-src="/data/music_1.mp3">/data/music_1.mp3</option>
+                        <option value="1" data-src="/data/music_2.mp3">/data/music_2.mp3</option>
+                        <option value="1" data-src="/data/music_3.mp3">/data/music_3.mp3</option>
+                        <option value="1" data-src="/data/music_4.mp3">/data/music_4.mp3</option>
+                    </select>
+                    <span class="select_play ez-form-addon" data-target="#select">
+                        <i class="remixicon-play-fill"></i>
+                    </span>
                 </div>
             </div>
         </div>
@@ -40,16 +75,15 @@
             <div class="ez-form-title">这是个播放器囔</div>
             <div class="ez-form-content">
                 <div class="ez-form-flex">
-                    <input type="text" class="ez-form-control">
-                    <span class="play ez-form-addon" data-src="/data/music_2.mp3">
+                    <input type="text" class="ez-form-control" value="这里是我选择的音频的路径啊/dist/meida/2012/12/12/name_1.mp3">
+                    <span class="input_play ez-form-addon" data-src="/data/music_3.mp3">
                         <i class="remixicon-play-fill"></i>
                     </span>
-                    <div class="ez-form-wave">wave</div>
                 </div>
             </div>
         </div>
     </div>
-    <script>$(".play").ez_form_play()</script>
+    <script>$(".input_play").ez_form_play(),$(".select_play").ez_form_play();var d=[{id:1,pid:0,title:"营业执照复印件"},{id:2,pid:0,title:"法人身份证复印件"},{id:3,pid:0,title:"经办人手持营业执照及身份证"},{id:4,pid:0,title:"中呼服务协议"},{id:5,pid:2,title:"22"},{id:6,pid:2,title:"23"},{id:7,pid:2,title:"24"}];$(".ez-form-select").ez_form_select({selected_max:0,data:d,selected:[{id:3,pid:0,title:"333经办人手持营业执照及身份证"}],dataUrl:"/data/select_tree.json",searchKeys:["title","selected"]})</script>
 </body>
 
 </html>

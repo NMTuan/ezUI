@@ -14002,7 +14002,7 @@ ez.select = require('./form/select'); //表单, select
 ez.player = require('./form/player'); //表单, player
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6ebf1999.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2089f535.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./headlines/headlines":19,"./iframeTabs/iframeTabs":20,"./imageView/imageView":21,"./log/log":22,"./menuTree/menuTree":23,"./msg/msg":24,"./renderHeight/renderHeight":26,"./role/role":27,"./scrollWheel/scrollWheel":28,"./subNav/subNav":29,"./tabs/tabs":30,"./tree/tree":31,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14048,10 +14048,12 @@ module.exports = _fixedContainer.fixedContainer;
 
 var player = {
   defaults: {
-    loadingIcon: '<i class="remixicon-loader-2-line"></i>',
+    loadingIcon: '<i class="remixicon-loader-2-line fa fa-spin"></i>',
     playIcon: '<i class="remixicon-play-fill"></i>',
     pauseIcon: '<i class="remixicon-pause-fill"></i>',
-    retryIcon: '<i class="remixicon-refresh-line"></i>'
+    retryIcon: '<i class="remixicon-refresh-line"></i>',
+    autoPlay: true //加载完毕自动播放
+
   },
   playWave: '',
   //播放器
@@ -14071,29 +14073,45 @@ var player = {
       player.playWave = '';
     }
 
-    var container = s.el.closest('.ez-form-flex').find('.ez-form-wave')[0];
+    var content = s.el.closest('.ez-form-content');
+    var container = $('<div>').addClass('ez-form-wave').css({
+      marginTop: content.css('paddingTop'),
+      marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
+      marginLeft: content.css('paddingLeft'),
+      height: content.height() - 1
+    });
     var height = s.el.outerHeight();
+    content.find('.ez-form-control').css('z-index', 1);
+    content.find('.ez-form-flex').prepend(container);
     player.playWave = WaveSurfer.create({
-      container: container,
+      container: container[0],
+      interact: false,
+      //开启鼠标交互
       autoCenter: true,
       //如果存在滚动条，则将波形置于进度的中心。
       barWidth: 1,
-      height: height,
+      height: height * 2,
       hideScrollbar: true,
       //是否在通常显示水平滚动条时隐藏水平滚动条。
-      normalize: true //最大峰值算100%
+      normalize: true,
+      //最大峰值算100%
+      waveColor: '#eeeeee',
+      //频谱颜色
+      progressColor: '#e0e0e0',
+      //播放后的频谱颜色
+      cursorColor: '#e0e0e0' //指针颜色
       // partialRender: true, //缓存，提高速度，实际使用，发现有时候音谱会不显示。
       // scrollParent: true, //波形图超出容器宽度，是否滚动
       // splitChannels: true,    //分音轨
 
-    }); // player.playWave.on('loading', function () {
-    //     console.log('loading');
-    // });
-
+    });
     player.playWave.on('ready', function () {
       console.log('ready');
       player.changeIcon.call(s, 'pause');
-      player.playWave.play();
+
+      if (s.params.autoPlay) {
+        player.playWave.play();
+      }
     });
     player.playWave.on('play', function () {
       console.log('play');
@@ -14108,7 +14126,10 @@ var player = {
       player.changeIcon.call(s, 'play');
     });
     player.playWave.on('error', function () {
-      console.log('error');
+      s.el.one('click', function () {
+        player.changeIcon.call(s, 'loading');
+        player.playWave.load(player.playUrl);
+      });
       player.changeIcon.call(s, 'retry');
     });
   },
@@ -14117,6 +14138,14 @@ var player = {
     var el = s.el;
     el.on('click', function () {
       var url = el.data('src') || el.attr('src') || el.attr('href');
+
+      if (el.data('target')) {
+        var target = $(el.data('target'));
+
+        if (target.is('select')) {
+          url = target.find(':selected').data('src');
+        }
+      }
 
       if (!url) {
         return;

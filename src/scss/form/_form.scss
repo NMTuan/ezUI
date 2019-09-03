@@ -38,7 +38,7 @@
     }
     &-control { //自适应容器
         flex: 1 1 auto;
-        background-color: color('shades', 'white');
+        background-color: transparent;
         margin: 0 2px 0 0;  //为了focus时显示完整的outline
         padding: 0 12px;
         border: 0;
@@ -65,13 +65,13 @@
         }
     }
     &-wave {
-        background-color: rgba(255, 0, 0, 0.2);
+        //background-color: rgba(255, 0, 0, 0.2);
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
         z-index: 1;
-        //position: absolute;
-        //top: 0;
-        //right: 0;
-        //bottom: 0;
-        //left: 0;
     }
 
     &-addon {   //小组件
@@ -83,6 +83,7 @@
         border: 1px solid color('grey', 'l2');
         border-width: 0 1px;
         margin: 0 0 0 -1px;
+        //z-index: 1;
         &:last-child {
             border-right: 0;
         }
@@ -123,7 +124,7 @@
             background-color: #fff;
             border: 1px solid color('grey', 'l2');
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             left: -1px;
             right: -1px;
         }
@@ -135,6 +136,7 @@
             border-bottom: 1px solid color('grey', 'l3');
             input {
                 border: 1px solid color('grey', 'l3');
+                background-color: color('shades', 'white');
             }
         }
         &-list {
