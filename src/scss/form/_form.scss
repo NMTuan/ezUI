@@ -64,6 +64,15 @@
             font-size: 12px;
         }
     }
+    &-wave {
+        background-color: rgba(255, 0, 0, 0.2);
+        z-index: 1;
+        //position: absolute;
+        //top: 0;
+        //right: 0;
+        //bottom: 0;
+        //left: 0;
+    }
 
     &-addon {   //小组件
         white-space: nowrap;

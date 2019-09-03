@@ -1,0 +1,25 @@
+<% title = '表单试听'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+<style>
+    #wavesurfer {
+        /*pointer-events: fill;*/
+    }
+</style>
+<h2><%-title;%></h2>
+<div class="ez-form ez-form-inline ez-form-full">
+    <%-include('./_player.ejs', {url: '/data/music_1.mp3'})%>
+</div>
+
+<br>
+
+<div class="ez-form ez-form-inline ez-form-full ez-form-sm">
+    <%-include('./_player.ejs', {url: '/data/music_2.mp3'})%>
+</div>
+
+<script>
+$('.play').ez_form_play();
+</script>
+
+
+<%- include('../compoents/default/_footer.ejs'); %>

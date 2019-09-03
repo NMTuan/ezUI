@@ -480,6 +480,11 @@ body {
   font-size: 12px;
 }
 
+.ez-form-wave {
+  background-color: rgba(255, 0, 0, 0.2);
+  z-index: 1;
+}
+
 .ez-form-addon {
   white-space: nowrap;
   display: flex !important;

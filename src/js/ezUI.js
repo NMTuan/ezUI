@@ -20,4 +20,5 @@ ez.menuTree = require('./menuTree/menuTree');   //树状菜单
 ez.role = require('./role/role');   //权限的布局结构
 ez.msg = require('./msg/msg');  //消息
 ez.select = require('./form/select');   //表单, select
+ez.player = require('./form/player');   //表单, player
 ez.tree = require('./tree/tree');   //树结构
