@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1d35b1f7.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1bcae113.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14460,13 +14460,15 @@ var _upload = {
   defaults: {
     title: '上传文件',
     type: 'image',
-    //image | audio , todo data.type
-    area: ['400px', 'auto'],
+    //image | audio | wav | mp3, 可以取el的data-type
+    area: ['460px', 'auto'],
     //弹窗大小
     url: '',
     //上传地址, 可以取el的data-src
     multiple: false,
     //是否多选,可以取el的data-multiple
+    accept: null,
+    //文件类型的限制
     uploadTitle: '点击选择文件',
     //上传窗内的标题, 可取el的data-upload-title
     uploadTips: '',
@@ -14493,13 +14495,46 @@ var _upload = {
   Upload: function Upload(el, params) {
     var s = this;
     s.el = $(el);
-    s.params = $.extend(true, {}, _upload.defaults, params);
-    console.log(s.el.data('src'), s.params.url);
+    s.params = $.extend(true, {}, _upload.defaults, params); //若el上有data属性, 则取data, 否则按默认的来.
+
     s.params.url = s.el.data('src') || s.params.url;
     s.params.type = s.el.data('type') || s.params.type;
     s.params.multiple = s.el.data('multiple') || s.params.multiple;
     s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
     s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
+    s.params.type = s.el.data('type') || s.params.type; //格式限定
+
+    if (s.params.type === 'image') {
+      s.params.accept = {
+        title: 'Images',
+        extensions: 'jpg,jpeg,png',
+        mimeTypes: 'image/*'
+      };
+    }
+
+    if (s.params.type === 'audio') {
+      s.params.accept = {
+        title: 'Audio',
+        extensions: 'wav,mp3',
+        mimeTypes: 'audio/wav,audio/mp3'
+      };
+    }
+
+    if (s.params.type === 'wav') {
+      s.params.accept = {
+        title: 'Audio',
+        extensions: 'wav',
+        mimeTypes: 'audio/wav'
+      };
+    }
+
+    if (s.params.type === 'mp3') {
+      s.params.accept = {
+        title: 'Audio',
+        extensions: 'mp3',
+        mimeTypes: 'audio/mp3'
+      };
+    }
 
     _upload.events.call(s);
   },
@@ -14522,24 +14557,40 @@ var _upload = {
     var s = this;
     var title = s.params.uploadTitle;
     var icon = 'remixicon-upload-cloud-line';
+    var tips = s.params.uploadTips;
 
     if (s.params.type === 'image') {
       icon = 'remixicon-landscape-line';
     }
 
-    if (s.params.type === 'audio') {
+    if ($.inArray(s.params.type, ['audio', 'wav', 'mp3']) >= 0) {
       icon = 'remixicon-music-2-line';
     }
 
-    var dom = '' + '<div class="ez-form-upload">' + '<div class="ez-form-upload-inside">' + '<div class="ez-form-upload_file">' + '<i class="ez-form-upload-icon {icon} ri-4x"></i>' + '<div class="ez-form-upload-title">{title}</div>' + '</div>' + '</div>' + '</div>' + '';
-    dom = dom.replace('{title}', title || '');
-    dom = dom.replace('{icon}', icon);
-
-    if (s.params.uploadTips) {
-      dom += '<div class="ez-form-upload-tips">' + '<i class="remixicon-information-line ri-fw"></i> ' + '{tips}' + '</div>' + '';
-      dom = dom.replace('{tips}', s.params.uploadTips);
+    if (s.params.type === 'image') {
+      tips += '仅限后缀名为jpg、jpeg、png的文件。';
     }
 
+    if (s.params.type === 'audio') {
+      tips += '仅限后缀名为wav、mp3的文件。';
+    }
+
+    if (s.params.type === 'wav') {
+      tips += '仅限后缀名为wav的文件。';
+    }
+
+    if (s.params.type === 'mp3') {
+      tips += '仅限后缀名为mp3的文件。';
+    }
+
+    if (s.params.multiple) {
+      tips += '如有多个文件，可一次选择多个文件。';
+    }
+
+    var dom = '' + '<div class="ez-form-upload">' + '<div class="ez-form-upload-inside">' + '<div class="ez-form-upload_file">' + '<i class="ez-form-upload-icon {icon} ri-4x"></i>' + '<div class="ez-form-upload-title">{title}</div>' + '</div>' + '</div>' + '</div>' + '<div class="ez-form-upload-tips">' + '<i class="remixicon-information-line ri-fw"></i> ' + '{tips}' + '</div>' + '';
+    dom = dom.replace('{title}', title || '');
+    dom = dom.replace('{icon}', icon);
+    dom = dom.replace('{tips}', tips);
     return dom;
   },
   initWebUploader: function initWebUploader(layerDom, layerIndex) {
@@ -14550,15 +14601,11 @@ var _upload = {
         id: '.ez-form-upload',
         multiple: s.params.multiple || false
       },
+      accept: s.params.accept,
       auto: true,
       method: 'get',
       formData: s.params.data,
-      fileVal: s.params.field // accept: {
-      //     title: 'Images',
-      //     extensions: 'gif,jpg,jpeg,bmp,png',
-      //     mimeTypes: 'image/*'
-      // },
-
+      fileVal: s.params.field
     }); //上传中
 
     uploader.on('uploadProgress', function () {
@@ -14579,6 +14626,14 @@ var _upload = {
       layer.close(_upload.loadId);
       layer.close(_upload.layerId);
       _upload.msgId = layer.msg('服务器异常，请稍后再试！');
+    });
+    uploader.on('error', function (type) {
+      layer.close(_upload.loadId);
+      layer.close(_upload.layerId);
+
+      if (type === 'Q_TYPE_DENIED') {
+        _upload.msgId = layer.msg('文件类型不正确, 请确认后重试!');
+      }
     });
   }
 };
