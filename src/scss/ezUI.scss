@@ -33,6 +33,20 @@ body {
     &-fixed {
         position: fixed;
     }
+
+    &-cursor {
+        &-pointer {
+            cursor: pointer;
+        }
+
+        &-search {
+            cursor: zoom-in;
+        }
+
+        &-disabled {
+            cursor: not-allowed;
+        }
+    }
 }
 
 //文字颜色
@@ -44,8 +58,8 @@ body {
 //@import './layout/grid';
 //布局
 @import "./layout/layout";
-@import "./form/form";  //表单
-@import "./tree/tree";  //树结构
+@import "./form/form"; //表单
+@import "./tree/tree"; //树结构
 //按钮
 @import './button/button';
 

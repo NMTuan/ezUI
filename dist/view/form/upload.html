@@ -14,6 +14,8 @@
     <script src="/static/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/nprogress/0.2.0/nprogress.js"></script>
     <script src="/static/wavesurfer/3.0.0/wavesurfer.min.js"></script>
+    <script src="/static/webuploader/0.1.5/webuploader.html5only.min.js"></script>
+    <script src="/static/layer/3.1.1/layer.js"></script>
     <script src="/js/ezUI.js"></script>
 </head>
 
@@ -28,7 +30,7 @@
                         <div class="ez-form-control">
                             未选择任何文件
                         </div>
-                        <span class="ez-form-addon">选择文件</span>
+                        <span class="upload ez-form-addon">选择文件</span>
                     </div>
                 </div>
             </div>
@@ -39,53 +41,8 @@
                         <div class="ez-form-control">
                             <span class="ez-form-label">/files/2012-12-12/12/12/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7.jpg <i class="remixicon-close-circle-fill"></i></span>
                         </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title">多选</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                            <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                            <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                        </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title"></div>
-                <div class="ez-form-content">
-                    <button class="ez-btn ez-btn-primary">提交</button>
-                    <button class="ez-btn">取消</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <hr>
-    <div class="ez-form ez-form-inline ez-form-full ez-form-sm">
-        <form action="">
-            <div class="ez-form-row">
-                <div class="ez-form-title">文件上传</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            未选择任何文件
-                        </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title">单选</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            <span class="ez-form-label">/files/2012-12-12/12/12/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7.jpg <i class="remixicon-close-circle-fill"></i></span>
-                        </div>
+                        <span class="ez-form-addon"><i class="remixicon-close-line"></i></span>
+                        <span class="ez-form-addon"><i class="remixicon-play-fill"></i></span>
                         <span class="ez-form-addon">选择文件</span>
                     </div>
                 </div>
@@ -114,53 +71,6 @@
     </div>
     <hr>
     <h2>分行</h2>
-    <div class="ez-form">
-        <form action="">
-            <div class="ez-form-row">
-                <div class="ez-form-title">文件上传</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            未选择任何文件
-                        </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title">单选</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            <span class="ez-form-label">/files/2012-12-12/12/12/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7.jpg <i class="remixicon-close-circle-fill"></i></span>
-                        </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title">多选</div>
-                <div class="ez-form-content">
-                    <div class="ez-form-flex">
-                        <div class="ez-form-control">
-                            <span class="ez-form-label">绑定电话缴费凭证.png <i class="remixicon-close-circle-fill"></i></span>
-                            <span class="ez-form-label">营业执照.jpg <i class="remixicon-close-fill"></i></span>
-                            <span class="ez-form-label">彩铃音.mp3 <i class="remixicon-close-circle-fill"></i></span>
-                        </div>
-                        <span class="ez-form-addon">选择文件</span>
-                    </div>
-                </div>
-            </div>
-            <div class="ez-form-row">
-                <div class="ez-form-title"></div>
-                <div class="ez-form-content">
-                    <button class="ez-btn ez-btn-primary">提交</button>
-                    <button class="ez-btn">取消</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <hr>
     <div class="ez-form ez-form-sm">
         <form action="">
             <div class="ez-form-row">
@@ -170,7 +80,7 @@
                         <div class="ez-form-control">
                             未选择任何文件
                         </div>
-                        <span class="ez-form-addon">选择文件</span>
+                        <span class="upload ez-form-addon">选择文件</span>
                     </div>
                 </div>
             </div>
@@ -181,6 +91,8 @@
                         <div class="ez-form-control">
                             <span class="ez-form-label">/files/2012-12-12/12/12/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7.jpg <i class="remixicon-close-circle-fill"></i></span>
                         </div>
+                        <span class="ez-form-addon"><i class="remixicon-close-line"></i></span>
+                        <span class="ez-form-addon"><i class="remixicon-play-fill"></i></span>
                         <span class="ez-form-addon">选择文件</span>
                     </div>
                 </div>
@@ -207,7 +119,7 @@
             </div>
         </form>
     </div>
-    <script>$(".form-sm").find(".btn").addClass("btn-sm")</script>
+    <script>$(".form-sm").find(".btn").addClass("btn-sm"),$(".upload").last().data("multiple","true"),$(".upload").ez_form_upload({url:"/data/upload.json",callback:function(){console.log(this),console.log(arguments)}})</script>
 </body>
 
 </html>

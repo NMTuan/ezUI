@@ -13997,13 +13997,15 @@ ez.role = require('./role/role'); //权限的布局结构
 
 ez.msg = require('./msg/msg'); //消息
 
-ez.select = require('./form/select'); //表单, select
+ez.select = require('./form/select'); //表单, 下拉菜单
 
-ez.player = require('./form/player'); //表单, player
+ez.player = require('./form/player'); //表单, 播放器
+
+ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9121da62.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./headlines/headlines":19,"./iframeTabs/iframeTabs":20,"./imageView/imageView":21,"./log/log":22,"./menuTree/menuTree":23,"./msg/msg":24,"./renderHeight/renderHeight":26,"./role/role":27,"./scrollWheel/scrollWheel":28,"./subNav/subNav":29,"./tabs/tabs":30,"./tree/tree":31,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1d35b1f7.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14077,6 +14079,13 @@ var player = {
       }
 
       if (!url) {
+        var tips = '未找到音频文件';
+
+        if (s.target.is('select')) {
+          tips = '请先选择要播放的音频';
+        }
+
+        layer.msg(tips);
         return;
       } //判断是否重载
 
@@ -14136,6 +14145,7 @@ var player = {
       player.changeIcon.call(s, 'play');
     });
     player.playWave.on('error', function () {
+      layer.msg('音频加载失败, 请稍后重试');
       s.el.one('click', function () {
         player.changeIcon.call(s, 'loading');
         player.playWave.load(player.playUrl);
@@ -14442,7 +14452,146 @@ module.exports = {
   select: select.Select
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":31,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+},{"../tree/tree":32,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _upload = {
+  defaults: {
+    title: '上传文件',
+    type: 'image',
+    //image | audio , todo data.type
+    area: ['400px', 'auto'],
+    //弹窗大小
+    url: '',
+    //上传地址, 可以取el的data-src
+    multiple: false,
+    //是否多选,可以取el的data-multiple
+    uploadTitle: '点击选择文件',
+    //上传窗内的标题, 可取el的data-upload-title
+    uploadTips: '',
+    //上传窗内的提示, 可取el的data-upload-tips
+    data: {},
+    //额外参数
+    field: 'upload',
+    //上传的name值
+    callback: function callback() {}
+  },
+  msgId: '',
+  //整体提示信息id
+  loadId: '',
+  //整体loading的id
+  layerId: '',
+  //整体上传窗的id
+  upload: function upload(els, params) {
+    $.each(els, function () {
+      if (params.url || $(this).data('src')) {
+        new _upload.Upload(this, params);
+      }
+    });
+  },
+  Upload: function Upload(el, params) {
+    var s = this;
+    s.el = $(el);
+    s.params = $.extend(true, {}, _upload.defaults, params);
+    console.log(s.el.data('src'), s.params.url);
+    s.params.url = s.el.data('src') || s.params.url;
+    s.params.type = s.el.data('type') || s.params.type;
+    s.params.multiple = s.el.data('multiple') || s.params.multiple;
+    s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
+    s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
+
+    _upload.events.call(s);
+  },
+  events: function events() {
+    var s = this;
+    s.el.on('click', function () {
+      _upload.layerId = layer.open({
+        type: 1,
+        title: s.params.title,
+        area: s.params.area,
+        content: _upload.layerDom.call(s),
+        id: 'ez_form_upload',
+        success: function success(layerDom, layerIndex) {
+          _upload.initWebUploader.call(s);
+        }
+      });
+    });
+  },
+  layerDom: function layerDom() {
+    var s = this;
+    var title = s.params.uploadTitle;
+    var icon = 'remixicon-upload-cloud-line';
+
+    if (s.params.type === 'image') {
+      icon = 'remixicon-landscape-line';
+    }
+
+    if (s.params.type === 'audio') {
+      icon = 'remixicon-music-2-line';
+    }
+
+    var dom = '' + '<div class="ez-form-upload">' + '<div class="ez-form-upload-inside">' + '<div class="ez-form-upload_file">' + '<i class="ez-form-upload-icon {icon} ri-4x"></i>' + '<div class="ez-form-upload-title">{title}</div>' + '</div>' + '</div>' + '</div>' + '';
+    dom = dom.replace('{title}', title || '');
+    dom = dom.replace('{icon}', icon);
+
+    if (s.params.uploadTips) {
+      dom += '<div class="ez-form-upload-tips">' + '<i class="remixicon-information-line ri-fw"></i> ' + '{tips}' + '</div>' + '';
+      dom = dom.replace('{tips}', s.params.uploadTips);
+    }
+
+    return dom;
+  },
+  initWebUploader: function initWebUploader(layerDom, layerIndex) {
+    var s = this;
+    var uploader = WebUploader.create({
+      server: s.params.url,
+      pick: {
+        id: '.ez-form-upload',
+        multiple: s.params.multiple || false
+      },
+      auto: true,
+      method: 'get',
+      formData: s.params.data,
+      fileVal: s.params.field // accept: {
+      //     title: 'Images',
+      //     extensions: 'gif,jpg,jpeg,bmp,png',
+      //     mimeTypes: 'image/*'
+      // },
+
+    }); //上传中
+
+    uploader.on('uploadProgress', function () {
+      _upload.loadId = layer.load();
+    }); //上传成功
+
+    uploader.on('uploadSuccess', function (files, res) {
+      if (typeof s.params.callback == 'function') {
+        s.params.callback.call(s, res, files);
+      }
+    });
+    uploader.on('uploadFinished', function () {
+      layer.close(_upload.loadId);
+      layer.close(_upload.layerId);
+    }); //上传出错
+
+    uploader.on('uploadError', function () {
+      layer.close(_upload.loadId);
+      layer.close(_upload.layerId);
+      _upload.msgId = layer.msg('服务器异常，请稍后再试！');
+    });
+  }
+};
+$.fn.extend({
+  ez_form_upload: function ez_form_upload(params) {
+    _upload.upload(this, params);
+
+    return this;
+  }
+});
+module.exports = _upload.upload;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\upload.js","/form")
+},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14512,7 +14661,7 @@ module.exports = {
   close: _headlines.hide
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/headlines\\headlines.js","/headlines")
-},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14935,7 +15084,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],21:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15280,7 +15429,7 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],22:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15298,7 +15447,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15360,7 +15509,7 @@ $.fn.extend({
 });
 module.exports = _menuTree.menuTree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/menuTree\\menuTree.js","/menuTree")
-},{"XJF/FV":7,"buffer":6}],24:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15396,7 +15545,7 @@ var msg = {
 };
 module.exports = msg;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/msg\\msg.js","/msg")
-},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15409,7 +15558,7 @@ var random = function random(min, max) {
 
 module.exports = random;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/random\\random.js","/random")
-},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15463,7 +15612,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
-},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15559,7 +15708,7 @@ $.fn.extend({
 });
 module.exports = _role.role;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/role\\role.js","/role")
-},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],29:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15598,7 +15747,7 @@ $.fn.extend({
 });
 module.exports = _scrollWheel.scrollWheel;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/scrollWheel\\scrollWheel.js","/scrollWheel")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],29:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],30:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15655,7 +15804,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],30:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],31:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15724,7 +15873,7 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":7,"buffer":6}],31:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],32:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16137,4 +16286,4 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":25,"XJF/FV":7,"buffer":6}]},{},[15])
+},{"../random/random":26,"XJF/FV":7,"buffer":6}]},{},[15])

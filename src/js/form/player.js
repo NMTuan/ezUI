@@ -24,6 +24,11 @@ var player = {
                 }
             }
             if (!url) {
+                var tips = '未找到音频文件';
+                if(s.target.is('select')){
+                    tips = '请先选择要播放的音频';
+                }
+                layer.msg(tips);
                 return;
             }
             //判断是否重载
@@ -76,6 +81,7 @@ var player = {
             player.changeIcon.call(s, 'play');
         });
         player.playWave.on('error', function () {
+            layer.msg('音频加载失败, 请稍后重试');
             s.el.one('click', function () {
                 player.changeIcon.call(s, 'loading');
                 player.playWave.load(player.playUrl);

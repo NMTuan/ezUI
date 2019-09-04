@@ -369,6 +369,21 @@ body {
   position: fixed;
 }
 
+.ez-cursor-pointer,
+.eza-cursor-pointer {
+  cursor: pointer;
+}
+
+.ez-cursor-search,
+.eza-cursor-search {
+  cursor: zoom-in;
+}
+
+.ez-cursor-disabled,
+.eza-cursor-disabled {
+  cursor: not-allowed;
+}
+
 .ez.sidebar {
   min-width: 100px;
   min-height: 100px;
@@ -638,6 +653,74 @@ body {
 .ez-form-sm .ez-form-label {
   font-size: 12px;
   padding: 1px;
+}
+
+.ez-form-upload {
+  margin: 14px;
+  border: 1px dashed #e0e0e0;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ez-form-upload:hover {
+  background-color: #fafafa;
+}
+
+.ez-form-upload-inside {
+  padding: 60px 0;
+}
+
+.ez-form-upload-icon {
+  display: block;
+  text-align: center;
+  color: #e0e0e0;
+}
+
+.ez-form-upload-title {
+  color: #616161;
+  margin-top: 12px;
+}
+
+.ez-form-upload-tips {
+  padding: 8px;
+  line-height: 1.4;
+  text-align: left;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.webuploader-container {
+  position: relative;
+}
+
+.webuploader-element-invisible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+/*.webuploader-pick {*/
+/*position: relative;*/
+/*display: inline-block;*/
+/*cursor: pointer;*/
+/*background: #00b7ee;*/
+/*padding: 10px 15px;*/
+/*color: #fff;*/
+/*text-align: center;*/
+/*border-radius: 3px;*/
+/*overflow: hidden;*/
+/*}*/
+.webuploader-pick-hover {
+  /*background: #00a2d4;*/
+}
+
+.webuploader-pick-disable {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .ez-tree {
