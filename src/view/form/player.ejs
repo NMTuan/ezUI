@@ -1,11 +1,6 @@
 <% title = '表单试听'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
-<style>
-    #wavesurfer {
-        /*pointer-events: fill;*/
-    }
-</style>
 <h2><%- title; %></h2>
 <div class="ez-form ez-form-inline ez-form-full">
     <%- include('./_input_player.ejs', {url: '/data/music_1.mp3'}) %>
