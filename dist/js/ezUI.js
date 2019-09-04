@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1bcae113.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_32f77b35.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14459,6 +14459,7 @@ module.exports = {
 var _upload = {
   defaults: {
     title: '上传文件',
+    placeholder: '未选择任何文件',
     type: 'image',
     //image | audio | wav | mp3, 可以取el的data-type
     area: ['460px', 'auto'],
@@ -14488,6 +14489,7 @@ var _upload = {
   upload: function upload(els, params) {
     $.each(els, function () {
       if (params.url || $(this).data('src')) {
+        $(this).addClass('ez-cursor-pointer');
         new _upload.Upload(this, params);
       }
     });
@@ -14495,6 +14497,7 @@ var _upload = {
   Upload: function Upload(el, params) {
     var s = this;
     s.el = $(el);
+    s.values = [];
     s.params = $.extend(true, {}, _upload.defaults, params); //若el上有data属性, 则取data, 否则按默认的来.
 
     s.params.url = s.el.data('src') || s.params.url;
@@ -14593,7 +14596,7 @@ var _upload = {
     dom = dom.replace('{tips}', tips);
     return dom;
   },
-  initWebUploader: function initWebUploader(layerDom, layerIndex) {
+  initWebUploader: function initWebUploader() {
     var s = this;
     var uploader = WebUploader.create({
       server: s.params.url,
@@ -14613,9 +14616,14 @@ var _upload = {
     }); //上传成功
 
     uploader.on('uploadSuccess', function (files, res) {
-      if (typeof s.params.callback == 'function') {
-        s.params.callback.call(s, res, files);
-      }
+      // if (typeof s.params.callback == 'function') {
+      //     s.params.callback.call(s, res, files);
+      // }
+      $.each(res.result, function () {
+        if (this.path) {
+          _upload.add.call(s, this);
+        }
+      });
     });
     uploader.on('uploadFinished', function () {
       layer.close(_upload.loadId);
@@ -14634,6 +14642,81 @@ var _upload = {
       if (type === 'Q_TYPE_DENIED') {
         _upload.msgId = layer.msg('文件类型不正确, 请确认后重试!');
       }
+    });
+  },
+  //循环结果集, path存在则更新, 否则插入. 触发change
+  add: function add(res) {
+    var s = this;
+    var existence = false;
+
+    if (!s.params.multiple) {
+      //单选模式, 每次清空一下
+      s.values = [];
+    } //todo 做完后记得打开
+    // $.each(s.values, function (i, item) {
+    //     if(item.path === res.path){
+    //         existence = true;
+    //         $.extend(true, item, res);
+    //         upload.renderItem.call(s);
+    //         return false;
+    //     }
+    // });
+
+
+    if (!existence) {
+      s.values.push(res);
+
+      _upload.renderItem.call(s);
+    }
+  },
+  remove: function remove(el) {
+    var s = this;
+    var path = $(el).data('path');
+
+    if (!path) {
+      return;
+    }
+
+    layer.confirm('确定要移除么?', function (index) {
+      $.each(s.values, function (i, item) {
+        if (item.path === path) {
+          s.values.splice(i, 1);
+
+          _upload.renderItem.call(s);
+
+          return false;
+        }
+      });
+      layer.close(index);
+    });
+  },
+  //重新渲染结果集
+  renderItem: function renderItem() {
+    var s = this;
+    var select = s.el.next('.ez-form-upload-field');
+    select.html('');
+    var prev = s.el.prev('.ez-form-control');
+    prev.html('');
+
+    if (s.values.length === 0) {
+      prev.html(s.params.placeholder);
+      return;
+    }
+
+    $.each(s.values, function (i, item) {
+      var option = $('<option>');
+      option.html(item.name || item.path);
+      option.attr('value', item.path);
+      option.attr('selected', 'selected');
+      select.append(option);
+      var label = $('<span>').addClass('ez-form-label').data('path', item.path).html(item.name || item.path);
+      var close = $('<i>').addClass('ez-form-label-remove remixicon-close-circle-fill').attr('title', '移除').data('path', item.path);
+      label.append(close);
+      close.on('click', function () {
+        _upload.remove.call(s, this);
+      });
+      prev.append(label);
+      prev.append(' ');
     });
   }
 };

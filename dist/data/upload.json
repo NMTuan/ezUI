@@ -2,6 +2,9 @@
     "code": "40000",
     "msg": "",
     "result": [
-        "/data/music_1.mp3"
+        {
+            "path": "/data/music_1.mp3",
+            "name": "music_1.mp3"
+        }
     ]
 }

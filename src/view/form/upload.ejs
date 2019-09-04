@@ -16,13 +16,9 @@
 <script>
     $('.form-sm').find('.btn').addClass('btn-sm');  //sm模式下按钮也调小
 
-    $('.upload').last().data('multiple', 'true').data('type', 'audio');
+    $('.upload').last().data('multiple', 'true');
     $('.upload').ez_form_upload({
-        url: '/data/upload.json',
-        callback: function () {
-            console.log(this);
-            console.log(arguments);
-        }
+        url: '/data/upload.json'
     });
 </script>
 
