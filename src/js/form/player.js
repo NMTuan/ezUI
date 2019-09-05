@@ -34,7 +34,7 @@ var player = {
                 }
                 //upload模式
                 if(s.target.find('.ez-form-label').length > 0){
-                    url = s.target.find('.ez-form-label').first().data('path');
+                    url = s.target.find('.ez-form-label').last().data('path');
                 }
             }
             if (!url) {
