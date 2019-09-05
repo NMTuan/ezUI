@@ -1,32 +1,15 @@
 <% title = '表单'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
-<div id="tree" class="ez-tree">
-
-</div>
-<script>
-    // $('#tree').ez_tree({
-    //     data: [
-    //         {id: 1, pid: 0, title: '营业执照复印件'},
-    //         {id: 2, pid: 0, title: '法人身份证复印件'},
-    //         {id: 3, pid: 0, selected: true, title: '经办人手持营业执照及身份证'},
-    //         {id: 4, pid: 0, title: '中呼服务协议'},
-    //         {id: 5, pid: 2, title: '22'},
-    //         {id: 6, pid: 2, title: '23'},
-    //         {id: 7, pid: 2, selected: true, title: '24'},
-    //     ],
-    //     // type: 'checkbox',
-    // });
-</script>
-
-<h2>一行</h2>
+<h2>一行,标准</h2>
 <div class="ez-form ez-form-inline ez-form-full">
-    <%- include('./_select.ejs'); %>
+    <%- include('./_select_linkage.ejs'); %>
 </div>
 <hr>
 
+<h2>一行,sm</h2>
 <div class="ez-form ez-form-inline ez-form-full ez-form-sm">
-    <%- include('./_select.ejs'); %>
+    <%- include('./_select_linkage.ejs'); %>
 </div>
 <hr>
 
@@ -46,7 +29,7 @@
     //     d.push({id: i, pid: 0, title: 'title_' + i})
     // }
     $('.ez-form-select').eq(0).ez_form_select({
-        selected_max: 1,
+        selected_max: 0,
         data: [],
         selected: [
             {id: 3, pid: 0, title: '333经办人手持营业执照及身份证'},

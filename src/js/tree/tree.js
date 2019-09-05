@@ -263,7 +263,16 @@ var tree = {
         var s = this;
         var params = s.params;
         var currentData = tree.getData.call(s, id);
-        tree.concat(params.selected, currentData);
+        if(params.type === 'radio'){
+            $.each(params.data, function () {
+                if(this.selected){
+                    this.selected = false;
+                }
+            });
+            params.selected = currentData;
+        } else {
+            tree.concat(params.selected, currentData);
+        }
         $.each(currentData, function () {
             if (this.selected !== true) {
                 this.selected = true;
@@ -293,6 +302,7 @@ var tree = {
             }
         });
         tree.appendTree.call(s);
+        console.log(s);
     },
     //取所有选中数据
     getSelected: function () {

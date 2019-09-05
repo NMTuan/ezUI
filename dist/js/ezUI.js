@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d93253b.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bea44c25.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14336,7 +14336,7 @@ var select = {
     }
 
     var label = $('<span>').addClass('ez-form-label');
-    var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
+    var removeBtn = $('<i>').addClass('remixicon-close-fill').addClass(params.removeBtn.replace('.', ''));
     $.each(params.selected, function (i, item) {
       head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
       head.append(' ');
@@ -16365,7 +16365,18 @@ var tree = {
     var s = this;
     var params = s.params;
     var currentData = tree.getData.call(s, id);
-    tree.concat(params.selected, currentData);
+
+    if (params.type === 'radio') {
+      $.each(params.data, function () {
+        if (this.selected) {
+          this.selected = false;
+        }
+      });
+      params.selected = currentData;
+    } else {
+      tree.concat(params.selected, currentData);
+    }
+
     $.each(currentData, function () {
       if (this.selected !== true) {
         this.selected = true;
@@ -16395,6 +16406,7 @@ var tree = {
       }
     });
     tree.appendTree.call(s);
+    console.log(s);
   },
   //取所有选中数据
   getSelected: function getSelected() {

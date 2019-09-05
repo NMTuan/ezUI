@@ -69,7 +69,7 @@ var select = {
             return;
         }
         var label = $('<span>').addClass('ez-form-label');
-        var removeBtn = $('<i>').addClass('remixicon-close-circle-fill').addClass(params.removeBtn.replace('.', ''));
+        var removeBtn = $('<i>').addClass('remixicon-close-fill').addClass(params.removeBtn.replace('.', ''));
         $.each(params.selected, function (i, item) {
             head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
             head.append(' ');
