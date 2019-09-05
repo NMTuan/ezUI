@@ -11,9 +11,6 @@ var upload = {
         uploadTips: '',     //上传窗内的提示, 可取el的data-upload-tips
         data: {},   //额外参数
         field: 'upload', //上传的name值
-        callback: function () {
-
-        },
     },
     msgId: '',  //整体提示信息id
     loadId: '', //整体loading的id
@@ -29,8 +26,9 @@ var upload = {
     Upload: function (el, params) {
         var s = this;
         s.el = $(el);
-        s.values = [];
+        s.values = [];  //[{name, path}]
         s.params = $.extend(true, {}, upload.defaults, params);
+        s.select = s.el.next('.ez-form-upload-field');
 
         //若el上有data属性, 则取data, 否则按默认的来.
         s.params.url = s.el.data('src') || s.params.url;
@@ -39,6 +37,16 @@ var upload = {
         s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
         s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
         s.params.type = s.el.data('type') || s.params.type;
+
+        //初始化value
+        if (s.select.find('option').length > 0) {
+            $.each(s.select.find('option'), function (i, item) {
+                if($(item).attr('value')){
+                    s.values.push({name: $.trim($(item).text()), path: $(item).attr('value')});
+                }
+            });
+            upload.renderItem.call(s);
+        }
 
         //格式限定
         if (s.params.type === 'image') {
@@ -228,8 +236,7 @@ var upload = {
     //重新渲染结果集
     renderItem: function () {
         var s = this;
-        var select = s.el.next('.ez-form-upload-field');
-        select.html('');
+        s.select.html('');
         var prev = s.el.prev('.ez-form-control');
         prev.html('');
         if (s.values.length === 0) {
@@ -241,12 +248,14 @@ var upload = {
             option.html(item.name || item.path);
             option.attr('value', item.path);
             option.attr('selected', 'selected');
-            select.append(option);
+            s.select.append(option);
 
             var label = $('<span>').addClass('ez-form-label').data('path', item.path).html(item.name || item.path);
-            var close = $('<i>').addClass('ez-form-label-remove remixicon-close-circle-fill').attr('title', '移除').data('path', item.path);
+            var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
             label.append(close);
-            close.on('click', function () {
+            close.on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 upload.remove.call(s, this);
             });
             prev.append(label);

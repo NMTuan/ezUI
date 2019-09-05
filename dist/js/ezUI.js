@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_32f77b35.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_cc6da20f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14476,9 +14476,8 @@ var _upload = {
     //上传窗内的提示, 可取el的data-upload-tips
     data: {},
     //额外参数
-    field: 'upload',
-    //上传的name值
-    callback: function callback() {}
+    field: 'upload' //上传的name值
+
   },
   msgId: '',
   //整体提示信息id
@@ -14497,15 +14496,31 @@ var _upload = {
   Upload: function Upload(el, params) {
     var s = this;
     s.el = $(el);
-    s.values = [];
-    s.params = $.extend(true, {}, _upload.defaults, params); //若el上有data属性, 则取data, 否则按默认的来.
+    s.values = []; //[{name, path}]
+
+    s.params = $.extend(true, {}, _upload.defaults, params);
+    s.select = s.el.next('.ez-form-upload-field'); //若el上有data属性, 则取data, 否则按默认的来.
 
     s.params.url = s.el.data('src') || s.params.url;
     s.params.type = s.el.data('type') || s.params.type;
     s.params.multiple = s.el.data('multiple') || s.params.multiple;
     s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
     s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
-    s.params.type = s.el.data('type') || s.params.type; //格式限定
+    s.params.type = s.el.data('type') || s.params.type; //初始化value
+
+    if (s.select.find('option').length > 0) {
+      $.each(s.select.find('option'), function (i, item) {
+        if ($(item).attr('value')) {
+          s.values.push({
+            name: $.trim($(item).text()),
+            path: $(item).attr('value')
+          });
+        }
+      });
+
+      _upload.renderItem.call(s);
+    } //格式限定
+
 
     if (s.params.type === 'image') {
       s.params.accept = {
@@ -14693,8 +14708,7 @@ var _upload = {
   //重新渲染结果集
   renderItem: function renderItem() {
     var s = this;
-    var select = s.el.next('.ez-form-upload-field');
-    select.html('');
+    s.select.html('');
     var prev = s.el.prev('.ez-form-control');
     prev.html('');
 
@@ -14708,11 +14722,14 @@ var _upload = {
       option.html(item.name || item.path);
       option.attr('value', item.path);
       option.attr('selected', 'selected');
-      select.append(option);
+      s.select.append(option);
       var label = $('<span>').addClass('ez-form-label').data('path', item.path).html(item.name || item.path);
-      var close = $('<i>').addClass('ez-form-label-remove remixicon-close-circle-fill').attr('title', '移除').data('path', item.path);
+      var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
       label.append(close);
-      close.on('click', function () {
+      close.on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         _upload.remove.call(s, this);
       });
       prev.append(label);
