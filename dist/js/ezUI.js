@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_43a9c00d.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d93253b.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14340,7 +14340,7 @@ var select = {
     $.each(params.selected, function (i, item) {
       head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
       head.append(' ');
-      field.append('<option value="' + item.id + '">' + item.title + '</option>');
+      field.append('<option value="' + item.id + '" selected="selected">' + item.title + '</option>');
     });
   },
   renderSearch: function renderSearch() {

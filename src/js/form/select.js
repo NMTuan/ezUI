@@ -73,7 +73,7 @@ var select = {
         $.each(params.selected, function (i, item) {
             head.append(label.clone().html(item.title + ' ').append(removeBtn.clone().data('id', item.id)));
             head.append(' ');
-            field.append('<option value="' + item.id + '">' + item.title + '</option>')
+            field.append('<option value="' + item.id + '" selected="selected">' + item.title + '</option>')
         });
     },
     renderSearch: function () {
