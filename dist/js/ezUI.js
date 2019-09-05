@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_cc6da20f.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_92c20bc3.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14063,18 +14063,32 @@ var player = {
   //当前播放地址
   currentEl: '',
   //当前播放按钮, 如果不同, 即使是playUrl一样, 也要重新处理.
+  play: function play(els, params) {
+    $.each(els, function () {
+      new player.Play(this, params);
+    });
+  },
   Play: function Play(el, params) {
     var s = this;
     s.el = $(el);
     s.params = $.extend(true, {}, player.defaults, params);
     s.target = $(s.el.data('target'));
+    s.error = false; //加载失败
+
     player.events.call(s);
+    s.el.addClass('ez-cursor-pointer');
     s.el.on('click', function () {
       var url = s.el.data('src') || s.el.attr('src') || s.el.attr('href');
 
       if (s.target.length > 0) {
+        //select模式
         if (s.target.is('select')) {
           url = s.target.find(':selected').data('src');
+        } //upload模式
+
+
+        if (s.target.find('.ez-form-label').length > 0) {
+          url = s.target.find('.ez-form-label').first().data('path');
         }
       }
 
@@ -14090,9 +14104,10 @@ var player = {
       } //判断是否重载
 
 
-      if (player.currentEl == s.el && player.playUrl === url) {
+      if (!s.error && player.currentEl == s.el && player.playUrl === url) {
         player.playWave.playPause();
       } else {
+        s.error = false;
         player.initWavesurfer.call(s);
         player.changeIcon.call(s, 'loading');
         player.playWave.load(url);
@@ -14146,20 +14161,30 @@ var player = {
     });
     player.playWave.on('error', function () {
       layer.msg('音频加载失败, 请稍后重试');
-      s.el.one('click', function () {
-        player.changeIcon.call(s, 'loading');
-        player.playWave.load(player.playUrl);
-      });
-      player.changeIcon.call(s, 'retry');
+      player.changeIcon.call(s, 'play');
+      s.error = true; // s.el.one('click', function () {
+      //     player.changeIcon.call(s, 'loading');
+      //     player.playWave.load(player.playUrl);
+      // });
     });
   },
   renderWavesurferContainer: function renderWavesurferContainer() {
     var s = this;
     var content = s.el.closest('.ez-form-content');
+    var leftAddon = content.find('.ez-form-control').prevAll('.ez-form-addon');
+    var leftWidth = 0;
+    var rightAddon = content.find('.ez-form-control').nextAll('.ez-form-addon');
+    var rightWidth = 0;
+    $.each(leftAddon, function (i, item) {
+      leftWidth += $(item).outerWidth();
+    });
+    $.each(rightAddon, function (i, item) {
+      rightWidth += $(item).outerWidth();
+    });
     var container = $('<div>').addClass('ez-form-wave').css({
       marginTop: content.css('paddingTop'),
-      marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
-      marginLeft: content.css('paddingLeft'),
+      marginRight: parseInt(content.css('paddingRight')) + rightWidth,
+      marginLeft: parseInt(content.css('paddingLeft')) + leftWidth,
       height: content.height() - 1
     });
     content.find('.ez-form-control').css('z-index', 1);
@@ -14203,11 +14228,6 @@ var player = {
     if (icon === 'retry') {
       el.html(this.params.retryIcon);
     }
-  },
-  play: function play(els, params) {
-    $.each(els, function () {
-      new player.Play(this, params);
-    });
   }
 };
 $.fn.extend({
@@ -14499,7 +14519,7 @@ var _upload = {
     s.values = []; //[{name, path}]
 
     s.params = $.extend(true, {}, _upload.defaults, params);
-    s.select = s.el.next('.ez-form-upload-field'); //若el上有data属性, 则取data, 否则按默认的来.
+    s.select = s.el.parent().find('.ez-form-upload-field'); //若el上有data属性, 则取data, 否则按默认的来.
 
     s.params.url = s.el.data('src') || s.params.url;
     s.params.type = s.el.data('type') || s.params.type;
@@ -14709,11 +14729,11 @@ var _upload = {
   renderItem: function renderItem() {
     var s = this;
     s.select.html('');
-    var prev = s.el.prev('.ez-form-control');
-    prev.html('');
+    var control = s.el.closest('.ez-form-flex').find('.ez-form-control');
+    control.html('');
 
     if (s.values.length === 0) {
-      prev.html(s.params.placeholder);
+      control.html(s.params.placeholder);
       return;
     }
 
@@ -14732,8 +14752,8 @@ var _upload = {
 
         _upload.remove.call(s, this);
       });
-      prev.append(label);
-      prev.append(' ');
+      control.append(label);
+      control.append(' ');
     });
   }
 };

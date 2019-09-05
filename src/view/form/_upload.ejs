@@ -3,13 +3,14 @@
         <div class="ez-form-title">文件上传</div>
         <div class="ez-form-content">
             <div class="ez-form-flex">
-                <div class="ez-form-control">
+                <div id="<%-id%>" class="ez-form-control">
                     未选择任何文件
                 </div>
-                <span class="upload ez-form-addon">选择文件</span>
-                <select class="ez-form-upload-field" name="" multiple>
+                <select class="ez-form-upload-field" name="" multiple="multiple" style="display: none;">
                     <option value="/data/selected.mp3">selected.mp3</option>
                 </select>
+                <span class="play ez-form-addon" data-target="#<%-id%>"><i class="remixicon-play-fill"></i></span>
+                <span class="upload ez-form-addon">选择文件</span>
             </div>
         </div>
     </div>
@@ -21,7 +22,6 @@
                     <span class="ez-form-label">/files/2012-12-12/12/12/e36a6b89ae2adf820058e5f1b2a42f826d3f4a7.jpg <i class="ez-form-label-remove remixicon-close-fill"></i></span>
                 </div>
                 <span class="ez-form-addon"><i class="remixicon-close-line"></i></span>
-                <span class="ez-form-addon"><i class="remixicon-play-fill"></i></span>
                 <span class="ez-form-addon">选择文件</span>
             </div>
         </div>

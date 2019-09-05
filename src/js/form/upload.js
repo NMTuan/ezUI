@@ -28,7 +28,7 @@ var upload = {
         s.el = $(el);
         s.values = [];  //[{name, path}]
         s.params = $.extend(true, {}, upload.defaults, params);
-        s.select = s.el.next('.ez-form-upload-field');
+        s.select = s.el.parent().find('.ez-form-upload-field');
 
         //若el上有data属性, 则取data, 否则按默认的来.
         s.params.url = s.el.data('src') || s.params.url;
@@ -237,10 +237,10 @@ var upload = {
     renderItem: function () {
         var s = this;
         s.select.html('');
-        var prev = s.el.prev('.ez-form-control');
-        prev.html('');
+        var control = s.el.closest('.ez-form-flex').find('.ez-form-control');
+        control.html('');
         if (s.values.length === 0) {
-            prev.html(s.params.placeholder);
+            control.html(s.params.placeholder);
             return;
         }
         $.each(s.values, function (i, item) {
@@ -258,8 +258,8 @@ var upload = {
                 e.stopPropagation();
                 upload.remove.call(s, this);
             });
-            prev.append(label);
-            prev.append(' ');
+            control.append(label);
+            control.append(' ');
         });
     },
 };

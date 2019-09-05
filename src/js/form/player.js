@@ -9,18 +9,32 @@ var player = {
     playWave: '',   //播放器
     playUrl: '',    //当前播放地址
     currentEl: '',  //当前播放按钮, 如果不同, 即使是playUrl一样, 也要重新处理.
+
+    play: function (els, params) {
+        $.each(els, function () {
+            new player.Play(this, params);
+        });
+    },
+
     Play: function (el, params) {
         var s = this;
         s.el = $(el);
         s.params = $.extend(true, {}, player.defaults, params);
         s.target = $(s.el.data('target'));
+        s.error = false;    //加载失败
 
         player.events.call(s);
+        s.el.addClass('ez-cursor-pointer');
         s.el.on('click', function () {
             var url = s.el.data('src') || s.el.attr('src') || s.el.attr('href');
             if (s.target.length > 0) {
+                //select模式
                 if (s.target.is('select')) {
                     url = s.target.find(':selected').data('src');
+                }
+                //upload模式
+                if(s.target.find('.ez-form-label').length > 0){
+                    url = s.target.find('.ez-form-label').first().data('path');
                 }
             }
             if (!url) {
@@ -32,9 +46,10 @@ var player = {
                 return;
             }
             //判断是否重载
-            if (player.currentEl == s.el && player.playUrl === url) {
+            if (!s.error && player.currentEl == s.el && player.playUrl === url) {
                 player.playWave.playPause();
             } else {
+                s.error = false;
                 player.initWavesurfer.call(s);
                 player.changeIcon.call(s, 'loading');
                 player.playWave.load(url);
@@ -82,21 +97,32 @@ var player = {
         });
         player.playWave.on('error', function () {
             layer.msg('音频加载失败, 请稍后重试');
-            s.el.one('click', function () {
-                player.changeIcon.call(s, 'loading');
-                player.playWave.load(player.playUrl);
-            });
-            player.changeIcon.call(s, 'retry');
+            player.changeIcon.call(s, 'play');
+            s.error = true;
+            // s.el.one('click', function () {
+            //     player.changeIcon.call(s, 'loading');
+            //     player.playWave.load(player.playUrl);
+            // });
         });
     },
 
     renderWavesurferContainer: function () {
         var s = this;
         var content = s.el.closest('.ez-form-content');
+        var leftAddon = content.find('.ez-form-control').prevAll('.ez-form-addon');
+        var leftWidth = 0;
+        var rightAddon = content.find('.ez-form-control').nextAll('.ez-form-addon');
+        var rightWidth = 0;
+        $.each(leftAddon, function (i, item) {
+            leftWidth += $(item).outerWidth();
+        });
+        $.each(rightAddon, function (i, item) {
+            rightWidth += $(item).outerWidth();
+        });
         var container = $('<div>').addClass('ez-form-wave').css({
             marginTop: content.css('paddingTop'),
-            marginRight: parseInt(content.css('paddingRight')) + s.el.outerWidth(),
-            marginLeft: content.css('paddingLeft'),
+            marginRight: parseInt(content.css('paddingRight')) + rightWidth,
+            marginLeft: parseInt(content.css('paddingLeft')) + leftWidth,
             height: content.height() - 1,
         });
         content.find('.ez-form-control').css('z-index', 1);
@@ -138,12 +164,6 @@ var player = {
         if (icon === 'retry') {
             el.html(this.params.retryIcon);
         }
-    },
-
-    play: function (els, params) {
-        $.each(els, function () {
-            new player.Play(this, params);
-        });
     },
 };
 $.fn.extend({

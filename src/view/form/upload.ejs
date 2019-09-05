@@ -3,14 +3,14 @@
 
 <h2>一行</h2>
 <div class="ez-form ez-form-inline ez-form-full">
-    <%- include('./_upload.ejs');%>
+    <%- include('./_upload.ejs', {id: 'play_1'});%>
 </div>
 <hr>
 
 <h2>分行</h2>
 
 <div class="ez-form ez-form-sm">
-    <%- include('./_upload.ejs');%>
+    <%- include('./_upload.ejs', {id: 'play_2'});%>
 </div>
 
 <script>
@@ -22,9 +22,11 @@
         url: '/data/upload.json'
     });
 
-    $('.ez-form-control').on('click', '.ez-form-label', function () {
+    $('.ez-form-control').addClass('ez-cursor-search').on('click', '.ez-form-label', function () {
         console.log('view image');
     });
+
+    $('.play').ez_form_play();
 </script>
 
 
