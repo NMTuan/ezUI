@@ -1,13 +1,42 @@
 <div class="ez-form-row">
-    <div class="ez-form-title">多框</div>
+    <div class="ez-form-title">省</div>
     <div class="ez-form-content">
-        <div class="ez-form-flex">
-            <span class="ez-form-addon">省: </span>
-            <select name="" class="ez-form-control"> <option value="">请选择...</option></select>
-            <span class="ez-form-addon">市: </span>
-            <select name="" class="ez-form-control"> <option value="">请选择...</option></select>
-            <span class="ez-form-addon">区: </span>
-            <select name="" class="ez-form-control"> <option value="">请选择...</option></select>
+        <div id="linkage_<%-id%>_1" class="ez-form-select ez-form-flex">
+            <div class="ez-form-control">
+                <%- include('./_select_multiple.ejs'); %>
+            </div>
+            <select class="ez-form-select-field" name="" multiple="multiple" style="display: ;">
+                <option value=""></option>
+            </select>
+            <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
+        </div>
+    </div>
+</div>
+<div class="ez-form-row">
+    <div class="ez-form-title">市</div>
+    <div class="ez-form-content">
+        <div id="linkage_<%-id%>_2" class="ez-form-select ez-form-flex">
+            <div class="ez-form-control">
+                <%- include('./_select_multiple.ejs'); %>
+            </div>
+            <select class="ez-form-select-field" name="" multiple="multiple" style="display: ;">
+                <option value=""></option>
+            </select>
+            <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
+        </div>
+    </div>
+</div>
+<div class="ez-form-row">
+    <div class="ez-form-title">区</div>
+    <div class="ez-form-content">
+        <div id="linkage_<%-id%>_3" class="ez-form-select ez-form-flex">
+            <div class="ez-form-control">
+                <%- include('./_select_multiple.ejs'); %>
+            </div>
+            <select class="ez-form-select-field" name="" multiple="multiple" style="display: ;">
+                <option value=""></option>
+            </select>
+            <span class="ez-form-select-icon ez-form-addon"><i class="fa fa-caret-down"></i></span>
         </div>
     </div>
 </div>

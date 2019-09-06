@@ -36,6 +36,9 @@ var tree = {
         s.search = function () {
             return tree.search.apply(s, arguments);
         };
+        s.setData = function () {
+            tree.setData.apply(s, arguments);
+        };
         tree.init.call(s);
         tree.events.call(s);
     },
@@ -127,10 +130,24 @@ var tree = {
             }
             var status = $(this).prop('checked');
             var id = $(this).data('id');
-            if (status) { //选中了
-                tree.selected.call(s, id);
-            } else {    //取消了
-                tree.unSelected.call(s, id);
+            //单选模式, 选择已选数据, 不处理.
+            // if (s.params.type === 'radio' && s.params.selected.length === 1 && s.params.selected[0].id === id) {
+            //     return;
+            // }
+            if(s.params.type === 'radio'){
+                $.each(params.data, function () {
+                    if (this.selected) {
+                        this.selected = false;
+                    }
+                });
+                params.selected = tree.getData.call(s, id);
+            }
+            if(s.params.type === 'checkbox'){
+                if (status) { //选中了
+                    tree.selected.call(s, id);
+                } else {    //取消了
+                    tree.unSelected.call(s, id);
+                }
             }
             //插入事件
             params.choose.call(s, $(this), el);
@@ -230,6 +247,16 @@ var tree = {
         });
         return _data;
     },
+    setData: function (data) {
+        var s = this;
+        var params = s.params;
+        //把data替换掉
+        params.data = data;
+        //更新下data状态
+        tree.concat.call(s, params.data, params.selected, {push_existence: false});
+        //重新渲染
+        tree.appendTree.call(s);
+    },
     //取数据
     getJson: function (url, success) {
         var s = this;
@@ -263,16 +290,7 @@ var tree = {
         var s = this;
         var params = s.params;
         var currentData = tree.getData.call(s, id);
-        if(params.type === 'radio'){
-            $.each(params.data, function () {
-                if(this.selected){
-                    this.selected = false;
-                }
-            });
-            params.selected = currentData;
-        } else {
-            tree.concat(params.selected, currentData);
-        }
+        tree.concat(params.selected, currentData);
         $.each(currentData, function () {
             if (this.selected !== true) {
                 this.selected = true;

@@ -9,6 +9,7 @@ var select = {
         list: '.ez-form-select-list',       //下拉列表
         field: '.ez-form-select-field',     //隐藏域
         removeBtn: '.ez-form-label-remove', //移除按钮
+        placeholder: '请选择',
         dir: 3, //1上 2右 3下 4左
         data: [],       //数据集
         dataUrl: '',    //异步加载
@@ -19,11 +20,18 @@ var select = {
         searchKeys: [], //需要搜索的key
         searchTime: 300, //延时搜索
         searchUrl: '',  //异步搜索
+        change: function () {
+        },
+        choose: function () {
+        }
     },
     Select: function (els, params) {
         var s = this;
         s.el = els.first();
         s.params = $.extend(true, {}, select.defaults, params);
+        s.setData = function (data) {
+            select.setData.call(s, data);
+        };
         select.renderTree.call(s);
         select.init.call(s);
         select.events.call(s);
@@ -38,10 +46,10 @@ var select = {
             select.renderSearch.call(s, el);
         }
     },
-    renderTree: function(){
+    renderTree: function () {
         var s = this;
         var params = s.params;
-        if(this.tree){
+        if (this.tree) {
             return;
         }
         s.tree = new Tree(s.el.find(params.list), {
@@ -54,6 +62,13 @@ var select = {
             dataChange: function () {
                 params.selected = this.getSelected();
                 select.renderVal.call(s);
+                params.change.call(s);
+            },
+            choose: function () {
+                if (params.selected_max === 1) {
+                    select.hide.call(s);
+                }
+                params.choose.apply(s, arguments);
             }
         });
     },
@@ -66,6 +81,7 @@ var select = {
         var field = el.find(params.field);
         field.html('');
         if ($.isEmptyObject(params.selected)) {
+            head.append(s.params.placeholder);
             return;
         }
         var label = $('<span>').addClass('ez-form-label');
@@ -109,7 +125,7 @@ var select = {
             select.show.call(s, el);
         });
         head.on('click', function (e) {
-            e.stopPropagation();
+            // e.stopPropagation();
             select.show.call(s, el);
         });
         head.on('click', params.removeBtn, function (e) {
@@ -120,7 +136,7 @@ var select = {
             e.stopPropagation();
         });
         icon.on('click', function (e) {
-            e.stopPropagation();
+            // e.stopPropagation();
             select.toggle.call(s, el);
         });
         //任意位置, 关闭
@@ -131,8 +147,7 @@ var select = {
         });
     },
     search: function (val) {
-        var tree = this.tree;
-        tree.search.call(tree, val);
+        this.tree.search(val);
     },
     showWhere: function (el, ref) {   //当前元素, 参照物
         var body = $('body');
@@ -169,7 +184,7 @@ var select = {
             body.css('top', height);
         }
         //如果有搜索, 默认聚焦
-        if(params.searchKeys.length > 0 || params.searchUrl){
+        if (params.searchKeys.length > 0 || params.searchUrl) {
             el.find(params.search).find('input').focus();
         }
     },
@@ -187,7 +202,29 @@ var select = {
             select.hide.apply(this, arguments);
         }
     },
-
+    setData: function (data) {
+        var s = this;
+        var el = s.el;
+        var params = s.params;
+        //设置待选项
+        s.tree.setData(data);
+        //清空搜索
+        el.find(params.search).find('input').val('').trigger('keyup');
+        //清除选中数据
+        $.each(params.selected, function () {
+            // var selected = this;
+            // var existence = false;  //本数据是否已经存在
+            // $.each(data, function (i, item) {
+            //     if(item.id === selected.id){
+            //         existence = true;
+            //         return false;
+            //     }
+            // });
+            // if(!existence){
+                s.tree.unSelected(this.id);
+            // }
+        })
+    },
 
 };
 
@@ -198,6 +235,4 @@ $.fn.extend({
     }
 });
 
-module.exports = {
-    select: select.Select
-};
+module.exports = select.Select;

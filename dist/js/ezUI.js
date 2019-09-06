@@ -14004,7 +14004,7 @@ ez.player = require('./form/player'); //表单, 播放器
 ez.form = require('./form/upload'); //表单, 上传
 
 ez.tree = require('./tree/tree'); //树结构
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bea44c25.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8bc51cbc.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14262,6 +14262,7 @@ var select = {
     //隐藏域
     removeBtn: '.ez-form-label-remove',
     //移除按钮
+    placeholder: '请选择',
     dir: 3,
     //1上 2右 3下 4左
     data: [],
@@ -14279,13 +14280,20 @@ var select = {
     //需要搜索的key
     searchTime: 300,
     //延时搜索
-    searchUrl: '' //异步搜索
-
+    searchUrl: '',
+    //异步搜索
+    change: function change() {},
+    choose: function choose() {}
   },
   Select: function Select(els, params) {
     var s = this;
     s.el = els.first();
     s.params = $.extend(true, {}, select.defaults, params);
+
+    s.setData = function (data) {
+      select.setData.call(s, data);
+    };
+
     select.renderTree.call(s);
     select.init.call(s);
     select.events.call(s);
@@ -14319,6 +14327,14 @@ var select = {
       dataChange: function dataChange() {
         params.selected = this.getSelected();
         select.renderVal.call(s);
+        params.change.call(s);
+      },
+      choose: function choose() {
+        if (params.selected_max === 1) {
+          select.hide.call(s);
+        }
+
+        params.choose.apply(s, arguments);
       }
     });
   },
@@ -14332,6 +14348,7 @@ var select = {
     field.html('');
 
     if ($.isEmptyObject(params.selected)) {
+      head.append(s.params.placeholder);
       return;
     }
 
@@ -14375,7 +14392,7 @@ var select = {
       select.show.call(s, el);
     });
     head.on('click', function (e) {
-      e.stopPropagation();
+      // e.stopPropagation();
       select.show.call(s, el);
     });
     head.on('click', params.removeBtn, function (e) {
@@ -14386,7 +14403,7 @@ var select = {
       e.stopPropagation();
     });
     icon.on('click', function (e) {
-      e.stopPropagation();
+      // e.stopPropagation();
       select.toggle.call(s, el);
     }); //任意位置, 关闭
 
@@ -14397,8 +14414,7 @@ var select = {
     });
   },
   search: function search(val) {
-    var tree = this.tree;
-    tree.search.call(tree, val);
+    this.tree.search(val);
   },
   showWhere: function showWhere(el, ref) {
     //当前元素, 参照物
@@ -14460,6 +14476,28 @@ var select = {
     } else {
       select.hide.apply(this, arguments);
     }
+  },
+  setData: function setData(data) {
+    var s = this;
+    var el = s.el;
+    var params = s.params; //设置待选项
+
+    s.tree.setData(data); //清空搜索
+
+    el.find(params.search).find('input').val('').trigger('keyup'); //清除选中数据
+
+    $.each(params.selected, function () {
+      // var selected = this;
+      // var existence = false;  //本数据是否已经存在
+      // $.each(data, function (i, item) {
+      //     if(item.id === selected.id){
+      //         existence = true;
+      //         return false;
+      //     }
+      // });
+      // if(!existence){
+      s.tree.unSelected(this.id); // }
+    });
   }
 };
 $.fn.extend({
@@ -14468,9 +14506,7 @@ $.fn.extend({
     return this;
   }
 });
-module.exports = {
-  select: select.Select
-};
+module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
 },{"../tree/tree":32,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
@@ -16106,6 +16142,10 @@ var tree = {
       return tree.search.apply(s, arguments);
     };
 
+    s.setData = function () {
+      tree.setData.apply(s, arguments);
+    };
+
     tree.init.call(s);
     tree.events.call(s);
   },
@@ -16211,14 +16251,28 @@ var tree = {
       }
 
       var status = $(this).prop('checked');
-      var id = $(this).data('id');
+      var id = $(this).data('id'); //单选模式, 选择已选数据, 不处理.
+      // if (s.params.type === 'radio' && s.params.selected.length === 1 && s.params.selected[0].id === id) {
+      //     return;
+      // }
 
-      if (status) {
-        //选中了
-        tree.selected.call(s, id);
-      } else {
-        //取消了
-        tree.unSelected.call(s, id);
+      if (s.params.type === 'radio') {
+        $.each(params.data, function () {
+          if (this.selected) {
+            this.selected = false;
+          }
+        });
+        params.selected = tree.getData.call(s, id);
+      }
+
+      if (s.params.type === 'checkbox') {
+        if (status) {
+          //选中了
+          tree.selected.call(s, id);
+        } else {
+          //取消了
+          tree.unSelected.call(s, id);
+        }
       } //插入事件
 
 
@@ -16331,6 +16385,18 @@ var tree = {
     });
     return _data;
   },
+  setData: function setData(data) {
+    var s = this;
+    var params = s.params; //把data替换掉
+
+    params.data = data; //更新下data状态
+
+    tree.concat.call(s, params.data, params.selected, {
+      push_existence: false
+    }); //重新渲染
+
+    tree.appendTree.call(s);
+  },
   //取数据
   getJson: function getJson(url, success) {
     var s = this;
@@ -16365,18 +16431,7 @@ var tree = {
     var s = this;
     var params = s.params;
     var currentData = tree.getData.call(s, id);
-
-    if (params.type === 'radio') {
-      $.each(params.data, function () {
-        if (this.selected) {
-          this.selected = false;
-        }
-      });
-      params.selected = currentData;
-    } else {
-      tree.concat(params.selected, currentData);
-    }
-
+    tree.concat(params.selected, currentData);
     $.each(currentData, function () {
       if (this.selected !== true) {
         this.selected = true;

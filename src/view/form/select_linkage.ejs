@@ -3,50 +3,75 @@
 
 <h2>一行,标准</h2>
 <div class="ez-form ez-form-inline ez-form-full">
-    <%- include('./_select_linkage.ejs'); %>
+    <%- include('./_select_linkage.ejs', {id: '1'}); %>
 </div>
 <hr>
 
 <h2>一行,sm</h2>
 <div class="ez-form ez-form-inline ez-form-full ez-form-sm">
-    <%- include('./_select_linkage.ejs'); %>
+    <%- include('./_select_linkage.ejs', {id: '2'}); %>
 </div>
 <hr>
 
 
 <script>
-    $('.ez-form-sm').find('.ez-btn').addClass('ez-btn-sm');  //sm模式下按钮也调小
-    var d = [
-        {id: 1, pid: 0, title: '营业执照复印件'},
-        {id: 2, pid: 0, title: '法人身份证复印件'},
-        {id: 3, pid: 0, title: '经办人手持营业执照及身份证'},
-        {id: 4, pid: 0, title: '中呼服务协议'},
-        {id: 5, pid: 2, title: '22'},
-        {id: 6, pid: 2, title: '23'},
-        {id: 7, pid: 2, title: '24'},
+    var lingage_1 = [
+        {id: 1, pid: 0, title: '山东'},
+        {id: 2, pid: 0, title: '河南'},
     ];
-    // for(var i = 8; i < 50; i++){
-    //     d.push({id: i, pid: 0, title: 'title_' + i})
-    // }
-    $('.ez-form-select').eq(0).ez_form_select({
-        selected_max: 0,
-        data: [],
+    var l1 = new ez.select($('#linkage_1_1'), {
+        data: lingage_1,
+        searchKeys: ['title', 'selected'],
         selected: [
-            {id: 3, pid: 0, title: '333经办人手持营业执照及身份证'},
+            {id: 2, pid: 0, title: '河南'},
         ],
-        // dataUrl: '/data/select_tree.json',
-        searchUrl: '/data/select_tree.json',
-        // searchKeys: ['title', 'selected']
-    }).click();
-    // $('.ez-form-select').eq(1).ez_form_select({
-    //     data: [
-    //         {id: 1, pid: 0, title: '男'},
-    //         {id: 2, pid: 0, title: '女'},
-    //         {id: 3, pid: 0, title: '保密'},
-    //         {id: 4, pid: 0, title: '未知'},
-    //         {id: 5, pid: 0, title: '不限'},
-    //     ]
-    // });
+        choose: function () {
+            l2.setData([
+                {id: 3, pid: 0, title: '济南'},
+                {id: 4, pid: 0, title: '青岛'},
+                {id: 5, pid: 0, title: '潍坊'},
+            ]);
+            l3.setData([
+                {id: 15, pid: 0, title: '奎文区'},
+                {id: 16, pid: 0, title: '潍城区'},
+                {id: 17, pid: 0, title: '高新区'},
+            ]);
+        }
+    });
+
+    var lingage_2 = [
+        {id: 6, pid: 0, title: '郑州'},
+        {id: 7, pid: 0, title: '开封'},
+        {id: 8, pid: 0, title: '洛阳'},
+    ];
+    var l2 = new ez.select($('#linkage_1_2'), {
+        data: lingage_2,
+        selected: [
+            {id: 1, pid: 0, title: '郑州'},
+        ],
+        searchKeys: ['title', 'selected'],
+        choose: function () {
+            l3.setData([
+                {id: 9, pid: 0, title: '奎文区'},
+                {id: 10, pid: 0, title: '潍城区'},
+                {id: 11, pid: 0, title: '高新区'},
+            ]);
+        }
+    });
+
+    var lingage_3 = [
+        {id: 1, pid: 0, title: '中原区'},
+        {id: 2, pid: 0, title: '二七区'},
+        {id: 3, pid: 0, title: '管城区'},
+    ];
+    var l3 = new ez.select($('#linkage_1_3'), {
+        data: lingage_3,
+        selected: [
+            {id: 2, pid: 0, title: '二七区'},
+        ],
+        searchKeys: ['title', 'selected']
+    });
+
 </script>
 
 
