@@ -141,6 +141,7 @@ var tree = {
                     }
                 });
                 params.selected = tree.getData.call(s, id);
+                params.dataChange.call(s);
             }
             if(s.params.type === 'checkbox'){
                 if (status) { //选中了
