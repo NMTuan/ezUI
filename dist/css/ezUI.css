@@ -481,11 +481,14 @@ body {
 }
 
 .ez-form-control input {
+  margin-top: 0;
   vertical-align: middle;
 }
 
 .ez-form-control label {
   margin-right: 12px;
+  margin-bottom: 0;
+  font-weight: normal;
 }
 
 .ez-form-control-sm {
@@ -513,6 +516,7 @@ body {
   border: 1px solid #e0e0e0;
   border-width: 0 1px;
   margin: 0 0 0 -1px;
+  line-height: 1;
 }
 
 .ez-form-addon:last-child {
@@ -548,6 +552,8 @@ body {
 
 .ez-form-select-head {
   vertical-align: middle;
+  line-height: 34px;
+  font-weight: normal;
 }
 
 .ez-form-select-body {
@@ -557,6 +563,7 @@ body {
   padding: 0;
   background-color: #fff;
   border: 1px solid #e0e0e0;
+  line-height: 34px;
   position: absolute;
   z-index: 2;
   left: -1px;
@@ -643,6 +650,14 @@ body {
 .ez-form-sm .ez-form-control {
   padding: 0 6px;
   min-height: 26px;
+  line-height: 26px;
+}
+
+.ez-form-sm .ez-form-select-head {
+  line-height: 26px;
+}
+
+.ez-form-sm .ez-form-select-body {
   line-height: 26px;
 }
 
