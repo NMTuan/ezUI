@@ -1,0 +1,26 @@
+<% title = '表单验证'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+<h2>横向(常见于搜索)</h2>
+<div class="ez-form ez-form-inline ez-form-inline-horizontal ez-form-sm">
+    <%- include('./_form.ejs');%>
+</div>
+<hr>
+
+<h2>一行</h2>
+<div class="ez-form ez-form-inline ez-form-full ez-form-sm">
+    <%- include('./_form.ejs');%>
+</div>
+<hr>
+
+<h2>分行</h2>
+<div class="ez-form">
+    <%- include('./_form.ejs');%>
+</div>
+
+<script>
+    $('.ez-form-sm').find('.ez-btn').addClass('ez-btn-sm');  //sm模式下按钮也调小
+    $('.ez-form-inline-horizontal').find('.ez-form-row-tips').remove();   //水平模式下用不到tips
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>
