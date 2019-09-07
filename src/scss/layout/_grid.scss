@@ -1,7 +1,8 @@
 .ez {
-    &.row {
+    $ez: &;
+    &-row {
         @extend %clear;
-    
+
         @for $i from 1 through 15 {
             &-span#{$i} {
                 margin: -#{$i}px;
@@ -12,17 +13,17 @@
             }
 
         }
-        
+
         &-span {
             margin: -4px;
 
-            .col {
+            #{$ez}-col {
                 padding: 4px;
             }
         }
     }
 
-    &.col {
+    &-col {
         $i: 1;
         float: left;
 

@@ -2,9 +2,9 @@
 <%- include('../compoents/default/_header.ejs'); %>
 
 <% [12, 6, 4, 3, 2, 1].forEach(item => { %>
-<div class="ez row">
+<div class="ez-row">
     <% for(var i = 0; i < item; i++){ %>
-        <div class="ez col col<%- 12 / item %>">
+        <div class="ez-col ez-col<%- 12 / item %>">
             <div class="ez bg-blue-grey bg-l<%- i % 5 + 1 %>">.col.col<%- 12 / item %></div>
         </div>
     <% } %>
@@ -12,9 +12,9 @@
 <% }) %>
 
 <% [12, 6, 4, 3, 2, 1].forEach(item => { %>
-<div class="ez row row-span">
+<div class="ez-row ez-row-span">
     <% for(var i = 0; i < item; i++){ %>
-        <div class="ez col col<%- 12 / item %>">
+        <div class="ez-col ez-col<%- 12 / item %>">
             <div class="ez bg-blue .bg-l<%- i % 5 + 1 %>">.col.col<%- 12 / item %></div>
         </div>
     <% } %>
