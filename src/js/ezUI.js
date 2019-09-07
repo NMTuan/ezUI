@@ -23,3 +23,4 @@ ez.select = require('./form/select');   //表单, 下拉菜单
 ez.player = require('./form/player');   //表单, 播放器
 ez.form = require('./form/upload');     //表单, 上传
 ez.tree = require('./tree/tree');   //树结构
+ez.watermark = require('./watermark/watermark');    //水印

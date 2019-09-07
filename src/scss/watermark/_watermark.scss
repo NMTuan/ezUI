@@ -1,0 +1,16 @@
+.ez-watermark {
+    display: none;
+    width: 300px;
+    height: 150px;
+    pointer-events: none;
+    &-repeat {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        //right: 0;
+        //bottom: 0;
+        left: 0;
+        z-index: 99999999;
+    }
+}
