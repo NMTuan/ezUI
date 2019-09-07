@@ -564,6 +564,14 @@ body {
   width: 100%;
 }
 
+.ez-avg {
+  display: flex;
+}
+
+.ez-avg-item {
+  flex: 1 1 auto;
+}
+
 .ez.sidebar {
   min-width: 100px;
   min-height: 100px;

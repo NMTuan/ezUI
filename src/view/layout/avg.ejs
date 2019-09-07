@@ -1,0 +1,15 @@
+<% title = '等分栅格'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+<% [1, 2, 3, 4, 5, 6, 7, 8].forEach(item => { %>
+    <div class="ez-avg">
+        <% for(var i = 0; i < item; i++){ %>
+            <div class="ez-avg-item" style="border: 1px solid #d00;">
+                <%- item %> - <%- i+1 %>
+            </div>
+        <% } %>
+    </div>
+<% }) %>
+
+
+<%- include('../compoents/default/_footer.ejs'); %>
