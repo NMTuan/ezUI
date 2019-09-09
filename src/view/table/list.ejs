@@ -1,0 +1,19 @@
+<% title = '表格列表'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+<div class="ez-table-list">
+    <div class="ez-table-list-table">
+<!--        <div class="ez-table-list-col" style="background-color: #d00;"></div>-->
+        <% for(var row = 0; row < 10;row++) { %>
+            <div class="ez-table-list-row">
+                <% for(var cell = 0; cell < 10; cell++){ %>
+                    <div class="ez-table-list-cell">
+                        <% for(var i = 0; i < row + cell; i++){ %>
+                            <%- row + cell %>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</div>
+<%- include('../compoents/default/_footer.ejs'); %>

@@ -1,0 +1,31 @@
+.ez-table-list {
+    width: 100%;
+    overflow: auto;
+    &-table {
+        display: table;
+        border-collapse: collapse;
+        //table-layout: fixed;
+    }
+    //&-col {
+    //    display: table-column;
+    //    //position: fixed;
+    //    width: 100%;
+    //}
+    &-row {
+        display: table-row;
+        overflow: auto;
+        position: relative;
+    }
+    &-cell {
+        display: table-cell;
+        border: 1px solid #ccc;
+        white-space: nowrap;
+        overflow: hidden;
+        &:first-child {
+            background-color: rgba(255, 255, 0, 0.5);
+            position: absolute;
+            //width: 100%;
+        }
+        //text-overflow: ellipsis;
+    }
+}
