@@ -4,7 +4,7 @@ var upload = {
         placeholder: '未选择任何文件',
         type: 'image',  //image | audio | wav | mp3, 可以取el的data-type
         area: ['460px', 'auto'],    //弹窗大小
-        url: '',    //上传地址, 可以取el的data-src
+        url: '',    //上传地址, 可以取el的data-url
         multiple: false,    //是否多选,可以取el的data-multiple
         accept: null,   //文件类型的限制
         uploadTitle: '点击选择文件',    //上传窗内的标题, 可取el的data-upload-title
@@ -17,7 +17,7 @@ var upload = {
     layerId: '',//整体上传窗的id
     upload: function (els, params) {
         $.each(els, function () {
-            if (params.url || $(this).data('src')) {
+            if (params.url || $(this).data('url')) {
                 $(this).addClass('ez-cursor-pointer');
                 new upload.Upload(this, params);
             }
