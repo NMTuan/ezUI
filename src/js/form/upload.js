@@ -176,11 +176,15 @@ var upload = {
             // if (typeof s.params.callback == 'function') {
             //     s.params.callback.call(s, res, files);
             // }
+            if(res.code !== 40000){
+                layer.msg(res.msg);
+                return;
+            }
             $.each(res.result, function () {
                 if (this.path) {
                     upload.add.call(s, this);
                 }
-            })
+            });
         });
         uploader.on('uploadFinished', function () {
             layer.close(upload.loadId);
