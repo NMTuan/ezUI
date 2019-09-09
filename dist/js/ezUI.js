@@ -14006,7 +14006,7 @@ ez.form = require('./form/upload'); //表单, 上传
 ez.tree = require('./tree/tree'); //树结构
 
 ez.watermark = require('./watermark/watermark'); //水印
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8650b6a1.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5dff999e.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"./watermark/watermark":33,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14564,7 +14564,8 @@ var _upload = {
     s.params.multiple = s.el.data('multiple') || s.params.multiple;
     s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
     s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
-    s.params.accept = s.el.data('accept') || s.params.accept; //初始化value
+    s.params.accept = s.el.data('accept') || s.params.accept;
+    s.params.data = s.el.data('data') || s.params.data; //初始化value
 
     if (s.select.find('option').length > 0) {
       $.each(s.select.find('option'), function (i, item) {

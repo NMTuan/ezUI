@@ -37,6 +37,7 @@ var upload = {
         s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
         s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
         s.params.accept = s.el.data('accept') || s.params.accept;
+        s.params.data = s.el.data('data') || s.params.data;
 
         //初始化value
         if (s.select.find('option').length > 0) {
