@@ -36,7 +36,7 @@ var upload = {
         s.params.multiple = s.el.data('multiple') || s.params.multiple;
         s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
         s.params.uploadTips = s.el.data('upload-tips') || s.params.uploadTips;
-        s.params.type = s.el.data('type') || s.params.type;
+        s.params.accept = s.el.data('accept') || s.params.accept;
 
         //初始化value
         if (s.select.find('option').length > 0) {
