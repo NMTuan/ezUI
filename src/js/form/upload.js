@@ -16,6 +16,7 @@ var upload = {
     loadId: '', //整体loading的id
     layerId: '',//整体上传窗的id
     upload: function (els, params) {
+        params = params || {};
         $.each(els, function () {
             if (params.url || $(this).data('url')) {
                 $(this).addClass('ez-cursor-pointer');
