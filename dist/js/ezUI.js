@@ -14006,7 +14006,7 @@ ez.form = require('./form/upload'); //表单, 上传
 ez.tree = require('./tree/tree'); //树结构
 
 ez.watermark = require('./watermark/watermark'); //水印
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c485d99b.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a4553ff5.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"./watermark/watermark":33,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14780,11 +14780,11 @@ var _upload = {
 
     $.each(s.values, function (i, item) {
       var option = $('<option>');
-      option.html(item.name || item.path);
+      option.html(item.name || item.src);
       option.attr('value', item.path);
       option.attr('selected', 'selected');
       s.select.append(option);
-      var label = $('<span>').addClass('ez-form-label').data('path', item.path).html(item.name || item.path);
+      var label = $('<span>').addClass('ez-form-label').data('src', item.src).html(item.name || item.src);
       var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
       label.append(close);
       close.on('click', function (e) {

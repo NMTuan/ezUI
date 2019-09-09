@@ -248,12 +248,12 @@ var upload = {
         }
         $.each(s.values, function (i, item) {
             var option = $('<option>');
-            option.html(item.name || item.path);
+            option.html(item.name || item.src);
             option.attr('value', item.path);
             option.attr('selected', 'selected');
             s.select.append(option);
 
-            var label = $('<span>').addClass('ez-form-label').data('path', item.path).html(item.name || item.path);
+            var label = $('<span>').addClass('ez-form-label').data('src', item.src).html(item.name || item.src);
             var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
             label.append(close);
             close.on('click', function (e) {
