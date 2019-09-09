@@ -19,7 +19,8 @@
     $('.upload').last().data('multiple', 'true');
 
     $('.upload').ez_form_upload({
-        url: '/data/upload.json'
+        url: '/data/upload.json',
+        multiple: true
     });
 
     $('.ez-form-control').on('click', '.ez-form-label', function () {

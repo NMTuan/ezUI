@@ -44,8 +44,12 @@ var upload = {
         //初始化value
         if (s.select.find('option').length > 0) {
             $.each(s.select.find('option'), function (i, item) {
-                if($(item).attr('value')){
-                    s.values.push({name: $.trim($(item).text()), path: $(item).attr('value')});
+                if ($(item).attr('value')) {
+                    s.values.push({
+                        name: $.trim($(item).text()),
+                        path: $(item).attr('value'),
+                        src: $(item).data('src') || ''
+                    });
                 }
             });
             upload.renderItem.call(s);
@@ -250,6 +254,7 @@ var upload = {
             var option = $('<option>');
             option.html(item.name || item.src);
             option.attr('value', item.path);
+            option.data('src', item.src);
             option.attr('selected', 'selected');
             s.select.append(option);
 
