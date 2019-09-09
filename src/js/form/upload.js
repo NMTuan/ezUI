@@ -156,7 +156,7 @@ var upload = {
             },
             accept: s.params.accept,
             auto: true,
-            method: 'get',
+            method: 'post',
             formData: s.params.data,
             fileVal: s.params.field,
         });
