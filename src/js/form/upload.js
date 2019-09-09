@@ -31,7 +31,7 @@ var upload = {
         s.select = s.el.parent().find('.ez-form-upload-field');
 
         //若el上有data属性, 则取data, 否则按默认的来.
-        s.params.url = s.el.data('src') || s.params.url;
+        s.params.url = s.el.data('url') || s.params.url;
         s.params.type = s.el.data('type') || s.params.type;
         s.params.multiple = s.el.data('multiple') || s.params.multiple;
         s.params.uploadTitle = s.el.data('upload-title') || s.params.uploadTitle;
