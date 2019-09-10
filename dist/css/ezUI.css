@@ -1084,6 +1084,11 @@ body {
   border-collapse: collapse;
 }
 
+.ez-table-list-header {
+  display: table-header-group;
+  font-weight: bold;
+}
+
 .ez-table-list-row {
   display: table-row;
   overflow: auto;
@@ -1095,11 +1100,6 @@ body {
   border: 1px solid #ccc;
   white-space: nowrap;
   overflow: hidden;
-}
-
-.ez-table-list-cell:first-child {
-  background-color: rgba(255, 255, 0, 0.5);
-  position: absolute;
 }
 
 .ez.image-view {
