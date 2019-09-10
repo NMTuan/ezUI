@@ -1,6 +1,7 @@
 //公共，通用
 $types: ('primary', 'secondary', 'success', 'warning', 'danger', 'link', 'disabled');
 $common-color: 'grey';
+$base-color: 'current';
 @import '../../node_modules/normalize.css/normalize';
 @import './common/common';
 @import './color/color';
@@ -65,7 +66,7 @@ body {
 @import './button/button';
 
 //表格
-//@import './table/table';
+@import './table/table';
 @import "./table/list";
 
 

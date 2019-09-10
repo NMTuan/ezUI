@@ -14006,8 +14006,10 @@ ez.form = require('./form/upload'); //表单, 上传
 ez.tree = require('./tree/tree'); //树结构
 
 ez.watermark = require('./watermark/watermark'); //水印
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_569f6d3c.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./tabs/tabs":31,"./tree/tree":32,"./watermark/watermark":33,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+
+ez.tableList = require('./table/list');
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a03eb6dd.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./table/list":31,"./tabs/tabs":32,"./tree/tree":33,"./watermark/watermark":34,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14510,7 +14512,7 @@ $.fn.extend({
 });
 module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":32,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+},{"../tree/tree":33,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16026,6 +16028,107 @@ module.exports = _subNav.subNav;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var _list = {
+  defaults: {
+    data: {
+      header: [],
+      body: [],
+      option: []
+    },
+    tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'] // multiple: true, //多选
+    // move: true, //列移动
+
+  },
+  list: function list(els, params) {
+    $.each(els, function () {
+      new _list.List($(this), params);
+    });
+  },
+  List: function List(el, params) {
+    var s = this;
+    s.el = el;
+    s.params = $.extend(true, {}, _list.defaults, params);
+
+    _list.renderTable.call(s);
+
+    _list.events.call(s);
+  },
+  events: function events() {
+    var s = this; //点击选中行
+
+    s.el.on('click', '.ez-table-list-row', function () {
+      $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
+      $(this).find('input').prop('checked', true);
+    });
+    s.el.on('click', 'input', function (e) {
+      e.stopPropagation();
+      $(this).closest('.ez-table-list-row').addClass('ez-table-list-active');
+    });
+  },
+  renderTable: function renderTable() {
+    var s = this;
+    var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
+
+    var header = _list.renderHeader.call(s);
+
+    var body = _list.renderBody.call(s);
+
+    table.append(header).append(body);
+    s.el.append(table);
+  },
+  renderHeader: function renderHeader() {
+    var s = this;
+    var html = $('<div>').addClass('ez-table-list-head');
+    var row = $('<div>').addClass('ez-table-list-row');
+    var drag = $('<i>').addClass('remixicon-more-2-line');
+    var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+    row.append(_list.renderCell(optionBtn, true));
+    $.each(s.params.data.header, function (i, item) {
+      var cell = _list.renderCell(item.title, true);
+
+      cell.prepend(drag.clone());
+      row.append(cell);
+    });
+    html.append(row);
+    return html;
+  },
+  renderBody: function renderBody() {
+    var s = this;
+    var html = $('<div>').addClass('ez-table-list-body');
+    $.each(s.params.data.body, function (i, item) {
+      var row = _list.renderRow(item);
+
+      html.append(row);
+    });
+    return html;
+  },
+  renderRow: function renderRow(data) {
+    var html = $('<div>').addClass('ez-table-list-row');
+    html.append(_list.renderCell('<input type="checkbox" name="" id="">', true));
+    $.each(data, function (key, value) {
+      var cell = _list.renderCell(value);
+
+      html.append(cell);
+    });
+    return html;
+  },
+  renderCell: function renderCell(value, th) {
+    return $('<div>').addClass('ez-table-list-' + (th ? 'th' : 'td')).html(value);
+  }
+};
+$.fn.extend({
+  ez_table_list: function ez_table_list(params) {
+    _list.list(this, params);
+
+    return this;
+  }
+});
+module.exports = _list.list;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/table\\list.js","/table")
+},{"XJF/FV":7,"buffer":6}],32:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 var _tabs = {
   defaults: {
     currentClass: 'current',
@@ -16091,7 +16194,7 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":7,"buffer":6}],32:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],33:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16536,7 +16639,7 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":26,"XJF/FV":7,"buffer":6}],33:[function(require,module,exports){
+},{"../random/random":26,"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

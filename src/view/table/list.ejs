@@ -1,29 +1,133 @@
 <% title = '表格列表'; %>
 <%- include('../compoents/default/_header.ejs'); %>
-<div class="ez-table-list">
-    <div class="ez-table-list-table">
-        <div class="ez-table-list-header">
-            <div class="ez-table-list-row">
-                <% for(var cell = 0; cell < 10; cell++){ %>
-                    <div class="ez-table-list-cell">
-                        <% for(var i = 0; i <= cell; i++){ %>
-                            <%- i + cell %>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
-        </div>
-        <% for(var row = 0; row < 60;row++) { %>
-            <div class="ez-table-list-row">
-                <% for(var cell = 0; cell < 10; cell++){ %>
-                    <div class="ez-table-list-cell">
-                        <% for(var i = 0; i <= row + cell; i=i+5){ %>
-                            <%- row + cell %>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
-        <% } %>
-    </div>
+<%
+var table = {
+    header: [
+        {field: 'id', title: '编号'},
+        {field: 'code', title: '服务号'},
+        {field: 'company', title: '所属企业'},
+        {field: 'agent', title: '所属机构'},
+        {field: 'site', title: '归属落地'},
+        {field: 'address', title: '服务器地址'},
+    ],
+    body: [
+        {
+            id: 'BC1909090542555642',
+            code: '<a href="#" class="ez-btn">按钮</a>',
+            company: '北京几克餐饮管理有限公司【beijingjike】',
+            agent: '山东中呼信息科技有限公司【sdzhonghu】',
+            site: '杭州电信',
+            address: '杭州新增服务器'
+        },
+        {
+            id: 'BC1909071014379811',
+            code: '4000661975',
+            company: '山东省菏泽信息工程学校【4000661975】',
+            agent: '山东咕果信息技术有限公司【guguo】',
+            site: '盘锦联通',
+            address: ''
+        },
+        {
+            id: 'BC1909060324338145',
+            code: '4009915525',
+            company: '黑龙江厚东科技有限公司【houdongkeji】',
+            agent: '山东中呼信息科技有限公司【sdzhonghu】',
+            site: '杭州电信',
+            address: '杭州新增服务器'
+        },
+        {
+            id: 'BC1909060107381625',
+            code: '4006662087',
+            company: '上海克骏文化传播有限公司【kejun】',
+            agent: '山东中呼信息科技有限公司【sdzhonghu】',
+            site: '盘锦联通',
+            address: '盘锦新增服务器'
+        },
+    ]
+}
+%>
+<div class="">
+    <a href="#" class="ez-btn">操作按钮</a>
 </div>
+
+<div id="tableList" class="ez-table-list"></div>
+<script>
+    $('#tableList').ez_table_list({
+        data: {
+            header: [
+                {field: 'id', title: '编号'},
+                {field: 'code', title: '服务号'},
+                {field: 'company', title: '所属企业'},
+                {field: 'agent', title: '所属机构'},
+                {field: 'site', title: '归属落地'},
+                {field: 'address', title: '服务器地址'},
+            ],
+            body: [
+                {
+                    id: 'BC1909090542555642',
+                    code: '<a href="#" class="ez-btn">按钮</a>',
+                    company: '北京几克餐饮管理有限公司【beijingjike】',
+                    agent: '山东中呼信息科技有限公司【sdzhonghu】',
+                    site: '杭州电信',
+                    address: '杭州新增服务器'
+                },
+                {
+                    id: 'BC1909071014379811',
+                    code: '4000661975',
+                    company: '山东省菏泽信息工程学校【4000661975】',
+                    agent: '山东咕果信息技术有限公司【guguo】',
+                    site: '盘锦联通',
+                    address: ''
+                },
+                {
+                    id: 'BC1909060324338145',
+                    code: '4009915525',
+                    company: '黑龙江厚东科技有限公司【houdongkeji】',
+                    agent: '山东中呼信息科技有限公司【sdzhonghu】',
+                    site: '杭州电信',
+                    address: '杭州新增服务器'
+                },
+                {
+                    id: 'BC1909060107381625',
+                    code: '4006662087',
+                    company: '上海克骏文化传播有限公司【kejun】',
+                    agent: '山东中呼信息科技有限公司【sdzhonghu】',
+                    site: '盘锦联通',
+                    address: '盘锦新增服务器'
+                },
+            ]
+        }
+    });
+</script>
+
+<!--<div class="ez-table-list">-->
+<!--    <table class="ez-table ez-table-block ez-table-border ez-table-line ez-table-vline ez-table-hover">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th><i class="remixicon-list-settings-line"></i></th>-->
+<!--            <% table.header.forEach(function(item){ %>-->
+<!--                <th>-->
+<!--                    <i class="remixicon-more-2-line"></i>-->
+<!--                    <%- item.title %>-->
+<!--                </th>-->
+<!--            <% }) %>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <% table.body.forEach(function (item) { %>-->
+<!--            <tr>-->
+<!--                <td><input type="checkbox" name="" id=""></td>-->
+<!--                <% table.header.forEach(function (header) { %>-->
+<!--                    <td>-->
+<!--                        <%- item[header.field] %>-->
+<!--                    </td>-->
+<!--                <% }) %>-->
+<!--            </tr>-->
+<!--        <% }) %>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
 <%- include('../compoents/default/_footer.ejs'); %>
+<script>
+
+</script>
