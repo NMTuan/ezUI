@@ -14008,7 +14008,7 @@ ez.tree = require('./tree/tree'); //树结构
 ez.watermark = require('./watermark/watermark'); //水印
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a03eb6dd.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_fb73a484.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./table/list":31,"./tabs/tabs":32,"./tree/tree":33,"./watermark/watermark":34,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16054,15 +16054,27 @@ var _list = {
     _list.events.call(s);
   },
   events: function events() {
-    var s = this; //点击选中行
+    var s = this; //点击选中行(单选)
 
     s.el.on('click', '.ez-table-list-row', function () {
+      _list.rowSelected(this);
+
+      _list.rowUnselected($(this).siblings('.ez-table-list-active'));
+
       $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
       $(this).find('input').prop('checked', true);
-    });
+    }); //勾选(可多选)
+
     s.el.on('click', 'input', function (e) {
       e.stopPropagation();
-      $(this).closest('.ez-table-list-row').addClass('ez-table-list-active');
+
+      _list.rowToggleSelected($(this).closest('.ez-table-list-row'));
+    }); //防止意外勾选, 扩大勾选热区
+
+    s.el.on('click', '.ez-table-list-checkbox', function (e) {
+      e.stopPropagation();
+
+      _list.rowToggleSelected($(this).closest('.ez-table-list-row'));
     });
   },
   renderTable: function renderTable() {
@@ -16080,13 +16092,13 @@ var _list = {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-head');
     var row = $('<div>').addClass('ez-table-list-row');
-    var drag = $('<i>').addClass('remixicon-more-2-line');
+    var dragBtn = $('<i>').addClass('remixicon-more-2-line');
     var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
     row.append(_list.renderCell(optionBtn, true));
     $.each(s.params.data.header, function (i, item) {
       var cell = _list.renderCell(item.title, true);
 
-      cell.prepend(drag.clone());
+      cell.prepend(dragBtn.clone());
       row.append(cell);
     });
     html.append(row);
@@ -16104,7 +16116,16 @@ var _list = {
   },
   renderRow: function renderRow(data) {
     var html = $('<div>').addClass('ez-table-list-row');
-    html.append(_list.renderCell('<input type="checkbox" name="" id="">', true));
+    var checkbox = $('<input>').attr({
+      type: 'checkbox',
+      name: '',
+      value: data.id
+    });
+
+    var cell = _list.renderCell(checkbox, true);
+
+    cell.addClass('ez-table-list-checkbox');
+    html.append(cell);
     $.each(data, function (key, value) {
       var cell = _list.renderCell(value);
 
@@ -16114,6 +16135,22 @@ var _list = {
   },
   renderCell: function renderCell(value, th) {
     return $('<div>').addClass('ez-table-list-' + (th ? 'th' : 'td')).html(value);
+  },
+  //选中当前行
+  rowSelected: function rowSelected(row) {
+    $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
+  },
+  //取消当前行
+  rowUnselected: function rowUnselected(row) {
+    $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
+  },
+  //切换选中状态
+  rowToggleSelected: function rowToggleSelected(row) {
+    if ($(row).hasClass('ez-table-list-active')) {
+      _list.rowUnselected(row);
+    } else {
+      _list.rowSelected(row);
+    }
   }
 };
 $.fn.extend({

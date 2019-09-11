@@ -32,15 +32,23 @@ var list = {
     },
     events: function () {
         var s = this;
-        //点击选中行
+        //点击选中行(单选)
         s.el.on('click', '.ez-table-list-row', function () {
+            list.rowSelected(this);
+            list.rowUnselected($(this).siblings('.ez-table-list-active'));
             $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
             $(this).find('input').prop('checked', true);
         });
+        //勾选(可多选)
         s.el.on('click', 'input', function (e) {
             e.stopPropagation();
-            $(this).closest('.ez-table-list-row').addClass('ez-table-list-active');
-        })
+            list.rowToggleSelected($(this).closest('.ez-table-list-row'));
+        });
+        //防止意外勾选, 扩大勾选热区
+        s.el.on('click', '.ez-table-list-checkbox', function (e) {
+            e.stopPropagation();
+            list.rowToggleSelected($(this).closest('.ez-table-list-row'));
+        });
 
     },
     renderTable: function () {
@@ -55,12 +63,12 @@ var list = {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-head');
         var row = $('<div>').addClass('ez-table-list-row');
-        var drag = $('<i>').addClass('remixicon-more-2-line');
+        var dragBtn = $('<i>').addClass('remixicon-more-2-line');
         var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
         row.append(list.renderCell(optionBtn, true));
         $.each(s.params.data.header, function (i, item) {
             var cell = list.renderCell(item.title, true);
-            cell.prepend(drag.clone());
+            cell.prepend(dragBtn.clone());
             row.append(cell);
         });
         html.append(row);
@@ -77,7 +85,14 @@ var list = {
     },
     renderRow: function (data) {
         var html = $('<div>').addClass('ez-table-list-row');
-        html.append(list.renderCell('<input type="checkbox" name="" id="">', true));
+        var checkbox = $('<input>').attr({
+            type: 'checkbox',
+            name: '',
+            value: data.id
+        });
+        var cell = list.renderCell(checkbox, true);
+        cell.addClass('ez-table-list-checkbox');
+        html.append(cell);
         $.each(data, function (key, value) {
             var cell = list.renderCell(value);
             html.append(cell);
@@ -87,6 +102,23 @@ var list = {
     renderCell: function (value, th) {
         return $('<div>').addClass('ez-table-list-' + (th ? 'th' : 'td')).html(value);
     },
+
+    //选中当前行
+    rowSelected: function (row) {
+        $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
+    },
+    //取消当前行
+    rowUnselected: function (row) {
+        $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
+    },
+    //切换选中状态
+    rowToggleSelected: function (row) {
+        if($(row).hasClass('ez-table-list-active')){
+            list.rowUnselected(row);
+        } else {
+            list.rowSelected(row);
+        }
+    }
 };
 
 $.fn.extend({
