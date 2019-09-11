@@ -3,8 +3,8 @@ var list = {
         data: {
             header: [],
             body: [],
-            option: [],
         },
+        sort: [],
         tableClass: [
             'ez-table-list-border',
             'ez-table-list-line',
@@ -34,6 +34,7 @@ var list = {
         var s = this;
         //点击选中行(单选)
         s.el.on('click', '.ez-table-list-row', function () {
+            console.log('click')
             list.rowSelected(this);
             list.rowUnselected($(this).siblings('.ez-table-list-active'));
             $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
@@ -51,7 +52,7 @@ var list = {
         });
         //选项
         s.el.on('click', '.ez-table-list-field-option', function (e) {
-            var el = $('<div>');
+            var el = $('<div>').addClass('ez-table-list')//.append($('<div>').addClass('ez-table-list'));
             var options = {
                 data: {
                     header: [
@@ -73,16 +74,17 @@ var list = {
                     'ez-table-list-vline',
                     'ez-table-list-hover',
                     'ez-table-list-full',
-                    // 'ez-table-list-stripe',
                     'ez-table-list-sm',
-
                 ],
             };
+            $('body').append(el);
             new list.List(el, options);
-            // $('body').append(el);
+            console.log(el);
             layer.open({
+                type: 1,
                 title: '表格配置',
-                content: el.html()
+                content: el.first(),
+                btn: ['保存'],
             })
         });
 
@@ -97,33 +99,52 @@ var list = {
         s.el.append(table);
     },
     //渲染表头
-    renderHeader: function (data) {
+    renderHeader: function () {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-head');
         var row = $('<div>').addClass('ez-table-list-row');
         var dragBtn = $('<i>').addClass('remixicon-more-2-line');
+        //多选框
         if (s.params.multiple) {
             var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
             var cell = list.renderCell('option', true);
+            cell.css('width', '1px');
             cell.html(optionBtn);
-        }
-        row.append(cell);
-        $.each(data || s.params.data.header, function (i, item) {
-            var cell = list.renderCell(item.field, true);
-            cell.html(item.title);
-            if (s.params.move) {
-                cell.prepend(dragBtn.clone());
-            }
             row.append(cell);
-        });
+        }
+        //如果有顺序配置, 则按配置执行, 否则输出全字段
+        if (s.params.sort.length > 0) {
+            $.each(s.params.sort, function (i, field) {
+                $.each(s.params.data.header, function (i, item) {
+                    if (item.field !== field) {
+                        return;
+                    }
+                    var cell = list.renderCell(item.field, true);
+                    cell.html(item.title);
+                    if (s.params.move) {
+                        cell.prepend(dragBtn.clone());
+                    }
+                    row.append(cell);
+                });
+            });
+        } else {
+            $.each(s.params.data.header, function (i, item) {
+                var cell = list.renderCell(item.field, true);
+                cell.html(item.title);
+                if (s.params.move) {
+                    cell.prepend(dragBtn.clone());
+                }
+                row.append(cell);
+            });
+        }
         html.append(row);
         return html;
     },
     //渲染表格主体
-    renderBody: function (data) {
+    renderBody: function () {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-body');
-        $.each(data || s.params.data.body, function (i, item) {
+        $.each(s.params.data.body, function (i, item) {
             var row = list.renderRow.call(s, item);
             html.append(row);
         });
@@ -141,13 +162,27 @@ var list = {
             });
             var cell = list.renderCell('checkbox', true);
             cell.append(checkbox);
-        }
-        html.append(cell);
-        $.each(data, function (key, value) {
-            var cell = list.renderCell(key);
-            cell.html(value);
             html.append(cell);
-        });
+        }
+        //如果有顺序配置, 则按配置执行, 否则输出全字段
+        if(s.params.sort.length > 0){
+            $.each(s.params.sort, function (i, field) {
+                $.each(data, function (key, value) {
+                    if(key !== field){
+                        return;
+                    }
+                    var cell = list.renderCell(key);
+                    cell.html(value);
+                    html.append(cell);
+                });
+            });
+        } else {
+            $.each(data, function (key, value) {
+                var cell = list.renderCell(key);
+                cell.html(value);
+                html.append(cell);
+            });
+        }
         return html;
     },
     //渲染单元格, field字段, th是否为th

@@ -14008,7 +14008,7 @@ ez.tree = require('./tree/tree'); //树结构
 ez.watermark = require('./watermark/watermark'); //水印
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9240a26e.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b69ef111.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/upload":19,"./headlines/headlines":20,"./iframeTabs/iframeTabs":21,"./imageView/imageView":22,"./log/log":23,"./menuTree/menuTree":24,"./msg/msg":25,"./renderHeight/renderHeight":27,"./role/role":28,"./scrollWheel/scrollWheel":29,"./subNav/subNav":30,"./table/list":31,"./tabs/tabs":32,"./tree/tree":33,"./watermark/watermark":34,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16032,9 +16032,9 @@ var _list = {
   defaults: {
     data: {
       header: [],
-      body: [],
-      option: []
+      body: []
     },
+    sort: [],
     tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
     multiple: false,
     //多选
@@ -16059,6 +16059,8 @@ var _list = {
     var s = this; //点击选中行(单选)
 
     s.el.on('click', '.ez-table-list-row', function () {
+      console.log('click');
+
       _list.rowSelected(this);
 
       _list.rowUnselected($(this).siblings('.ez-table-list-active'));
@@ -16080,7 +16082,8 @@ var _list = {
     }); //选项
 
     s.el.on('click', '.ez-table-list-field-option', function (e) {
-      var el = $('<div>');
+      var el = $('<div>').addClass('ez-table-list'); //.append($('<div>').addClass('ez-table-list'));
+
       var options = {
         data: {
           header: [{
@@ -16110,14 +16113,16 @@ var _list = {
             col: '服务器地址'
           }]
         },
-        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', // 'ez-table-list-stripe',
-        'ez-table-list-sm']
+        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm']
       };
-      new _list.List(el, options); // $('body').append(el);
-
+      $('body').append(el);
+      new _list.List(el, options);
+      console.log(el);
       layer.open({
+        type: 1,
         title: '表格配置',
-        content: el.html()
+        content: el.first(),
+        btn: ['保存']
       });
     });
   },
@@ -16134,40 +16139,63 @@ var _list = {
     s.el.append(table);
   },
   //渲染表头
-  renderHeader: function renderHeader(data) {
+  renderHeader: function renderHeader() {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-head');
     var row = $('<div>').addClass('ez-table-list-row');
-    var dragBtn = $('<i>').addClass('remixicon-more-2-line');
+    var dragBtn = $('<i>').addClass('remixicon-more-2-line'); //多选框
 
     if (s.params.multiple) {
       var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
 
       var cell = _list.renderCell('option', true);
 
+      cell.css('width', '1px');
       cell.html(optionBtn);
+      row.append(cell);
+    } //如果有顺序配置, 则按配置执行, 否则输出全字段
+
+
+    if (s.params.sort.length > 0) {
+      $.each(s.params.sort, function (i, field) {
+        $.each(s.params.data.header, function (i, item) {
+          if (item.field !== field) {
+            return;
+          }
+
+          var cell = _list.renderCell(item.field, true);
+
+          cell.html(item.title);
+
+          if (s.params.move) {
+            cell.prepend(dragBtn.clone());
+          }
+
+          row.append(cell);
+        });
+      });
+    } else {
+      $.each(s.params.data.header, function (i, item) {
+        var cell = _list.renderCell(item.field, true);
+
+        cell.html(item.title);
+
+        if (s.params.move) {
+          cell.prepend(dragBtn.clone());
+        }
+
+        row.append(cell);
+      });
     }
 
-    row.append(cell);
-    $.each(data || s.params.data.header, function (i, item) {
-      var cell = _list.renderCell(item.field, true);
-
-      cell.html(item.title);
-
-      if (s.params.move) {
-        cell.prepend(dragBtn.clone());
-      }
-
-      row.append(cell);
-    });
     html.append(row);
     return html;
   },
   //渲染表格主体
-  renderBody: function renderBody(data) {
+  renderBody: function renderBody() {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-body');
-    $.each(data || s.params.data.body, function (i, item) {
+    $.each(s.params.data.body, function (i, item) {
       var row = _list.renderRow.call(s, item);
 
       html.append(row);
@@ -16189,15 +16217,32 @@ var _list = {
       var cell = _list.renderCell('checkbox', true);
 
       cell.append(checkbox);
+      html.append(cell);
+    } //如果有顺序配置, 则按配置执行, 否则输出全字段
+
+
+    if (s.params.sort.length > 0) {
+      $.each(s.params.sort, function (i, field) {
+        $.each(data, function (key, value) {
+          if (key !== field) {
+            return;
+          }
+
+          var cell = _list.renderCell(key);
+
+          cell.html(value);
+          html.append(cell);
+        });
+      });
+    } else {
+      $.each(data, function (key, value) {
+        var cell = _list.renderCell(key);
+
+        cell.html(value);
+        html.append(cell);
+      });
     }
 
-    html.append(cell);
-    $.each(data, function (key, value) {
-      var cell = _list.renderCell(key);
-
-      cell.html(value);
-      html.append(cell);
-    });
     return html;
   },
   //渲染单元格, field字段, th是否为th
