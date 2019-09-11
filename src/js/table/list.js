@@ -14,8 +14,8 @@ var list = {
             'ez-table-list-stripe',
             // 'ez-table-list-sm',
         ],
-        // multiple: true, //多选
-        // move: true, //列移动
+        multiple: false, //多选
+        move: false, //列移动
     },
     list: function (els, params) {
         $.each(els, function () {
@@ -45,12 +45,49 @@ var list = {
             list.rowToggleSelected($(this).closest('.ez-table-list-row'));
         });
         //防止意外勾选, 扩大勾选热区
-        s.el.on('click', '.ez-table-list-checkbox', function (e) {
+        s.el.on('click', '.ez-table-list-field-checkbox', function (e) {
             e.stopPropagation();
             list.rowToggleSelected($(this).closest('.ez-table-list-row'));
         });
+        //选项
+        s.el.on('click', '.ez-table-list-field-option', function (e) {
+            var el = $('<div>');
+            var options = {
+                data: {
+                    header: [
+                        {field: 'id', title: '编号'},
+                        {field: 'col', title: '列'},
+                    ],
+                    body: [
+                        {id: 'id', col: '编号'},
+                        {id: 'code', col: '服务号'},
+                        {id: 'company', col: '所属企业'},
+                        {id: 'agent', col: '所属机构'},
+                        {id: 'site', col: '归属落地'},
+                        {id: 'address', col: '服务器地址'},
+                    ]
+                },
+                tableClass: [
+                    'ez-table-list-border',
+                    'ez-table-list-line',
+                    'ez-table-list-vline',
+                    'ez-table-list-hover',
+                    'ez-table-list-full',
+                    // 'ez-table-list-stripe',
+                    'ez-table-list-sm',
+
+                ],
+            };
+            new list.List(el, options);
+            // $('body').append(el);
+            layer.open({
+                title: '表格配置',
+                content: el.html()
+            })
+        });
 
     },
+    //渲染表格
     renderTable: function () {
         var s = this;
         var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
@@ -59,48 +96,68 @@ var list = {
         table.append(header).append(body);
         s.el.append(table);
     },
-    renderHeader: function () {
+    //渲染表头
+    renderHeader: function (data) {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-head');
         var row = $('<div>').addClass('ez-table-list-row');
         var dragBtn = $('<i>').addClass('remixicon-more-2-line');
-        var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
-        row.append(list.renderCell(optionBtn, true));
-        $.each(s.params.data.header, function (i, item) {
-            var cell = list.renderCell(item.title, true);
-            cell.prepend(dragBtn.clone());
+        if (s.params.multiple) {
+            var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+            var cell = list.renderCell('option', true);
+            cell.html(optionBtn);
+        }
+        row.append(cell);
+        $.each(data || s.params.data.header, function (i, item) {
+            var cell = list.renderCell(item.field, true);
+            cell.html(item.title);
+            if (s.params.move) {
+                cell.prepend(dragBtn.clone());
+            }
             row.append(cell);
         });
         html.append(row);
         return html;
     },
-    renderBody: function () {
+    //渲染表格主体
+    renderBody: function (data) {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-body');
-        $.each(s.params.data.body, function (i, item) {
-            var row = list.renderRow(item);
+        $.each(data || s.params.data.body, function (i, item) {
+            var row = list.renderRow.call(s, item);
             html.append(row);
         });
         return html;
     },
+    //渲染行, data单元格数据数组
     renderRow: function (data) {
+        var s = this;
         var html = $('<div>').addClass('ez-table-list-row');
-        var checkbox = $('<input>').attr({
-            type: 'checkbox',
-            name: '',
-            value: data.id
-        });
-        var cell = list.renderCell(checkbox, true);
-        cell.addClass('ez-table-list-checkbox');
+        if (s.params.multiple) {
+            var checkbox = $('<input>').attr({
+                type: 'checkbox',
+                name: '',
+                value: data.id
+            });
+            var cell = list.renderCell('checkbox', true);
+            cell.append(checkbox);
+        }
         html.append(cell);
         $.each(data, function (key, value) {
-            var cell = list.renderCell(value);
+            var cell = list.renderCell(key);
+            cell.html(value);
             html.append(cell);
         });
         return html;
     },
-    renderCell: function (value, th) {
-        return $('<div>').addClass('ez-table-list-' + (th ? 'th' : 'td')).html(value);
+    //渲染单元格, field字段, th是否为th
+    renderCell: function (field, th) {
+        var cls = [];
+        cls.push(th ? 'ez-table-list-th' : 'ez-table-list-td');
+        if (field) {
+            cls.push('ez-table-list-field-' + field);
+        }
+        return $('<div>').addClass(cls.join(' '));
     },
 
     //选中当前行
@@ -113,7 +170,7 @@ var list = {
     },
     //切换选中状态
     rowToggleSelected: function (row) {
-        if($(row).hasClass('ez-table-list-active')){
+        if ($(row).hasClass('ez-table-list-active')) {
             list.rowUnselected(row);
         } else {
             list.rowSelected(row);
