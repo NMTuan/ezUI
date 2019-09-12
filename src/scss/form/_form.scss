@@ -312,3 +312,20 @@
 }
 //引入webuploader的css
 @import "../../static/webuploader/0.1.5/webuploader";
+
+.ez-form {
+    $form: &;
+    &-textarea {
+        outline: 0;
+        resize: none;
+        &_counter {
+            //border-bottom: 1px solid color('grey', 'l2');
+        }
+        &-counter {
+            color: color('grey', 'base');
+            //height: 34px;
+            //line-height: 34px;
+            position: absolute;
+        }
+    }
+}
