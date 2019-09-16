@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c1065a38.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bc39ee3f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16148,9 +16148,11 @@ var _list = {
     },
     selected: [],
     //选中行
+    tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
+    hideFields: [],
+    //列隐藏
     sort: [],
     //列排序及显示
-    tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
     clickSelected: false,
     //点击选中
     multiple: false,
@@ -16244,8 +16246,9 @@ var _list = {
           }]
         },
         tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm'],
-        selected: s.params.sort,
-        multiple: '显示'
+        selected: s.params.hideFields,
+        hideFields: ['id'],
+        multiple: '隐藏'
       };
       $('body').append(el);
       var cfg = new _list.List(el, options);
@@ -16257,7 +16260,7 @@ var _list = {
         btn: ['保存'],
         yes: function yes(layerIndex, layerObj) {
           layer.close(layerIndex);
-          s.params.sort = cfg.getSelected.call(s);
+          s.params.hideFields = cfg.getSelected.call(s);
 
           _list.renderTable.call(s);
         },
@@ -16299,31 +16302,31 @@ var _list = {
       var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
 
       cell.css('width', '1px');
+      cell.addClass('ez-text-center');
       cell.html(optionBtn);
       row.append(cell);
     } //如果有顺序配置, 则按配置执行, 否则输出全字段
 
 
-    if (s.params.sort.length > 0) {
-      $.each(s.params.sort, function (i, field) {
-        $.each(s.params.data.header, function (i, item) {
-          if (item.field !== field) {
-            return;
-          }
-
-          var cell = _list.renderCell(item.field, true);
-
-          cell.html(item.title);
-
-          if (s.params.move) {
-            cell.prepend(dragBtn.clone());
-          }
-
-          row.append(cell);
-        });
-      });
+    if (s.params.sort.length > 0) {// $.each(s.params.sort, function (i, field) {
+      //     $.each(s.params.data.header, function (i, item) {
+      //         if (item.field !== field) {
+      //             return;
+      //         }
+      //         var cell = list.renderCell(item.field, true);
+      //         cell.html(item.title);
+      //         if (s.params.move) {
+      //             cell.prepend(dragBtn.clone());
+      //         }
+      //         row.append(cell);
+      //     });
+      // });
     } else {
       $.each(s.params.data.header, function (i, item) {
+        if ($.inArray(item.field, s.params.hideFields) >= 0) {
+          return;
+        }
+
         var cell = _list.renderCell(item.field, true);
 
         cell.html(item.title);
@@ -16380,21 +16383,22 @@ var _list = {
     } //如果有顺序配置, 则按配置执行, 否则输出全字段
 
 
-    if (s.params.sort.length > 0) {
-      $.each(s.params.sort, function (i, field) {
-        $.each(data, function (key, value) {
-          if (key !== field) {
-            return;
-          }
-
-          var cell = _list.renderCell(key);
-
-          cell.html(value);
-          html.append(cell);
-        });
-      });
+    if (s.params.sort.length > 0) {// $.each(s.params.sort, function (i, field) {
+      //     $.each(data, function (key, value) {
+      //         if (key !== field) {
+      //             return;
+      //         }
+      //         var cell = list.renderCell(key);
+      //         cell.html(value);
+      //         html.append(cell);
+      //     });
+      // });
     } else {
       $.each(data, function (key, value) {
+        if ($.inArray(key, s.params.hideFields) >= 0) {
+          return;
+        }
+
         var cell = _list.renderCell(key);
 
         cell.html(value);

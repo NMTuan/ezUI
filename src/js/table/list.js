@@ -5,7 +5,6 @@ var list = {
             body: [],
         },
         selected: [],   //选中行
-        sort: [],   //列排序及显示
         tableClass: [
             'ez-table-list-border',
             'ez-table-list-line',
@@ -15,6 +14,8 @@ var list = {
             'ez-table-list-stripe',
             // 'ez-table-list-sm',
         ],
+        hideFields: [], //列隐藏
+        sort: [],   //列排序及显示
         clickSelected: false,   //点击选中
         multiple: false, //多选   false不开启, option增加配置功能, 其它值则直接显示string
         move: false, //列移动
@@ -89,8 +90,9 @@ var list = {
                     'ez-table-list-full',
                     'ez-table-list-sm',
                 ],
-                selected: s.params.sort,
-                multiple: '显示'
+                selected: s.params.hideFields,
+                hideFields: ['id'],
+                multiple: '隐藏'
             };
             $('body').append(el);
             var cfg = new list.List(el, options);
@@ -102,7 +104,7 @@ var list = {
                 btn: ['保存'],
                 yes: function (layerIndex, layerObj) {
                     layer.close(layerIndex);
-                    s.params.sort = cfg.getSelected.call(s);
+                    s.params.hideFields = cfg.getSelected.call(s);
                     list.renderTable.call(s);
                 },
                 end: function () {
@@ -138,26 +140,30 @@ var list = {
             }
             var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
             cell.css('width', '1px');
+            cell.addClass('ez-text-center');
             cell.html(optionBtn);
             row.append(cell);
         }
         //如果有顺序配置, 则按配置执行, 否则输出全字段
         if (s.params.sort.length > 0) {
-            $.each(s.params.sort, function (i, field) {
-                $.each(s.params.data.header, function (i, item) {
-                    if (item.field !== field) {
-                        return;
-                    }
-                    var cell = list.renderCell(item.field, true);
-                    cell.html(item.title);
-                    if (s.params.move) {
-                        cell.prepend(dragBtn.clone());
-                    }
-                    row.append(cell);
-                });
-            });
+            // $.each(s.params.sort, function (i, field) {
+            //     $.each(s.params.data.header, function (i, item) {
+            //         if (item.field !== field) {
+            //             return;
+            //         }
+            //         var cell = list.renderCell(item.field, true);
+            //         cell.html(item.title);
+            //         if (s.params.move) {
+            //             cell.prepend(dragBtn.clone());
+            //         }
+            //         row.append(cell);
+            //     });
+            // });
         } else {
             $.each(s.params.data.header, function (i, item) {
+                if($.inArray(item.field, s.params.hideFields) >= 0){
+                    return;
+                }
                 var cell = list.renderCell(item.field, true);
                 cell.html(item.title);
                 if (s.params.move) {
@@ -206,18 +212,21 @@ var list = {
         }
         //如果有顺序配置, 则按配置执行, 否则输出全字段
         if (s.params.sort.length > 0) {
-            $.each(s.params.sort, function (i, field) {
-                $.each(data, function (key, value) {
-                    if (key !== field) {
-                        return;
-                    }
-                    var cell = list.renderCell(key);
-                    cell.html(value);
-                    html.append(cell);
-                });
-            });
+            // $.each(s.params.sort, function (i, field) {
+            //     $.each(data, function (key, value) {
+            //         if (key !== field) {
+            //             return;
+            //         }
+            //         var cell = list.renderCell(key);
+            //         cell.html(value);
+            //         html.append(cell);
+            //     });
+            // });
         } else {
             $.each(data, function (key, value) {
+                if($.inArray(key, s.params.hideFields) >= 0){
+                    return;
+                }
                 var cell = list.renderCell(key);
                 cell.html(value);
                 html.append(cell);
