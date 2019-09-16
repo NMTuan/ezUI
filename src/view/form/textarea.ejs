@@ -1,0 +1,25 @@
+<% title = '文本域'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+<h2>一行</h2>
+<div class="ez-form ez-form-inline ez-form-full ez-form-sm">
+    <%- include('./_textarea.ejs');%>
+</div>
+<hr>
+
+<h2>分行</h2>
+<div class="ez-form">
+    <%- include('./_textarea.ejs');%>
+</div>
+
+<script>
+    $('.ez-form-sm').find('.ez-btn').addClass('ez-btn-sm');  //sm模式下按钮也调小
+    $('.ez-form-inline-horizontal').find('.ez-form-row-tips').remove();   //水平模式下用不到tips
+
+
+    $('textarea').ez_form_textarea({
+        max: 20
+    });
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>
