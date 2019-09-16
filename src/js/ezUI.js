@@ -24,5 +24,6 @@ ez.player = require('./form/player');   //表单, 播放器
 ez.form = require('./form/upload');     //表单, 上传
 ez.tree = require('./tree/tree');   //树结构
 ez.watermark = require('./watermark/watermark');    //水印
+ez.textarea = require('./form/textarea');   //文本域
 
 ez.tableList = require('./table/list');
