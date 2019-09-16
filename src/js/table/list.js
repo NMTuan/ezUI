@@ -45,8 +45,8 @@ var list = {
         if (s.params.clickSelected) {
             s.el.on('click', '.ez-table-list-row', function () {
                 console.log('click')
-                list.rowSelected(this);
-                list.rowUnselected($(this).siblings('.ez-table-list-active'));
+                list.rowSelected.call(s, this);
+                list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
                 $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
                 $(this).find('input').prop('checked', true);
             });
@@ -54,16 +54,19 @@ var list = {
         //勾选(可多选)
         s.el.on('click', 'input', function (e) {
             e.stopPropagation();
-            list.rowToggleSelected($(this).closest('.ez-table-list-row'));
+            list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
         });
         //防止意外勾选, 扩大勾选热区
         s.el.on('click', '.ez-table-list-field-checkbox', function (e) {
             e.stopPropagation();
-            list.rowToggleSelected($(this).closest('.ez-table-list-row'));
+            list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
         });
         //选项
         s.el.on('click', '.ez-table-list-field-option', function (e) {
-            var el = $('<div>').addClass('ez-table-list')//.css('display', 'none');
+            var el = $('<div>').addClass('ez-table-list');
+            el.css({
+                padding: '12px'
+            });
             var options = {
                 data: {
                     header: [
@@ -90,17 +93,20 @@ var list = {
                 selected: s.params.sort,
                 multiple: '显示'
             };
-            s.el.append(el);
+            $('body').append(el);
             var cfg = new list.List(el, options);
             layer.open({
                 type: 1,
                 title: '表格配置',
                 content: el,
+                area: ['640px', 'auto'],
                 btn: ['保存'],
                 yes: function (layerIndex, layerObj) {
                     layer.close(layerIndex);
                     s.params.sort = cfg.getSelected.call(s);
                     list.renderTable.call(s);
+                },
+                end: function () {
                     cfg.destory();
                 }
             })
@@ -178,6 +184,11 @@ var list = {
     renderRow: function (data) {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-row');
+        html.data('id', data.id);
+        //增加选中class
+        if ($.inArray(data.id, s.params.selected) >= 0) {
+            html.addClass('ez-table-list-active');
+        }
         //构建复选框
         if (s.params.multiple) {
             var checkbox = $('<input>').attr({
@@ -185,6 +196,7 @@ var list = {
                 name: '',
                 value: data.id
             });
+            //默认选中
             if ($.inArray(data.id, s.params.selected) >= 0) {
                 checkbox.attr('checked', 'checked');
             }
@@ -226,18 +238,25 @@ var list = {
 
     //选中当前行
     rowSelected: function (row) {
+        var s = this;
         $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
+        list.selectedAdd.call(s, $(row).data('id'));
+        console.log(s.params.selected);
     },
     //取消当前行
     rowUnselected: function (row) {
+        var s = this;
         $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
+        list.selectedRemove.call(s, $(row).data('id'));
+        console.log(s.params.selected);
     },
     //切换选中状态
     rowToggleSelected: function (row) {
+        var s = this;
         if ($(row).hasClass('ez-table-list-active')) {
-            list.rowUnselected(row);
+            list.rowUnselected.call(s, row);
         } else {
-            list.rowSelected(row);
+            list.rowSelected.call(s, row);
         }
     },
     //销毁
@@ -253,6 +272,18 @@ var list = {
         });
         return selected;
     },
+    //添加选中
+    selectedAdd: function (dataId) {
+        this.params.selected.push(dataId);
+    },
+    //移除选中
+    selectedRemove: function (dataId) {
+        var index = this.params.selected.indexOf(dataId);
+        if(index < 0){
+            return;
+        }
+        this.params.selected.splice(index, 1);
+    }
 };
 
 $.fn.extend({
