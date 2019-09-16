@@ -36,6 +36,7 @@ var list = {
             return list.getSelected.call(s);
         };
 
+        list.initSort.call(s);
         list.renderTable.call(s);
         list.events.call(s);
         return s;
@@ -67,20 +68,23 @@ var list = {
             el.css({
                 padding: '12px'
             });
+            var body = [];
+            $.each(s.params.sort, function () {
+                var field = this;
+                $.each(s.params.data.header, function (i, item) {
+                    if(item.field === field) {
+                        body.push({id: field, col: item.title});
+                        return false;
+                    }
+                });
+            });
             var options = {
                 data: {
                     header: [
                         {field: 'id', title: '编号'},
                         {field: 'col', title: '列'},
                     ],
-                    body: [
-                        {id: 'id', col: '编号'},
-                        {id: 'code', col: '服务号'},
-                        {id: 'company', col: '所属企业'},
-                        {id: 'agent', col: '所属机构'},
-                        {id: 'site', col: '归属落地'},
-                        {id: 'address', col: '服务器地址'},
-                    ]
+                    body: body,
                 },
                 tableClass: [
                     'ez-table-list-border',
@@ -91,7 +95,7 @@ var list = {
                     'ez-table-list-sm',
                 ],
                 selected: s.params.hideFields,
-                hideFields: ['id'],
+                // hideFields: ['id'],
                 multiple: '隐藏'
             };
             $('body').append(el);
@@ -113,6 +117,19 @@ var list = {
             })
         });
 
+    },
+    //初始化排序
+    initSort: function () {
+        var s = this;
+        $.each(s.params.data.header, function () {
+            if ($.inArray(this.field, s.params.sort) >= 0) {
+                return;
+            }
+            s.params.sort.push(this.field);
+        });
+        if ($.inArray('checkbox', s.params.sort) < 0) {
+            s.params.sort.unshift('checkbox');
+        }
     },
     //渲染表格
     renderTable: function () {
@@ -144,34 +161,25 @@ var list = {
             cell.html(optionBtn);
             row.append(cell);
         }
-        //如果有顺序配置, 则按配置执行, 否则输出全字段
-        if (s.params.sort.length > 0) {
-            // $.each(s.params.sort, function (i, field) {
-            //     $.each(s.params.data.header, function (i, item) {
-            //         if (item.field !== field) {
-            //             return;
-            //         }
-            //         var cell = list.renderCell(item.field, true);
-            //         cell.html(item.title);
-            //         if (s.params.move) {
-            //             cell.prepend(dragBtn.clone());
-            //         }
-            //         row.append(cell);
-            //     });
-            // });
-        } else {
+        //按排序构建列
+        $.each(s.params.sort, function (i, field) {
+            //如果隐藏, 跳过
+            if ($.inArray(field, s.params.hideFields) >= 0) {
+                return;
+            }
             $.each(s.params.data.header, function (i, item) {
-                if($.inArray(item.field, s.params.hideFields) >= 0){
-                    return;
+                if (item.field === field) {
+                    var cell = list.renderCell(item.field, true);
+                    cell.html(item.title);
+                    if (s.params.move) {
+                        cell.prepend(dragBtn.clone());
+                    }
+                    row.append(cell);
+                    return false;
                 }
-                var cell = list.renderCell(item.field, true);
-                cell.html(item.title);
-                if (s.params.move) {
-                    cell.prepend(dragBtn.clone());
-                }
-                row.append(cell);
             });
-        }
+        });
+
         html.append(row);
         return html;
     },
@@ -210,28 +218,20 @@ var list = {
             cell.append(checkbox);
             html.append(cell);
         }
-        //如果有顺序配置, 则按配置执行, 否则输出全字段
-        if (s.params.sort.length > 0) {
-            // $.each(s.params.sort, function (i, field) {
-            //     $.each(data, function (key, value) {
-            //         if (key !== field) {
-            //             return;
-            //         }
-            //         var cell = list.renderCell(key);
-            //         cell.html(value);
-            //         html.append(cell);
-            //     });
-            // });
-        } else {
+        //按排序构建列
+        $.each(s.params.sort, function (i, field) {
+            if ($.inArray(field, s.params.hideFields) >= 0) {
+                return;
+            }
             $.each(data, function (key, value) {
-                if($.inArray(key, s.params.hideFields) >= 0){
-                    return;
+                if (key === field) {
+                    var cell = list.renderCell(key);
+                    cell.html(value);
+                    html.append(cell);
+                    return false;
                 }
-                var cell = list.renderCell(key);
-                cell.html(value);
-                html.append(cell);
             });
-        }
+        });
         return html;
     },
     //渲染单元格, field字段, th是否为th
@@ -280,14 +280,14 @@ var list = {
     },
     //添加选中
     selectedAdd: function (dataId) {
-        if(dataId){
+        if (dataId) {
             this.params.selected.push(dataId);
         }
     },
     //移除选中
     selectedRemove: function (dataId) {
         var index = this.params.selected.indexOf(dataId);
-        if(index < 0){
+        if (index < 0) {
             return;
         }
         this.params.selected.splice(index, 1);

@@ -55,12 +55,12 @@ var table = {
     $('#tableList').ez_table_list({
         data: {
             header: [
+                {field: 'address', title: '服务器地址'},
                 {field: 'id', title: '编号'},
                 {field: 'code', title: '服务号'},
                 {field: 'company', title: '所属企业'},
                 {field: 'agent', title: '所属机构'},
                 {field: 'site', title: '归属落地'},
-                {field: 'address', title: '服务器地址'},
             ],
             body: [
                 {
@@ -98,7 +98,7 @@ var table = {
             ]
         },
         selected: ['BC1909071014379811', 'BC1909060107381625'],
-        // sort: ['agent', 'code'],
+        sort: ['code', 'company', 'id'],
         // hideFields: ['id'],
         clickSelected: true,
         multiple: 'option',

@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bc39ee3f.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b0fa0e9a.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16178,6 +16178,8 @@ var _list = {
       return _list.getSelected.call(s);
     };
 
+    _list.initSort.call(s);
+
     _list.renderTable.call(s);
 
     _list.events.call(s);
@@ -16216,6 +16218,19 @@ var _list = {
       el.css({
         padding: '12px'
       });
+      var body = [];
+      $.each(s.params.sort, function () {
+        var field = this;
+        $.each(s.params.data.header, function (i, item) {
+          if (item.field === field) {
+            body.push({
+              id: field,
+              col: item.title
+            });
+            return false;
+          }
+        });
+      });
       var options = {
         data: {
           header: [{
@@ -16225,29 +16240,11 @@ var _list = {
             field: 'col',
             title: '列'
           }],
-          body: [{
-            id: 'id',
-            col: '编号'
-          }, {
-            id: 'code',
-            col: '服务号'
-          }, {
-            id: 'company',
-            col: '所属企业'
-          }, {
-            id: 'agent',
-            col: '所属机构'
-          }, {
-            id: 'site',
-            col: '归属落地'
-          }, {
-            id: 'address',
-            col: '服务器地址'
-          }]
+          body: body
         },
         tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm'],
         selected: s.params.hideFields,
-        hideFields: ['id'],
+        // hideFields: ['id'],
         multiple: '隐藏'
       };
       $('body').append(el);
@@ -16269,6 +16266,21 @@ var _list = {
         }
       });
     });
+  },
+  //初始化排序
+  initSort: function initSort() {
+    var s = this;
+    $.each(s.params.data.header, function () {
+      if ($.inArray(this.field, s.params.sort) >= 0) {
+        return;
+      }
+
+      s.params.sort.push(this.field);
+    });
+
+    if ($.inArray('checkbox', s.params.sort) < 0) {
+      s.params.sort.unshift('checkbox');
+    }
   },
   //渲染表格
   renderTable: function renderTable() {
@@ -16305,40 +16317,30 @@ var _list = {
       cell.addClass('ez-text-center');
       cell.html(optionBtn);
       row.append(cell);
-    } //如果有顺序配置, 则按配置执行, 否则输出全字段
+    } //按排序构建列
 
 
-    if (s.params.sort.length > 0) {// $.each(s.params.sort, function (i, field) {
-      //     $.each(s.params.data.header, function (i, item) {
-      //         if (item.field !== field) {
-      //             return;
-      //         }
-      //         var cell = list.renderCell(item.field, true);
-      //         cell.html(item.title);
-      //         if (s.params.move) {
-      //             cell.prepend(dragBtn.clone());
-      //         }
-      //         row.append(cell);
-      //     });
-      // });
-    } else {
+    $.each(s.params.sort, function (i, field) {
+      //如果隐藏, 跳过
+      if ($.inArray(field, s.params.hideFields) >= 0) {
+        return;
+      }
+
       $.each(s.params.data.header, function (i, item) {
-        if ($.inArray(item.field, s.params.hideFields) >= 0) {
-          return;
+        if (item.field === field) {
+          var cell = _list.renderCell(item.field, true);
+
+          cell.html(item.title);
+
+          if (s.params.move) {
+            cell.prepend(dragBtn.clone());
+          }
+
+          row.append(cell);
+          return false;
         }
-
-        var cell = _list.renderCell(item.field, true);
-
-        cell.html(item.title);
-
-        if (s.params.move) {
-          cell.prepend(dragBtn.clone());
-        }
-
-        row.append(cell);
       });
-    }
-
+    });
     html.append(row);
     return html;
   },
@@ -16380,32 +16382,24 @@ var _list = {
       cell.addClass('ez-text-center');
       cell.append(checkbox);
       html.append(cell);
-    } //如果有顺序配置, 则按配置执行, 否则输出全字段
+    } //按排序构建列
 
 
-    if (s.params.sort.length > 0) {// $.each(s.params.sort, function (i, field) {
-      //     $.each(data, function (key, value) {
-      //         if (key !== field) {
-      //             return;
-      //         }
-      //         var cell = list.renderCell(key);
-      //         cell.html(value);
-      //         html.append(cell);
-      //     });
-      // });
-    } else {
+    $.each(s.params.sort, function (i, field) {
+      if ($.inArray(field, s.params.hideFields) >= 0) {
+        return;
+      }
+
       $.each(data, function (key, value) {
-        if ($.inArray(key, s.params.hideFields) >= 0) {
-          return;
+        if (key === field) {
+          var cell = _list.renderCell(key);
+
+          cell.html(value);
+          html.append(cell);
+          return false;
         }
-
-        var cell = _list.renderCell(key);
-
-        cell.html(value);
-        html.append(cell);
       });
-    }
-
+    });
     return html;
   },
   //渲染单元格, field字段, th是否为th
