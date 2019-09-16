@@ -43,8 +43,7 @@ var list = {
         var s = this;
         //点击选中行(单选)
         if (s.params.clickSelected) {
-            s.el.on('click', '.ez-table-list-row', function () {
-                console.log('click')
+            s.el.on('click', '.ez-table-list-body .ez-table-list-row', function () {
                 list.rowSelected.call(s, this);
                 list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
                 $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
@@ -132,7 +131,7 @@ var list = {
         if (s.params.multiple) {
             var optionBtn = '';
             if (s.params.multiple === 'option') {
-                optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+                optionBtn = $('<i>').addClass('remixicon-settings-line');
                 optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
             } else {
                 optionBtn = s.params.multiple;
@@ -241,14 +240,12 @@ var list = {
         var s = this;
         $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
         list.selectedAdd.call(s, $(row).data('id'));
-        console.log(s.params.selected);
     },
     //取消当前行
     rowUnselected: function (row) {
         var s = this;
         $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
         list.selectedRemove.call(s, $(row).data('id'));
-        console.log(s.params.selected);
     },
     //切换选中状态
     rowToggleSelected: function (row) {
@@ -274,7 +271,9 @@ var list = {
     },
     //添加选中
     selectedAdd: function (dataId) {
-        this.params.selected.push(dataId);
+        if(dataId){
+            this.params.selected.push(dataId);
+        }
     },
     //移除选中
     selectedRemove: function (dataId) {

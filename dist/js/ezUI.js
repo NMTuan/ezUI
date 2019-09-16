@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b79ba6a6.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c1065a38.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16186,9 +16186,7 @@ var _list = {
     var s = this; //点击选中行(单选)
 
     if (s.params.clickSelected) {
-      s.el.on('click', '.ez-table-list-row', function () {
-        console.log('click');
-
+      s.el.on('click', '.ez-table-list-body .ez-table-list-row', function () {
         _list.rowSelected.call(s, this);
 
         _list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
@@ -16292,7 +16290,7 @@ var _list = {
       var optionBtn = '';
 
       if (s.params.multiple === 'option') {
-        optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+        optionBtn = $('<i>').addClass('remixicon-settings-line');
         optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
       } else {
         optionBtn = s.params.multiple;
@@ -16423,8 +16421,6 @@ var _list = {
     $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
 
     _list.selectedAdd.call(s, $(row).data('id'));
-
-    console.log(s.params.selected);
   },
   //取消当前行
   rowUnselected: function rowUnselected(row) {
@@ -16432,8 +16428,6 @@ var _list = {
     $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
 
     _list.selectedRemove.call(s, $(row).data('id'));
-
-    console.log(s.params.selected);
   },
   //切换选中状态
   rowToggleSelected: function rowToggleSelected(row) {
@@ -16460,7 +16454,9 @@ var _list = {
   },
   //添加选中
   selectedAdd: function selectedAdd(dataId) {
-    this.params.selected.push(dataId);
+    if (dataId) {
+      this.params.selected.push(dataId);
+    }
   },
   //移除选中
   selectedRemove: function selectedRemove(dataId) {
