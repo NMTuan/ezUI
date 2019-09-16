@@ -72,7 +72,7 @@ var list = {
             $.each(s.params.sort, function () {
                 var field = this;
                 $.each(s.params.data.header, function (i, item) {
-                    if(item.field === field) {
+                    if (item.field === field) {
                         body.push({id: field, col: item.title});
                         return false;
                     }
@@ -96,6 +96,7 @@ var list = {
                 ],
                 selected: s.params.hideFields,
                 // hideFields: ['id'],
+                sort: ['id', 'col', 'checkbox'],
                 multiple: '隐藏'
             };
             $('body').append(el);
@@ -127,7 +128,7 @@ var list = {
             }
             s.params.sort.push(this.field);
         });
-        if ($.inArray('checkbox', s.params.sort) < 0) {
+        if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
             s.params.sort.unshift('checkbox');
         }
     },
@@ -148,24 +149,26 @@ var list = {
         var dragBtn = $('<i>').addClass('remixicon-more-2-line');
         //多选框
         if (s.params.multiple) {
-            var optionBtn = '';
-            if (s.params.multiple === 'option') {
-                optionBtn = $('<i>').addClass('remixicon-settings-line');
-                optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
-            } else {
-                optionBtn = s.params.multiple;
-            }
-            var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
-            cell.css('width', '1px');
-            cell.addClass('ez-text-center');
-            cell.html(optionBtn);
-            row.append(cell);
         }
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
             //如果隐藏, 跳过
             if ($.inArray(field, s.params.hideFields) >= 0) {
                 return;
+            }
+            if (field === 'checkbox') {
+                var optionBtn = '';
+                if (s.params.multiple === 'option') {
+                    optionBtn = $('<i>').addClass('remixicon-settings-line');
+                    optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
+                } else {
+                    optionBtn = s.params.multiple;
+                }
+                var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
+                cell.css('width', '1px');
+                cell.addClass('ez-text-center');
+                cell.html(optionBtn);
+                row.append(cell);
             }
             $.each(s.params.data.header, function (i, item) {
                 if (item.field === field) {
@@ -202,26 +205,27 @@ var list = {
         if ($.inArray(data.id, s.params.selected) >= 0) {
             html.addClass('ez-table-list-active');
         }
-        //构建复选框
-        if (s.params.multiple) {
-            var checkbox = $('<input>').attr({
-                type: 'checkbox',
-                name: '',
-                value: data.id
-            });
-            //默认选中
-            if ($.inArray(data.id, s.params.selected) >= 0) {
-                checkbox.attr('checked', 'checked');
-            }
-            var cell = list.renderCell('checkbox', true);
-            cell.addClass('ez-text-center');
-            cell.append(checkbox);
-            html.append(cell);
-        }
+
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
             if ($.inArray(field, s.params.hideFields) >= 0) {
                 return;
+            }
+            //构建复选框
+            if (field === 'checkbox') {
+                var checkbox = $('<input>').attr({
+                    type: 'checkbox',
+                    name: '',
+                    value: data.id
+                });
+                //默认选中
+                if ($.inArray(data.id, s.params.selected) >= 0) {
+                    checkbox.attr('checked', 'checked');
+                }
+                var cell = list.renderCell('checkbox', true);
+                cell.addClass('ez-text-center');
+                cell.append(checkbox);
+                html.append(cell);
             }
             $.each(data, function (key, value) {
                 if (key === field) {

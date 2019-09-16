@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b0fa0e9a.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d9f11cc7.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16245,6 +16245,7 @@ var _list = {
         tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm'],
         selected: s.params.hideFields,
         // hideFields: ['id'],
+        sort: ['id', 'col', 'checkbox'],
         multiple: '隐藏'
       };
       $('body').append(el);
@@ -16278,7 +16279,7 @@ var _list = {
       s.params.sort.push(this.field);
     });
 
-    if ($.inArray('checkbox', s.params.sort) < 0) {
+    if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
       s.params.sort.unshift('checkbox');
     }
   },
@@ -16301,29 +16302,31 @@ var _list = {
     var row = $('<div>').addClass('ez-table-list-row');
     var dragBtn = $('<i>').addClass('remixicon-more-2-line'); //多选框
 
-    if (s.params.multiple) {
-      var optionBtn = '';
-
-      if (s.params.multiple === 'option') {
-        optionBtn = $('<i>').addClass('remixicon-settings-line');
-        optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
-      } else {
-        optionBtn = s.params.multiple;
-      }
-
-      var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
-
-      cell.css('width', '1px');
-      cell.addClass('ez-text-center');
-      cell.html(optionBtn);
-      row.append(cell);
-    } //按排序构建列
+    if (s.params.multiple) {} //按排序构建列
 
 
     $.each(s.params.sort, function (i, field) {
       //如果隐藏, 跳过
       if ($.inArray(field, s.params.hideFields) >= 0) {
         return;
+      }
+
+      if (field === 'checkbox') {
+        var optionBtn = '';
+
+        if (s.params.multiple === 'option') {
+          optionBtn = $('<i>').addClass('remixicon-settings-line');
+          optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
+        } else {
+          optionBtn = s.params.multiple;
+        }
+
+        var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
+
+        cell.css('width', '1px');
+        cell.addClass('ez-text-center');
+        cell.html(optionBtn);
+        row.append(cell);
       }
 
       $.each(s.params.data.header, function (i, item) {
@@ -16363,31 +16366,31 @@ var _list = {
 
     if ($.inArray(data.id, s.params.selected) >= 0) {
       html.addClass('ez-table-list-active');
-    } //构建复选框
-
-
-    if (s.params.multiple) {
-      var checkbox = $('<input>').attr({
-        type: 'checkbox',
-        name: '',
-        value: data.id
-      }); //默认选中
-
-      if ($.inArray(data.id, s.params.selected) >= 0) {
-        checkbox.attr('checked', 'checked');
-      }
-
-      var cell = _list.renderCell('checkbox', true);
-
-      cell.addClass('ez-text-center');
-      cell.append(checkbox);
-      html.append(cell);
     } //按排序构建列
 
 
     $.each(s.params.sort, function (i, field) {
       if ($.inArray(field, s.params.hideFields) >= 0) {
         return;
+      } //构建复选框
+
+
+      if (field === 'checkbox') {
+        var checkbox = $('<input>').attr({
+          type: 'checkbox',
+          name: '',
+          value: data.id
+        }); //默认选中
+
+        if ($.inArray(data.id, s.params.selected) >= 0) {
+          checkbox.attr('checked', 'checked');
+        }
+
+        var cell = _list.renderCell('checkbox', true);
+
+        cell.addClass('ez-text-center');
+        cell.append(checkbox);
+        html.append(cell);
       }
 
       $.each(data, function (key, value) {
