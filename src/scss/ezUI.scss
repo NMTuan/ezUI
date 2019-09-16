@@ -17,6 +17,17 @@ body {
 
 .ez,
 .eza {
+    &-text {
+        &-center {
+            text-align: center;
+        }
+        &-left {
+            text-align: left;
+        }
+        &-right {
+            text-align: right;
+        }
+    }
     &-pull {
         &-right {
             float: right;

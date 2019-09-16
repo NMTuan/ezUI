@@ -4,7 +4,8 @@ var list = {
             header: [],
             body: [],
         },
-        sort: [],
+        selected: [],   //选中行
+        sort: [],   //列排序及显示
         tableClass: [
             'ez-table-list-border',
             'ez-table-list-line',
@@ -14,7 +15,8 @@ var list = {
             'ez-table-list-stripe',
             // 'ez-table-list-sm',
         ],
-        multiple: false, //多选
+        clickSelected: false,   //点击选中
+        multiple: false, //多选   false不开启, option增加配置功能, 其它值则直接显示string
         move: false, //列移动
     },
     list: function (els, params) {
@@ -26,20 +28,29 @@ var list = {
         var s = this;
         s.el = el;
         s.params = $.extend(true, {}, list.defaults, params);
+        s.destory = function () {
+            list.destory.call(s);
+        };
+        s.getSelected = function () {
+            return list.getSelected.call(s);
+        };
 
         list.renderTable.call(s);
         list.events.call(s);
+        return s;
     },
     events: function () {
         var s = this;
         //点击选中行(单选)
-        s.el.on('click', '.ez-table-list-row', function () {
-            console.log('click')
-            list.rowSelected(this);
-            list.rowUnselected($(this).siblings('.ez-table-list-active'));
-            $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
-            $(this).find('input').prop('checked', true);
-        });
+        if (s.params.clickSelected) {
+            s.el.on('click', '.ez-table-list-row', function () {
+                console.log('click')
+                list.rowSelected(this);
+                list.rowUnselected($(this).siblings('.ez-table-list-active'));
+                $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
+                $(this).find('input').prop('checked', true);
+            });
+        }
         //勾选(可多选)
         s.el.on('click', 'input', function (e) {
             e.stopPropagation();
@@ -52,7 +63,7 @@ var list = {
         });
         //选项
         s.el.on('click', '.ez-table-list-field-option', function (e) {
-            var el = $('<div>').addClass('ez-table-list')//.append($('<div>').addClass('ez-table-list'));
+            var el = $('<div>').addClass('ez-table-list')//.css('display', 'none');
             var options = {
                 data: {
                     header: [
@@ -76,15 +87,22 @@ var list = {
                     'ez-table-list-full',
                     'ez-table-list-sm',
                 ],
+                selected: s.params.sort,
+                multiple: '显示'
             };
-            $('body').append(el);
-            new list.List(el, options);
-            console.log(el);
+            s.el.append(el);
+            var cfg = new list.List(el, options);
             layer.open({
                 type: 1,
                 title: '表格配置',
-                content: el.first(),
+                content: el,
                 btn: ['保存'],
+                yes: function (layerIndex, layerObj) {
+                    layer.close(layerIndex);
+                    s.params.sort = cfg.getSelected.call(s);
+                    list.renderTable.call(s);
+                    cfg.destory();
+                }
             })
         });
 
@@ -96,7 +114,7 @@ var list = {
         var header = list.renderHeader.call(s);
         var body = list.renderBody.call(s);
         table.append(header).append(body);
-        s.el.append(table);
+        s.el.empty().append(table);
     },
     //渲染表头
     renderHeader: function () {
@@ -106,8 +124,14 @@ var list = {
         var dragBtn = $('<i>').addClass('remixicon-more-2-line');
         //多选框
         if (s.params.multiple) {
-            var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
-            var cell = list.renderCell('option', true);
+            var optionBtn = '';
+            if (s.params.multiple === 'option') {
+                optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+                optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
+            } else {
+                optionBtn = s.params.multiple;
+            }
+            var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
             cell.css('width', '1px');
             cell.html(optionBtn);
             row.append(cell);
@@ -154,21 +178,26 @@ var list = {
     renderRow: function (data) {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-row');
+        //构建复选框
         if (s.params.multiple) {
             var checkbox = $('<input>').attr({
                 type: 'checkbox',
                 name: '',
                 value: data.id
             });
+            if ($.inArray(data.id, s.params.selected) >= 0) {
+                checkbox.attr('checked', 'checked');
+            }
             var cell = list.renderCell('checkbox', true);
+            cell.addClass('ez-text-center');
             cell.append(checkbox);
             html.append(cell);
         }
         //如果有顺序配置, 则按配置执行, 否则输出全字段
-        if(s.params.sort.length > 0){
+        if (s.params.sort.length > 0) {
             $.each(s.params.sort, function (i, field) {
                 $.each(data, function (key, value) {
-                    if(key !== field){
+                    if (key !== field) {
                         return;
                     }
                     var cell = list.renderCell(key);
@@ -210,7 +239,20 @@ var list = {
         } else {
             list.rowSelected(row);
         }
-    }
+    },
+    //销毁
+    destory: function () {
+        this.el.remove();
+    },
+    //获取选中数据
+    getSelected: function () {
+        var s = this;
+        var selected = [];
+        s.el.find(':checked').each(function () {
+            selected.push($(this).val());
+        });
+        return selected;
+    },
 };
 
 $.fn.extend({

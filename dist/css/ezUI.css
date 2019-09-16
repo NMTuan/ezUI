@@ -354,6 +354,21 @@ body {
   background-color: #FFFFFF;
 }
 
+.ez-text-center,
+.eza-text-center {
+  text-align: center;
+}
+
+.ez-text-left,
+.eza-text-left {
+  text-align: left;
+}
+
+.ez-text-right,
+.eza-text-right {
+  text-align: right;
+}
+
 .ez-pull-right,
 .eza-pull-right {
   float: right;
@@ -1303,7 +1318,6 @@ body {
 
 .ez-table-list-th {
   color: #424242;
-  text-align: left;
   background-color: #f5f5f5;
   font-weight: bold;
 }

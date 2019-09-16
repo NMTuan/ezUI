@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_24ead64d.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1160a215.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14841,15 +14841,18 @@ var _upload = {
       //单选模式, 每次清空一下
       s.values = [];
     } //todo 做完后记得打开
-    // $.each(s.values, function (i, item) {
-    //     if(item.path === res.path){
-    //         existence = true;
-    //         $.extend(true, item, res);
-    //         upload.renderItem.call(s);
-    //         return false;
-    //     }
-    // });
 
+
+    $.each(s.values, function (i, item) {
+      if (item.path === res.path) {
+        existence = true;
+        $.extend(true, item, res);
+
+        _upload.renderItem.call(s);
+
+        return false;
+      }
+    });
 
     if (!existence) {
       s.values.push(res);
@@ -16143,10 +16146,15 @@ var _list = {
       header: [],
       body: []
     },
+    selected: [],
+    //选中行
     sort: [],
+    //列排序及显示
     tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
+    clickSelected: false,
+    //点击选中
     multiple: false,
-    //多选
+    //多选   false不开启, option增加配置功能, 其它值则直接显示string
     move: false //列移动
 
   },
@@ -16160,23 +16168,36 @@ var _list = {
     s.el = el;
     s.params = $.extend(true, {}, _list.defaults, params);
 
+    s.destory = function () {
+      _list.destory.call(s);
+    };
+
+    s.getSelected = function () {
+      return _list.getSelected.call(s);
+    };
+
     _list.renderTable.call(s);
 
     _list.events.call(s);
+
+    return s;
   },
   events: function events() {
     var s = this; //点击选中行(单选)
 
-    s.el.on('click', '.ez-table-list-row', function () {
-      console.log('click');
+    if (s.params.clickSelected) {
+      s.el.on('click', '.ez-table-list-row', function () {
+        console.log('click');
 
-      _list.rowSelected(this);
+        _list.rowSelected(this);
 
-      _list.rowUnselected($(this).siblings('.ez-table-list-active'));
+        _list.rowUnselected($(this).siblings('.ez-table-list-active'));
 
-      $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
-      $(this).find('input').prop('checked', true);
-    }); //勾选(可多选)
+        $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
+        $(this).find('input').prop('checked', true);
+      });
+    } //勾选(可多选)
+
 
     s.el.on('click', 'input', function (e) {
       e.stopPropagation();
@@ -16191,7 +16212,7 @@ var _list = {
     }); //选项
 
     s.el.on('click', '.ez-table-list-field-option', function (e) {
-      var el = $('<div>').addClass('ez-table-list'); //.append($('<div>').addClass('ez-table-list'));
+      var el = $('<div>').addClass('ez-table-list'); //.css('display', 'none');
 
       var options = {
         data: {
@@ -16222,16 +16243,25 @@ var _list = {
             col: '服务器地址'
           }]
         },
-        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm']
+        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm'],
+        selected: s.params.sort,
+        multiple: '显示'
       };
-      $('body').append(el);
-      new _list.List(el, options);
-      console.log(el);
+      s.el.append(el);
+      var cfg = new _list.List(el, options);
       layer.open({
         type: 1,
         title: '表格配置',
-        content: el.first(),
-        btn: ['保存']
+        content: el,
+        btn: ['保存'],
+        yes: function yes(layerIndex, layerObj) {
+          layer.close(layerIndex);
+          s.params.sort = cfg.getSelected.call(s);
+
+          _list.renderTable.call(s);
+
+          cfg.destory();
+        }
       });
     });
   },
@@ -16245,7 +16275,7 @@ var _list = {
     var body = _list.renderBody.call(s);
 
     table.append(header).append(body);
-    s.el.append(table);
+    s.el.empty().append(table);
   },
   //渲染表头
   renderHeader: function renderHeader() {
@@ -16255,9 +16285,16 @@ var _list = {
     var dragBtn = $('<i>').addClass('remixicon-more-2-line'); //多选框
 
     if (s.params.multiple) {
-      var optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+      var optionBtn = '';
 
-      var cell = _list.renderCell('option', true);
+      if (s.params.multiple === 'option') {
+        optionBtn = $('<i>').addClass('remixicon-list-settings-line');
+        optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
+      } else {
+        optionBtn = s.params.multiple;
+      }
+
+      var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
 
       cell.css('width', '1px');
       cell.html(optionBtn);
@@ -16314,7 +16351,7 @@ var _list = {
   //渲染行, data单元格数据数组
   renderRow: function renderRow(data) {
     var s = this;
-    var html = $('<div>').addClass('ez-table-list-row');
+    var html = $('<div>').addClass('ez-table-list-row'); //构建复选框
 
     if (s.params.multiple) {
       var checkbox = $('<input>').attr({
@@ -16323,8 +16360,13 @@ var _list = {
         value: data.id
       });
 
+      if ($.inArray(data.id, s.params.selected) >= 0) {
+        checkbox.attr('checked', 'checked');
+      }
+
       var cell = _list.renderCell('checkbox', true);
 
+      cell.addClass('ez-text-center');
       cell.append(checkbox);
       html.append(cell);
     } //如果有顺序配置, 则按配置执行, 否则输出全字段
@@ -16380,6 +16422,19 @@ var _list = {
     } else {
       _list.rowSelected(row);
     }
+  },
+  //销毁
+  destory: function destory() {
+    this.el.remove();
+  },
+  //获取选中数据
+  getSelected: function getSelected() {
+    var s = this;
+    var selected = [];
+    s.el.find(':checked').each(function () {
+      selected.push($(this).val());
+    });
+    return selected;
   }
 };
 $.fn.extend({

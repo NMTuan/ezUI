@@ -213,14 +213,14 @@ var upload = {
         }
         //todo 做完后记得打开
 
-        // $.each(s.values, function (i, item) {
-        //     if(item.path === res.path){
-        //         existence = true;
-        //         $.extend(true, item, res);
-        //         upload.renderItem.call(s);
-        //         return false;
-        //     }
-        // });
+        $.each(s.values, function (i, item) {
+            if(item.path === res.path){
+                existence = true;
+                $.extend(true, item, res);
+                upload.renderItem.call(s);
+                return false;
+            }
+        });
 
         if (!existence) {
             s.values.push(res);
