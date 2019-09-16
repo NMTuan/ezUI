@@ -1363,6 +1363,11 @@ body {
   box-shadow: 0 -1px 0 #bdbdbd inset;
 }
 
+.ez-table-list-selected-disabled .ez-table-list-body .ez-table-list-active {
+  color: #bdbdbd;
+  text-decoration: line-through;
+}
+
 .ez-table-list-full {
   width: 100%;
 }

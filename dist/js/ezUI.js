@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d9f11cc7.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_745332b4.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16242,7 +16242,7 @@ var _list = {
           }],
           body: body
         },
-        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm'],
+        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm', 'ez-table-list-selected-disabled'],
         selected: s.params.hideFields,
         // hideFields: ['id'],
         sort: ['id', 'col', 'checkbox'],

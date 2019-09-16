@@ -90,6 +90,7 @@
                         background-color: color('grey', 'l4');
                     }
                 }
+
                 #{$table-list}-active,
                 &#{$table-list}-active,
                 &#{$table-list}-active:hover {
@@ -105,6 +106,17 @@
             }
         }
     }
+
+    //表格单元格设定
+    &-selected-disabled {
+        #{$table-list}-body {
+            #{$table-list}-active {
+                color: color('grey', 'l1');
+                text-decoration: line-through;
+            }
+        }
+    }
+
 
     &-full {
         width: 100%;
