@@ -80,6 +80,10 @@
             font-size: 12px;
         }
     }
+    select#{$form}-control {
+        width: 120px;
+        white-space: nowrap;
+    }
 
     &-wave {
         //background-color: rgba(255, 0, 0, 0.2);

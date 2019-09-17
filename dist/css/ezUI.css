@@ -687,6 +687,11 @@ body {
   font-size: 12px;
 }
 
+.ez-form select.ez-form-control {
+  width: 120px;
+  white-space: nowrap;
+}
+
 .ez-form-wave {
   overflow: hidden;
   position: absolute;
