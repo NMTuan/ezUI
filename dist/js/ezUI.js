@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bea36fe3.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_30081fd4.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16140,25 +16140,29 @@ module.exports = _subNav.subNav;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
-// var jQueryBridget = require('jquery-bridget');
-// var Draggabilly = require('draggabilly');   //鼠标拖拽
-// jQueryBridget('draggabilly', Draggabilly, $);
+var path = location.pathname;
 var _list = {
   defaults: {
     data: {
+      //数据集, 必须有id
       header: [],
-      body: []
+      //表头 {field, title}
+      body: [] //主体 {id, field1, field2}
+
     },
     selected: [],
-    //选中行
-    tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
+    //默认选中的行, [id1, id2]
+    tableClass: [//table要增加的class
+    'ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
     hideFields: [],
-    //列隐藏
+    //列隐藏 [field1, field2]
     sort: [],
-    //列排序及显示
+    //列排序及显示    [field1, field2]
     clickSelected: false,
     //点击选中
-    multiple: false //多选   false不开启, option增加配置功能, 其它值则直接显示string
+    multiple: false,
+    //多选   false不开启, option增加配置功能, 其它值则直接显示string
+    cfgTableLocalstorage: true //本地记录配置
 
   },
   list: function list(els, params) {
@@ -16182,6 +16186,8 @@ var _list = {
     s.getSort = function () {
       return _list.getSort.call(s);
     };
+
+    _list.initHideFields.call(s);
 
     _list.initSort.call(s);
 
@@ -16254,7 +16260,8 @@ var _list = {
         selected: s.params.hideFields,
         // hideFields: ['id'],
         sort: ['id', 'col', 'drag', 'checkbox'],
-        multiple: '隐藏'
+        multiple: '隐藏',
+        cfgTableLocalstorage: false
       };
       $('body').append(el);
       var cfgTable = new _list.List(el, options);
@@ -16276,6 +16283,11 @@ var _list = {
           s.params.sort = cfgTable.getSort();
           s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
 
+          if (window.localStorage && s.params.cfgTableLocalstorage) {
+            localStorage.setItem('hideFields_' + path, JSON.stringify(s.params.hideFields));
+            localStorage.setItem('sort_' + path, JSON.stringify(s.params.sort));
+          }
+
           _list.renderTable.call(s);
         },
         end: function end() {
@@ -16284,16 +16296,32 @@ var _list = {
       });
     });
   },
+  //初始化隐藏列
+  initHideFields: function initHideFields() {
+    var s = this;
+    var ls = localStorage.getItem('hideFields_' + path);
+
+    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
+      s.params.hideFields = JSON.parse(ls);
+    }
+  },
   //初始化排序
   initSort: function initSort() {
     var s = this;
+    var ls = localStorage.getItem('sort_' + path);
+
+    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
+      s.params.sort = JSON.parse(ls);
+    } //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
+
+
     $.each(s.params.data.header, function () {
       if ($.inArray(this.field, s.params.sort) >= 0) {
         return;
       }
 
       s.params.sort.push(this.field);
-    });
+    }); //如果是多选, 并且没有设定checkbox, 则在第一位增加checkbox
 
     if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
       s.params.sort.unshift('checkbox');
