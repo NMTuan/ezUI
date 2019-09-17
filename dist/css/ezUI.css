@@ -374,7 +374,8 @@ body {
   cursor: pointer;
 }
 
-.ez-cursor-search,
+.ez-cursor-view, .ez-cursor-search,
+.eza-cursor-view,
 .eza-cursor-search {
   cursor: zoom-in;
 }

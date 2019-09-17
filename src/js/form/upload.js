@@ -264,6 +264,9 @@ var upload = {
 
             var label = $('<span>').addClass('ez-form-label').data('src', item.src).html(item.name || item.src);
             var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
+            if(s.params.type === 'image'){
+                label.addClass('ez-cursor-view');
+            }
             label.append(close);
             close.on('click', function (e) {
                 e.preventDefault();
