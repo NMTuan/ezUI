@@ -569,7 +569,7 @@ body {
 }
 
 .ez-avg-item {
-  flex: 1 1 auto;
+  flex: 1;
 }
 
 .ez.sidebar {
@@ -650,7 +650,7 @@ body {
 }
 
 .ez-form-control {
-  flex: 1 1 auto;
+  flex: 1;
   background-color: transparent;
   margin: 0 2px 0 0;
   padding: 0 12px;
