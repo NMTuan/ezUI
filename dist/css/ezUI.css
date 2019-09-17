@@ -414,6 +414,11 @@ body {
   cursor: not-allowed;
 }
 
+.ez-noselect,
+.eza-noselect {
+  user-select: none;
+}
+
 .ez-row-span1 {
   margin: -1px;
 }

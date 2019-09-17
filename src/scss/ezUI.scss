@@ -69,6 +69,10 @@ body {
             cursor: not-allowed;
         }
     }
+
+    &-noselect {
+        user-select: none;
+    }
 }
 
 //文字颜色

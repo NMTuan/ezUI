@@ -100,7 +100,8 @@ var list = {
                     'ez-table-list-hover',
                     'ez-table-list-full',
                     'ez-table-list-sm',
-                    'ez-table-list-selected-disabled'
+                    'ez-table-list-selected-disabled',
+                    'ez-noselect'
                 ],
                 selected: s.params.hideFields,
                 // hideFields: ['id'],
