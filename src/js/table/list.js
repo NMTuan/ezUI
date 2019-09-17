@@ -1,3 +1,7 @@
+// var jQueryBridget = require('jquery-bridget');
+// var Draggabilly = require('draggabilly');   //鼠标拖拽
+// jQueryBridget('draggabilly', Draggabilly, $);
+
 var list = {
     defaults: {
         data: {
@@ -18,7 +22,6 @@ var list = {
         sort: [],   //列排序及显示
         clickSelected: false,   //点击选中
         multiple: false, //多选   false不开启, option增加配置功能, 其它值则直接显示string
-        move: false, //列移动
     },
     list: function (els, params) {
         $.each(els, function () {
@@ -34,6 +37,9 @@ var list = {
         };
         s.getSelected = function () {
             return list.getSelected.call(s);
+        };
+        s.getSort = function () {
+            return list.getSort.call(s);
         };
 
         list.initSort.call(s);
@@ -83,6 +89,7 @@ var list = {
                     header: [
                         {field: 'id', title: '编号'},
                         {field: 'col', title: '列'},
+                        {field: 'drag', title: '顺序'},
                     ],
                     body: body,
                 },
@@ -97,28 +104,34 @@ var list = {
                 ],
                 selected: s.params.hideFields,
                 // hideFields: ['id'],
-                sort: ['id', 'col', 'checkbox'],
+                sort: ['id', 'col', 'drag', 'checkbox'],
                 multiple: '隐藏'
             };
             $('body').append(el);
-            var cfg = new list.List(el, options);
+            var cfgTable = new list.List(el, options);
             layer.open({
                 type: 1,
                 title: '表格配置',
                 content: el,
                 area: ['640px', 'auto'],
                 btn: ['保存'],
+                zIndex: 10,
+                success: function () {
+                    list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
+                },
                 yes: function (layerIndex, layerObj) {
                     layer.close(layerIndex);
-                    s.params.hideFields = cfg.getSelected.call(s);
+                    s.params.hideFields = cfgTable.getSelected();
+                    var checkboxIndex = $.inArray('checkbox', s.params.sort);   //找到checkbox的位置
+                    s.params.sort = cfgTable.getSort();
+                    s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
                     list.renderTable.call(s);
                 },
                 end: function () {
-                    cfg.destory();
+                    cfgTable.destory();
                 }
             })
         });
-
     },
     //初始化排序
     initSort: function () {
@@ -147,7 +160,6 @@ var list = {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-head');
         var row = $('<div>').addClass('ez-table-list-row');
-        var dragBtn = $('<i>').addClass('remixicon-more-2-line');
         //多选框
         if (s.params.multiple) {
         }
@@ -170,13 +182,15 @@ var list = {
                 cell.addClass('ez-text-center');
                 cell.html(optionBtn);
                 row.append(cell);
+                return;
             }
             $.each(s.params.data.header, function (i, item) {
                 if (item.field === field) {
                     var cell = list.renderCell(item.field, true);
                     cell.html(item.title);
-                    if (s.params.move) {
-                        cell.prepend(dragBtn.clone());
+                    if (item.field === 'drag') {
+                        cell.css('width', '1px');
+                        cell.addClass('ez-text-center');
                     }
                     row.append(cell);
                     return false;
@@ -226,6 +240,13 @@ var list = {
                 var cell = list.renderCell('checkbox', true);
                 cell.addClass('ez-text-center');
                 cell.append(checkbox);
+                html.append(cell);
+            }
+            //构建拖拽
+            if (field === 'drag') {
+                var cell = list.renderCell('drag', true);
+                cell.addClass('ez-text-center');
+                cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
                 html.append(cell);
             }
             $.each(data, function (key, value) {
@@ -296,6 +317,28 @@ var list = {
             return;
         }
         this.params.selected.splice(index, 1);
+    },
+    //获取顺序
+    getSort: function () {
+        var s = this;
+        var sort = [];
+        $.each(s.el.find(':checkbox'), function (i, item) {
+            var val = $.trim($(item).val());
+            if (val) {
+                sort.push(val);
+            }
+        });
+        return sort;
+    },
+    //拖拽
+    dragula: function (container) {
+        dragula([container], {
+            revertOnSpill: true,
+            // direction: 'vertical',
+            moves: function (el, container, handle) {
+                return $(handle).hasClass('remixicon-drag-move-fill');
+            }
+        });
     }
 };
 

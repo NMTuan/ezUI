@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_745332b4.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4a480b09.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16140,6 +16140,9 @@ module.exports = _subNav.subNav;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+// var jQueryBridget = require('jquery-bridget');
+// var Draggabilly = require('draggabilly');   //鼠标拖拽
+// jQueryBridget('draggabilly', Draggabilly, $);
 var _list = {
   defaults: {
     data: {
@@ -16155,9 +16158,7 @@ var _list = {
     //列排序及显示
     clickSelected: false,
     //点击选中
-    multiple: false,
-    //多选   false不开启, option增加配置功能, 其它值则直接显示string
-    move: false //列移动
+    multiple: false //多选   false不开启, option增加配置功能, 其它值则直接显示string
 
   },
   list: function list(els, params) {
@@ -16176,6 +16177,10 @@ var _list = {
 
     s.getSelected = function () {
       return _list.getSelected.call(s);
+    };
+
+    s.getSort = function () {
+      return _list.getSort.call(s);
     };
 
     _list.initSort.call(s);
@@ -16239,31 +16244,42 @@ var _list = {
           }, {
             field: 'col',
             title: '列'
+          }, {
+            field: 'drag',
+            title: '顺序'
           }],
           body: body
         },
         tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm', 'ez-table-list-selected-disabled'],
         selected: s.params.hideFields,
         // hideFields: ['id'],
-        sort: ['id', 'col', 'checkbox'],
+        sort: ['id', 'col', 'drag', 'checkbox'],
         multiple: '隐藏'
       };
       $('body').append(el);
-      var cfg = new _list.List(el, options);
+      var cfgTable = new _list.List(el, options);
       layer.open({
         type: 1,
         title: '表格配置',
         content: el,
         area: ['640px', 'auto'],
         btn: ['保存'],
+        zIndex: 10,
+        success: function success() {
+          _list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
+        },
         yes: function yes(layerIndex, layerObj) {
           layer.close(layerIndex);
-          s.params.hideFields = cfg.getSelected.call(s);
+          s.params.hideFields = cfgTable.getSelected();
+          var checkboxIndex = $.inArray('checkbox', s.params.sort); //找到checkbox的位置
+
+          s.params.sort = cfgTable.getSort();
+          s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
 
           _list.renderTable.call(s);
         },
         end: function end() {
-          cfg.destory();
+          cfgTable.destory();
         }
       });
     });
@@ -16299,8 +16315,7 @@ var _list = {
   renderHeader: function renderHeader() {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-head');
-    var row = $('<div>').addClass('ez-table-list-row');
-    var dragBtn = $('<i>').addClass('remixicon-more-2-line'); //多选框
+    var row = $('<div>').addClass('ez-table-list-row'); //多选框
 
     if (s.params.multiple) {} //按排序构建列
 
@@ -16327,6 +16342,7 @@ var _list = {
         cell.addClass('ez-text-center');
         cell.html(optionBtn);
         row.append(cell);
+        return;
       }
 
       $.each(s.params.data.header, function (i, item) {
@@ -16335,8 +16351,9 @@ var _list = {
 
           cell.html(item.title);
 
-          if (s.params.move) {
-            cell.prepend(dragBtn.clone());
+          if (item.field === 'drag') {
+            cell.css('width', '1px');
+            cell.addClass('ez-text-center');
           }
 
           row.append(cell);
@@ -16390,6 +16407,15 @@ var _list = {
 
         cell.addClass('ez-text-center');
         cell.append(checkbox);
+        html.append(cell);
+      } //构建拖拽
+
+
+      if (field === 'drag') {
+        var cell = _list.renderCell('drag', true);
+
+        cell.addClass('ez-text-center');
+        cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
         html.append(cell);
       }
 
@@ -16468,7 +16494,40 @@ var _list = {
     }
 
     this.params.selected.splice(index, 1);
-  }
+  },
+  //获取顺序
+  getSort: function getSort() {
+    var s = this;
+    var sort = [];
+    $.each(s.el.find(':checkbox'), function (i, item) {
+      var val = $.trim($(item).val());
+
+      if (val) {
+        sort.push(val);
+      }
+    });
+    return sort;
+  },
+  //拖拽
+  dragula: function (_dragula) {
+    function dragula(_x) {
+      return _dragula.apply(this, arguments);
+    }
+
+    dragula.toString = function () {
+      return _dragula.toString();
+    };
+
+    return dragula;
+  }(function (container) {
+    dragula([container], {
+      revertOnSpill: true,
+      // direction: 'vertical',
+      moves: function moves(el, container, handle) {
+        return $(handle).hasClass('remixicon-drag-move-fill');
+      }
+    });
+  })
 };
 $.fn.extend({
   ez_table_list: function ez_table_list(params) {

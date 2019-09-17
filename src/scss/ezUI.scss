@@ -54,6 +54,16 @@ body {
         &-search {
             cursor: zoom-in;
         }
+        &-move {
+            cursor: move;
+        }
+        &-drag {
+            cursor: grab;
+        }
+        &-draging {
+            cursor: grabbing;
+        }
+
 
         &-disabled {
             cursor: not-allowed;

@@ -394,6 +394,21 @@ body {
   cursor: zoom-in;
 }
 
+.ez-cursor-move,
+.eza-cursor-move {
+  cursor: move;
+}
+
+.ez-cursor-drag,
+.eza-cursor-drag {
+  cursor: grab;
+}
+
+.ez-cursor-draging,
+.eza-cursor-draging {
+  cursor: grabbing;
+}
+
 .ez-cursor-disabled,
 .eza-cursor-disabled {
   cursor: not-allowed;
