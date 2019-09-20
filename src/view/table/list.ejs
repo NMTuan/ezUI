@@ -61,6 +61,8 @@ var table = {
                 {field: 'company', title: '所属企业'},
                 {field: 'agent', title: '所属机构'},
                 {field: 'site', title: '归属落地'},
+                {field: '_category', title: 'category'},
+                {field: '_type', title: 'type'},
             ],
             body: [
                 {
@@ -69,7 +71,9 @@ var table = {
                     company: '北京几克餐饮管理有限公司【beijingjike】',
                     agent: '山东中呼信息科技有限公司【sdzhonghu】',
                     site: '杭州电信',
-                    address: '杭州新增服务器'
+                    address: '杭州新增服务器',
+                    _category: 'A',
+                    _type: '1',
                 },
                 {
                     id: 'BC1909071014379811',
@@ -77,7 +81,9 @@ var table = {
                     company: '山东省菏泽信息工程学校【4000661975】',
                     agent: '山东咕果信息技术有限公司【guguo】',
                     site: '盘锦联通',
-                    address: ''
+                    address: '',
+                    _category: 'B',
+                    _type: '2',
                 },
                 {
                     id: 'BC1909060324338145',
@@ -85,7 +91,9 @@ var table = {
                     company: '黑龙江厚东科技有限公司【houdongkeji】',
                     agent: '山东中呼信息科技有限公司【sdzhonghu】',
                     site: '杭州电信',
-                    address: '杭州新增服务器'
+                    address: '杭州新增服务器',
+                    _category: 'C',
+                    _type: '3',
                 },
                 {
                     id: 'BC1909060107381625',
@@ -93,7 +101,9 @@ var table = {
                     company: '上海克骏文化传播有限公司【kejun】',
                     agent: '山东中呼信息科技有限公司【sdzhonghu】',
                     site: '盘锦联通',
-                    address: '盘锦新增服务器'
+                    address: '盘锦新增服务器',
+                    _category: 'D',
+                    _type: '4',
                 },
             ]
         },
@@ -101,7 +111,7 @@ var table = {
         sort: ['code', 'company'],
         hideFields: ['id'],
         clickSelected: true,
-        // multiple: 'option',
+        multiple: 'option',
     });
 </script>
 

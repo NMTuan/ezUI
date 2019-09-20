@@ -14012,7 +14012,7 @@ ez.textarea = require('./form/textarea'); //文本域
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c1493913.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4869a540.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16488,7 +16488,12 @@ var _list = {
         },
         yes: function yes(layerIndex, layerObj) {
           layer.close(layerIndex);
-          s.params.hideFields = cfgTable.getSelected();
+          var selectedData = cfgTable.getSelected();
+          var selected = [];
+          $.each(selectedData, function () {
+            selected.push(this.id);
+          });
+          s.params.hideFields = selected;
           var checkboxIndex = $.inArray('checkbox', s.params.sort); //找到checkbox的位置
 
           s.params.sort = cfgTable.getSort();
@@ -16527,6 +16532,10 @@ var _list = {
 
 
     $.each(s.params.data.header, function () {
+      if (this.field.indexOf('_') === 0) {
+        return;
+      }
+
       if ($.inArray(this.field, s.params.sort) >= 0) {
         return;
       }
@@ -16618,7 +16627,9 @@ var _list = {
   renderRow: function renderRow(data) {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-row');
-    html.data('id', data.id); //增加选中class
+    $.each(data, function (key, value) {
+      html.data(key, value);
+    }); //增加选中class
 
     if ($.inArray(data.id, s.params.selected) >= 0) {
       html.addClass('ez-table-list-active');
@@ -16636,6 +16647,9 @@ var _list = {
           type: 'checkbox',
           name: '',
           value: data.id
+        });
+        $.each(data, function (key, value) {
+          checkbox.data(key, value);
         }); //默认选中
 
         if ($.inArray(data.id, s.params.selected) >= 0) {
@@ -16715,18 +16729,18 @@ var _list = {
   //获取选中数据
   getSelected: function getSelected() {
     var s = this;
-    var selected = [];
+    var selected = []; //返回的数据集
 
-    if (s.el.find('input').length === 0) {
-      s.el.find('.ez-table-list-active').each(function () {
-        selected.push($(this).data('id'));
-      });
-    } else {
-      s.el.find(':checked').each(function () {
-        selected.push($(this).val());
-      });
-    }
+    var el = s.el.find('input').length === 0 ? s.el.find('.ez-table-list-active') : s.el.find(':checked'); //取数据的el
 
+    el.each(function () {
+      var item = {}; //每项数据集
+
+      $.each($(this).data(), function (key, value) {
+        item[key] = value;
+      });
+      selected.push(item);
+    });
     return selected;
   },
   //添加选中

@@ -122,7 +122,12 @@ var list = {
                 },
                 yes: function (layerIndex, layerObj) {
                     layer.close(layerIndex);
-                    s.params.hideFields = cfgTable.getSelected();
+                    var selectedData = cfgTable.getSelected();
+                    var selected = [];
+                    $.each(selectedData, function () {
+                        selected.push(this.id);
+                    });
+                    s.params.hideFields = selected;
                     var checkboxIndex = $.inArray('checkbox', s.params.sort);   //找到checkbox的位置
                     s.params.sort = cfgTable.getSort();
                     s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
@@ -155,6 +160,9 @@ var list = {
         }
         //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
         $.each(s.params.data.header, function () {
+            if (this.field.indexOf('_') === 0) {
+                return;
+            }
             if ($.inArray(this.field, s.params.sort) >= 0) {
                 return;
             }
@@ -234,7 +242,9 @@ var list = {
     renderRow: function (data) {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-row');
-        html.data('id', data.id);
+        $.each(data, function (key, value) {
+            html.data(key, value);
+        });
         //增加选中class
         if ($.inArray(data.id, s.params.selected) >= 0) {
             html.addClass('ez-table-list-active');
@@ -251,6 +261,9 @@ var list = {
                     type: 'checkbox',
                     name: '',
                     value: data.id
+                });
+                $.each(data, function (key, value) {
+                    checkbox.data(key, value);
                 });
                 //默认选中
                 if ($.inArray(data.id, s.params.selected) >= 0) {
@@ -320,16 +333,16 @@ var list = {
     //获取选中数据
     getSelected: function () {
         var s = this;
-        var selected = [];
-        if(s.el.find('input').length === 0){
-            s.el.find('.ez-table-list-active').each(function () {
-                selected.push($(this).data('id'));
+        var selected = [];  //返回的数据集
+        var el = s.el.find('input').length === 0 ? s.el.find('.ez-table-list-active') : s.el.find(':checked');  //取数据的el
+        el.each(function () {
+            var item = {};  //每项数据集
+            $.each($(this).data(), function (key, value) {
+                item[key] = value;
             });
-        } else {
-            s.el.find(':checked').each(function () {
-                selected.push($(this).val());
-            });
-        }
+            selected.push(item);
+        });
+
         return selected;
     },
     //添加选中
@@ -352,7 +365,7 @@ var list = {
         list.selectedChanged.call(s);
     },
     //选中数据改变后
-    selectedChanged: function(){
+    selectedChanged: function () {
         var s = this;
         clearTimeout(delay);
         delay = setTimeout(function () {
