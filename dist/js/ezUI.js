@@ -14012,7 +14012,7 @@ ez.textarea = require('./form/textarea'); //文本域
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_27b55ec7.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c1493913.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16534,7 +16534,7 @@ var _list = {
       s.params.sort.push(this.field);
     }); //如果是多选, 并且没有设定checkbox, 则在第一位增加checkbox
 
-    if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
+    if (s.params.multiple !== false && $.inArray('checkbox', s.params.sort) < 0) {
       s.params.sort.unshift('checkbox');
     }
   },
@@ -16716,9 +16716,17 @@ var _list = {
   getSelected: function getSelected() {
     var s = this;
     var selected = [];
-    s.el.find(':checked').each(function () {
-      selected.push($(this).val());
-    });
+
+    if (s.el.find('input').length === 0) {
+      s.el.find('.ez-table-list-active').each(function () {
+        selected.push($(this).data('id'));
+      });
+    } else {
+      s.el.find(':checked').each(function () {
+        selected.push($(this).val());
+      });
+    }
+
     return selected;
   },
   //添加选中

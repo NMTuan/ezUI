@@ -161,7 +161,7 @@ var list = {
             s.params.sort.push(this.field);
         });
         //如果是多选, 并且没有设定checkbox, 则在第一位增加checkbox
-        if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
+        if (s.params.multiple !== false && $.inArray('checkbox', s.params.sort) < 0) {
             s.params.sort.unshift('checkbox');
         }
     },
@@ -321,9 +321,15 @@ var list = {
     getSelected: function () {
         var s = this;
         var selected = [];
-        s.el.find(':checked').each(function () {
-            selected.push($(this).val());
-        });
+        if(s.el.find('input').length === 0){
+            s.el.find('.ez-table-list-active').each(function () {
+                selected.push($(this).data('id'));
+            });
+        } else {
+            s.el.find(':checked').each(function () {
+                selected.push($(this).val());
+            });
+        }
         return selected;
     },
     //添加选中
