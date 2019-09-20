@@ -101,6 +101,11 @@ var upload = {
                 }
             })
         });
+        s.el.closest('.ez-form-flex').find('.ez-form-control').on('click', '.ez-form-label-remove', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            upload.remove.call(s, this);
+        });
     },
     layerDom: function () {
         var s = this;
@@ -176,7 +181,7 @@ var upload = {
             // if (typeof s.params.callback == 'function') {
             //     s.params.callback.call(s, res, files);
             // }
-            if(res.code !== 40000){
+            if (res.code !== 40000) {
                 layer.msg(res.msg);
                 return;
             }
@@ -211,10 +216,9 @@ var upload = {
         if (!s.params.multiple) { //单选模式, 每次清空一下
             s.values = [];
         }
-        //todo 做完后记得打开
 
         $.each(s.values, function (i, item) {
-            if(item.path === res.path){
+            if (item.path === res.path) {
                 existence = true;
                 $.extend(true, item, res);
                 upload.renderItem.call(s);
@@ -264,12 +268,10 @@ var upload = {
 
             var label = $('<span>').addClass('ez-form-label').data('src', item.src).html(item.name || item.src);
             var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
+            if (s.params.type === 'image') {
+                label.addClass('ez-cursor-view');
+            }
             label.append(close);
-            close.on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                upload.remove.call(s, this);
-            });
             control.append(label);
             control.append(' ');
         });

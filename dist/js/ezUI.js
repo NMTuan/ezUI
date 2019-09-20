@@ -14009,9 +14009,9 @@ ez.watermark = require('./watermark/watermark'); //水印
 
 ez.textarea = require('./form/textarea'); //文本域
 
-ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_30081fd4.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./table/list":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+ez.addForm = require('./form/addForm'); //表单中, 添加表单
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c9292b42.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14051,6 +14051,209 @@ $.fn.extend({
 module.exports = _fixedContainer.fixedContainer;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fixedContainer\\fixedContainer.js","/fixedContainer")
 },{"XJF/FV":7,"buffer":6}],17:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _addForm = {
+  defaults: {
+    url: '',
+    title: '添加',
+    area: ['780px', '480px'],
+    btn: ['确定', '取消'],
+    multiple: true,
+    //多选
+    template: '{title}',
+    //item中展示的内容
+    cursor: '' //item鼠标样式 ez-cursor-x
+
+  },
+  addForm: function addForm(els, params) {
+    $.each(els, function () {
+      new _addForm.AddForm($(this), params);
+    });
+  },
+  AddForm: function AddForm(el, params) {
+    var s = this;
+    s.el = el;
+
+    _addForm.initParams.call(s, params);
+
+    if (!s.params.url) {
+      return;
+    }
+
+    _addForm.initData.call(s);
+
+    _addForm.events.call(s);
+  },
+  //初始化参数
+  initParams: function initParams(params) {
+    var s = this;
+    s.params = $.extend(true, {}, _addForm.defaults, params); //有data的用data属性做参数
+
+    $.each(s.el.data(), function (i, item) {
+      s.params[i] = item;
+    });
+  },
+  events: function events() {
+    var s = this;
+    s.el.on('click', function () {
+      layer.open({
+        type: 2,
+        title: s.params.title,
+        content: s.params.url,
+        area: s.params.area,
+        btn: s.params.btn,
+        yes: function yes(index) {
+          var formData = _addForm.getFormData(index);
+
+          _addForm.addData.call(s, formData);
+
+          layer.close(index);
+        }
+      });
+    });
+    s.el.parent().on('click', '.ez-form-label-remove', function () {
+      var id = $(this).data('_id');
+      layer.confirm('确定要移除么?', function (index) {
+        _addForm.removeData.call(s, id);
+
+        layer.close(index);
+      });
+    });
+  },
+  //获取弹窗表单中的数据
+  getFormData: function getFormData(index) {
+    var form = layer.getChildFrame('form', index);
+    var formData = form.serializeArray();
+    var data = {};
+    $.each(formData, function (i, item) {
+      data[item.name] = item.value;
+    });
+    return data;
+  },
+  //初始化数据
+  initData: function initData() {
+    var s = this;
+    s.data = [];
+    var data = {};
+    var max = 0;
+    s.el.closest('.ez-form-content').find('input').each(function (i, item) {
+      var key = $(item).attr('name');
+      var val = $.trim($(item).val());
+
+      if (val === '') {
+        //保证空字符串不被split, 提前退出.
+        return;
+      }
+
+      data[key] = val.split(',');
+      var len = data[key].length;
+
+      if (len > max) {
+        max = len;
+      }
+    });
+
+    for (var i = 0; i < max; i++) {
+      var d = {};
+      $.each(data, function (key, value) {
+        d[key] = value[i];
+      });
+      s.data.push(d);
+    }
+
+    _addForm.renderItem.call(s);
+  },
+  //添加数据
+  addData: function addData(data) {
+    var s = this;
+
+    if (!s.params.multiple) {
+      s.data = [];
+    }
+
+    s.data.push(data);
+
+    _addForm.renderItem.call(s);
+  },
+  removeData: function removeData(id) {
+    var s = this;
+
+    if (typeof id === 'undefined') {
+      return;
+    }
+
+    s.data.splice(id, 1);
+
+    _addForm.renderItem.call(s);
+  },
+  //渲染
+  renderItem: function renderItem() {
+    var s = this;
+    var control = s.el.parent().find('.ez-form-control');
+    var data = $.extend(true, {}, s.data);
+    var inputValues = {};
+    var label = $('<span>').addClass('ez-form-label');
+    var remove = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '删除');
+    control.empty();
+
+    if (s.data.length === 0) {
+      return;
+    }
+
+    $.each(data, function (i, item) {
+      var tpl = s.params.template;
+
+      var _label = label.clone();
+
+      var _remove = remove.clone();
+
+      _label.data('_id', i);
+
+      if (s.params.cursor) {
+        _label.addClass('ez-cursor-' + s.params.cursor);
+      }
+
+      $.each(item, function (key, value) {
+        _label.data(key, value);
+
+        if (!inputValues[key]) {
+          inputValues[key] = [];
+        }
+
+        inputValues[key].push(value);
+
+        if (tpl.indexOf('{' + key + '}') >= 0) {
+          tpl = tpl.replace('{' + key + '}', value);
+        }
+      });
+
+      _remove.data('_id', i);
+
+      _label.html(tpl);
+
+      _label.append(_remove);
+
+      control.append(_label);
+      control.append(' ');
+    }); //给input赋值
+
+    $.each(inputValues, function (key, value) {
+      s.el.parent().find('input[name="' + key + '"]').val(value.join(','));
+    });
+  }
+};
+$.fn.extend({
+  ez_form_add_form: function ez_form_add_form(params) {
+    _addForm.addForm($(this), params);
+
+    return this;
+  }
+});
+module.exports = _addForm.addForm;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\addForm.js","/form")
+},{"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14244,7 +14447,7 @@ $.fn.extend({
 });
 module.exports = player.Play;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\player.js","/form")
-},{"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14514,7 +14717,7 @@ $.fn.extend({
 });
 module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":34,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+},{"../tree/tree":34,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14616,7 +14819,7 @@ $.fn.extend({
 });
 module.exports = new _textarea.Textarea();
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\textarea.js","/form")
-},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14738,6 +14941,12 @@ var _upload = {
         }
       });
     });
+    s.el.closest('.ez-form-flex').find('.ez-form-control').on('click', '.ez-form-label-remove', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      _upload.remove.call(s, this);
+    });
   },
   layerDom: function layerDom() {
     var s = this;
@@ -14840,8 +15049,7 @@ var _upload = {
     if (!s.params.multiple) {
       //单选模式, 每次清空一下
       s.values = [];
-    } //todo 做完后记得打开
-
+    }
 
     $.each(s.values, function (i, item) {
       if (item.path === res.path) {
@@ -14902,13 +15110,12 @@ var _upload = {
       s.select.append(option);
       var label = $('<span>').addClass('ez-form-label').data('src', item.src).html(item.name || item.src);
       var close = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '移除').data('path', item.path);
-      label.append(close);
-      close.on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
 
-        _upload.remove.call(s, this);
-      });
+      if (s.params.type === 'image') {
+        label.addClass('ez-cursor-view');
+      }
+
+      label.append(close);
       control.append(label);
       control.append(' ');
     });
@@ -14923,7 +15130,7 @@ $.fn.extend({
 });
 module.exports = _upload.upload;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\upload.js","/form")
-},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14993,7 +15200,7 @@ module.exports = {
   close: _headlines.hide
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/headlines\\headlines.js","/headlines")
-},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15416,7 +15623,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],23:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15761,7 +15968,7 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],24:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15779,7 +15986,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15841,7 +16048,7 @@ $.fn.extend({
 });
 module.exports = _menuTree.menuTree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/menuTree\\menuTree.js","/menuTree")
-},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15877,7 +16084,7 @@ var msg = {
 };
 module.exports = msg;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/msg\\msg.js","/msg")
-},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15890,7 +16097,7 @@ var random = function random(min, max) {
 
 module.exports = random;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/random\\random.js","/random")
-},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],29:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15944,7 +16151,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
-},{"XJF/FV":7,"buffer":6}],29:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],30:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16040,7 +16247,7 @@ $.fn.extend({
 });
 module.exports = _role.role;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/role\\role.js","/role")
-},{"XJF/FV":7,"buffer":6}],30:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],31:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16079,7 +16286,7 @@ $.fn.extend({
 });
 module.exports = _scrollWheel.scrollWheel;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/scrollWheel\\scrollWheel.js","/scrollWheel")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],31:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],32:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16136,436 +16343,6 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],32:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";
-
-var path = location.pathname;
-var _list = {
-  defaults: {
-    data: {
-      //数据集, 必须有id
-      header: [],
-      //表头 {field, title}
-      body: [] //主体 {id, field1, field2}
-
-    },
-    selected: [],
-    //默认选中的行, [id1, id2]
-    tableClass: [//table要增加的class
-    'ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
-    hideFields: [],
-    //列隐藏 [field1, field2]
-    sort: [],
-    //列排序及显示    [field1, field2]
-    clickSelected: false,
-    //点击选中
-    multiple: false,
-    //多选   false不开启, option增加配置功能, 其它值则直接显示string
-    cfgTableLocalstorage: true //本地记录配置
-
-  },
-  list: function list(els, params) {
-    $.each(els, function () {
-      new _list.List($(this), params);
-    });
-  },
-  List: function List(el, params) {
-    var s = this;
-    s.el = el;
-    s.params = $.extend(true, {}, _list.defaults, params);
-
-    s.destory = function () {
-      _list.destory.call(s);
-    };
-
-    s.getSelected = function () {
-      return _list.getSelected.call(s);
-    };
-
-    s.getSort = function () {
-      return _list.getSort.call(s);
-    };
-
-    _list.initHideFields.call(s);
-
-    _list.initSort.call(s);
-
-    _list.renderTable.call(s);
-
-    _list.events.call(s);
-
-    return s;
-  },
-  events: function events() {
-    var s = this; //点击选中行(单选)
-
-    if (s.params.clickSelected) {
-      s.el.on('click', '.ez-table-list-body .ez-table-list-row', function () {
-        _list.rowSelected.call(s, this);
-
-        _list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
-
-        $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
-        $(this).find('input').prop('checked', true);
-      });
-    } //勾选(可多选)
-
-
-    s.el.on('click', 'input', function (e) {
-      e.stopPropagation();
-
-      _list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
-    }); //防止意外勾选, 扩大勾选热区
-
-    s.el.on('click', '.ez-table-list-field-checkbox', function (e) {
-      e.stopPropagation();
-
-      _list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
-    }); //选项
-
-    s.el.on('click', '.ez-table-list-field-option', function (e) {
-      var el = $('<div>').addClass('ez-table-list');
-      el.css({
-        padding: '12px'
-      });
-      var body = [];
-      $.each(s.params.sort, function () {
-        var field = this;
-        $.each(s.params.data.header, function (i, item) {
-          if (item.field === field) {
-            body.push({
-              id: field,
-              col: item.title
-            });
-            return false;
-          }
-        });
-      });
-      var options = {
-        data: {
-          header: [{
-            field: 'id',
-            title: '编号'
-          }, {
-            field: 'col',
-            title: '列'
-          }, {
-            field: 'drag',
-            title: '顺序'
-          }],
-          body: body
-        },
-        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm', 'ez-table-list-selected-disabled', 'ez-noselect'],
-        selected: s.params.hideFields,
-        // hideFields: ['id'],
-        sort: ['id', 'col', 'drag', 'checkbox'],
-        multiple: '隐藏',
-        cfgTableLocalstorage: false
-      };
-      $('body').append(el);
-      var cfgTable = new _list.List(el, options);
-      layer.open({
-        type: 1,
-        title: '表格配置',
-        content: el,
-        area: ['640px', 'auto'],
-        btn: ['保存'],
-        zIndex: 10,
-        success: function success() {
-          _list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
-        },
-        yes: function yes(layerIndex, layerObj) {
-          layer.close(layerIndex);
-          s.params.hideFields = cfgTable.getSelected();
-          var checkboxIndex = $.inArray('checkbox', s.params.sort); //找到checkbox的位置
-
-          s.params.sort = cfgTable.getSort();
-          s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
-
-          if (window.localStorage && s.params.cfgTableLocalstorage) {
-            localStorage.setItem('hideFields_' + path, JSON.stringify(s.params.hideFields));
-            localStorage.setItem('sort_' + path, JSON.stringify(s.params.sort));
-          }
-
-          _list.renderTable.call(s);
-        },
-        end: function end() {
-          cfgTable.destory();
-        }
-      });
-    });
-  },
-  //初始化隐藏列
-  initHideFields: function initHideFields() {
-    var s = this;
-    var ls = localStorage.getItem('hideFields_' + path);
-
-    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-      s.params.hideFields = JSON.parse(ls);
-    }
-  },
-  //初始化排序
-  initSort: function initSort() {
-    var s = this;
-    var ls = localStorage.getItem('sort_' + path);
-
-    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-      s.params.sort = JSON.parse(ls);
-    } //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
-
-
-    $.each(s.params.data.header, function () {
-      if ($.inArray(this.field, s.params.sort) >= 0) {
-        return;
-      }
-
-      s.params.sort.push(this.field);
-    }); //如果是多选, 并且没有设定checkbox, 则在第一位增加checkbox
-
-    if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
-      s.params.sort.unshift('checkbox');
-    }
-  },
-  //渲染表格
-  renderTable: function renderTable() {
-    var s = this;
-    var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
-
-    var header = _list.renderHeader.call(s);
-
-    var body = _list.renderBody.call(s);
-
-    table.append(header).append(body);
-    s.el.empty().append(table);
-  },
-  //渲染表头
-  renderHeader: function renderHeader() {
-    var s = this;
-    var html = $('<div>').addClass('ez-table-list-head');
-    var row = $('<div>').addClass('ez-table-list-row'); //多选框
-
-    if (s.params.multiple) {} //按排序构建列
-
-
-    $.each(s.params.sort, function (i, field) {
-      //如果隐藏, 跳过
-      if ($.inArray(field, s.params.hideFields) >= 0) {
-        return;
-      }
-
-      if (field === 'checkbox') {
-        var optionBtn = '';
-
-        if (s.params.multiple === 'option') {
-          optionBtn = $('<i>').addClass('remixicon-settings-line');
-          optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
-        } else {
-          optionBtn = s.params.multiple;
-        }
-
-        var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
-
-        cell.css('width', '1px');
-        cell.addClass('ez-text-center');
-        cell.html(optionBtn);
-        row.append(cell);
-        return;
-      }
-
-      $.each(s.params.data.header, function (i, item) {
-        if (item.field === field) {
-          var cell = _list.renderCell(item.field, true);
-
-          cell.html(item.title);
-
-          if (item.field === 'drag') {
-            cell.css('width', '1px');
-            cell.addClass('ez-text-center');
-          }
-
-          row.append(cell);
-          return false;
-        }
-      });
-    });
-    html.append(row);
-    return html;
-  },
-  //渲染表格主体
-  renderBody: function renderBody() {
-    var s = this;
-    var html = $('<div>').addClass('ez-table-list-body');
-    $.each(s.params.data.body, function (i, item) {
-      var row = _list.renderRow.call(s, item);
-
-      html.append(row);
-    });
-    return html;
-  },
-  //渲染行, data单元格数据数组
-  renderRow: function renderRow(data) {
-    var s = this;
-    var html = $('<div>').addClass('ez-table-list-row');
-    html.data('id', data.id); //增加选中class
-
-    if ($.inArray(data.id, s.params.selected) >= 0) {
-      html.addClass('ez-table-list-active');
-    } //按排序构建列
-
-
-    $.each(s.params.sort, function (i, field) {
-      if ($.inArray(field, s.params.hideFields) >= 0) {
-        return;
-      } //构建复选框
-
-
-      if (field === 'checkbox') {
-        var checkbox = $('<input>').attr({
-          type: 'checkbox',
-          name: '',
-          value: data.id
-        }); //默认选中
-
-        if ($.inArray(data.id, s.params.selected) >= 0) {
-          checkbox.attr('checked', 'checked');
-        }
-
-        var cell = _list.renderCell('checkbox', true);
-
-        cell.addClass('ez-text-center');
-        cell.append(checkbox);
-        html.append(cell);
-      } //构建拖拽
-
-
-      if (field === 'drag') {
-        var cell = _list.renderCell('drag', true);
-
-        cell.addClass('ez-text-center');
-        cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
-        html.append(cell);
-      }
-
-      $.each(data, function (key, value) {
-        if (key === field) {
-          var cell = _list.renderCell(key);
-
-          cell.html(value);
-          html.append(cell);
-          return false;
-        }
-      });
-    });
-    return html;
-  },
-  //渲染单元格, field字段, th是否为th
-  renderCell: function renderCell(field, th) {
-    var cls = [];
-    cls.push(th ? 'ez-table-list-th' : 'ez-table-list-td');
-
-    if (field) {
-      cls.push('ez-table-list-field-' + field);
-    }
-
-    return $('<div>').addClass(cls.join(' '));
-  },
-  //选中当前行
-  rowSelected: function rowSelected(row) {
-    var s = this;
-    $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
-
-    _list.selectedAdd.call(s, $(row).data('id'));
-  },
-  //取消当前行
-  rowUnselected: function rowUnselected(row) {
-    var s = this;
-    $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
-
-    _list.selectedRemove.call(s, $(row).data('id'));
-  },
-  //切换选中状态
-  rowToggleSelected: function rowToggleSelected(row) {
-    var s = this;
-
-    if ($(row).hasClass('ez-table-list-active')) {
-      _list.rowUnselected.call(s, row);
-    } else {
-      _list.rowSelected.call(s, row);
-    }
-  },
-  //销毁
-  destory: function destory() {
-    this.el.remove();
-  },
-  //获取选中数据
-  getSelected: function getSelected() {
-    var s = this;
-    var selected = [];
-    s.el.find(':checked').each(function () {
-      selected.push($(this).val());
-    });
-    return selected;
-  },
-  //添加选中
-  selectedAdd: function selectedAdd(dataId) {
-    if (dataId) {
-      this.params.selected.push(dataId);
-    }
-  },
-  //移除选中
-  selectedRemove: function selectedRemove(dataId) {
-    var index = this.params.selected.indexOf(dataId);
-
-    if (index < 0) {
-      return;
-    }
-
-    this.params.selected.splice(index, 1);
-  },
-  //获取顺序
-  getSort: function getSort() {
-    var s = this;
-    var sort = [];
-    $.each(s.el.find(':checkbox'), function (i, item) {
-      var val = $.trim($(item).val());
-
-      if (val) {
-        sort.push(val);
-      }
-    });
-    return sort;
-  },
-  //拖拽
-  dragula: function (_dragula) {
-    function dragula(_x) {
-      return _dragula.apply(this, arguments);
-    }
-
-    dragula.toString = function () {
-      return _dragula.toString();
-    };
-
-    return dragula;
-  }(function (container) {
-    dragula([container], {
-      revertOnSpill: true,
-      // direction: 'vertical',
-      moves: function moves(el, container, handle) {
-        return $(handle).hasClass('remixicon-drag-move-fill');
-      }
-    });
-  })
-};
-$.fn.extend({
-  ez_table_list: function ez_table_list(params) {
-    _list.list(this, params);
-
-    return this;
-  }
-});
-module.exports = _list.list;
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/table\\list.js","/table")
 },{"XJF/FV":7,"buffer":6}],33:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -17080,7 +16857,7 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":27,"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
+},{"../random/random":28,"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

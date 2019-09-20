@@ -45,7 +45,7 @@
     }
 
     &-control { //自适应容器
-        flex: 1 1 auto;
+        flex: 1;
         background-color: transparent;
         margin: 0 2px 0 0; //为了focus时显示完整的outline
         padding: 0 12px;
@@ -79,6 +79,10 @@
             line-height: 26px;
             font-size: 12px;
         }
+    }
+    select#{$form}-control {
+        width: 120px;
+        white-space: nowrap;
     }
 
     &-wave {

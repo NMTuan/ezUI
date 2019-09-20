@@ -389,7 +389,8 @@ body {
   cursor: pointer;
 }
 
-.ez-cursor-search,
+.ez-cursor-view, .ez-cursor-search,
+.eza-cursor-view,
 .eza-cursor-search {
   cursor: zoom-in;
 }
@@ -604,7 +605,7 @@ body {
 }
 
 .ez-avg-item {
-  flex: 1 1 auto;
+  flex: 1;
 }
 
 .ez.sidebar {
@@ -685,7 +686,7 @@ body {
 }
 
 .ez-form-control {
-  flex: 1 1 auto;
+  flex: 1;
   background-color: transparent;
   margin: 0 2px 0 0;
   padding: 0 12px;
@@ -719,6 +720,11 @@ body {
   min-height: 26px;
   line-height: 26px;
   font-size: 12px;
+}
+
+.ez-form select.ez-form-control {
+  width: 120px;
+  white-space: nowrap;
 }
 
 .ez-form-wave {
