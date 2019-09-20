@@ -1,0 +1,27 @@
+<% title = '表单'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+
+
+
+<h2>一行</h2>
+<div class="ez-form ez-form-inline ez-form-full">
+    <%- include('./_form_add_form.ejs');%>
+</div>
+<hr>
+
+<h2>分行</h2>
+<div class="ez-form">
+    <%- include('./_form_add_form.ejs');%>
+</div>
+
+<script>
+    $('.ez-form-inline-horizontal').find('.ez-form-row-tips').remove();   //水平模式下用不到tips
+
+    $('.add').ez_form_add_form({
+        template: '{number}',
+        // multiple: false,
+        cursor: 'view',
+    });
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>

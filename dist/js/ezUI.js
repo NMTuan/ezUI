@@ -14008,8 +14008,10 @@ ez.tree = require('./tree/tree'); //树结构
 ez.watermark = require('./watermark/watermark'); //水印
 
 ez.textarea = require('./form/textarea'); //文本域
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_78be2a7b.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/player":17,"./form/select":18,"./form/textarea":19,"./form/upload":20,"./headlines/headlines":21,"./iframeTabs/iframeTabs":22,"./imageView/imageView":23,"./log/log":24,"./menuTree/menuTree":25,"./msg/msg":26,"./renderHeight/renderHeight":28,"./role/role":29,"./scrollWheel/scrollWheel":30,"./subNav/subNav":31,"./tabs/tabs":32,"./tree/tree":33,"./watermark/watermark":34,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+
+ez.addForm = require('./form/addForm'); //表单中, 添加表单
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1090df94.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14049,6 +14051,209 @@ $.fn.extend({
 module.exports = _fixedContainer.fixedContainer;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fixedContainer\\fixedContainer.js","/fixedContainer")
 },{"XJF/FV":7,"buffer":6}],17:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+var _addForm = {
+  defaults: {
+    url: '',
+    title: '添加',
+    area: ['780px', '480px'],
+    btn: ['确定', '取消'],
+    multiple: true,
+    //多选
+    template: '{title}',
+    //item中展示的内容
+    cursor: '' //item鼠标样式 ez-cursor-x
+
+  },
+  addForm: function addForm(els, params) {
+    $.each(els, function () {
+      new _addForm.AddForm($(this), params);
+    });
+  },
+  AddForm: function AddForm(el, params) {
+    var s = this;
+    s.el = el;
+
+    _addForm.initParams.call(s, params);
+
+    if (!s.params.url) {
+      return;
+    }
+
+    _addForm.initData.call(s);
+
+    _addForm.events.call(s);
+  },
+  //初始化参数
+  initParams: function initParams(params) {
+    var s = this;
+    s.params = $.extend(true, {}, _addForm.defaults, params); //有data的用data属性做参数
+
+    $.each(s.el.data(), function (i, item) {
+      s.params[i] = item;
+    });
+  },
+  events: function events() {
+    var s = this;
+    s.el.on('click', function () {
+      layer.open({
+        type: 2,
+        title: s.params.title,
+        content: s.params.url,
+        area: s.params.area,
+        btn: s.params.btn,
+        yes: function yes(index) {
+          var formData = _addForm.getFormData(index);
+
+          _addForm.addData.call(s, formData);
+
+          layer.close(index);
+        }
+      });
+    });
+    s.el.parent().on('click', '.ez-form-label-remove', function () {
+      var id = $(this).data('_id');
+      layer.confirm('确定要移除么?', function (index) {
+        _addForm.removeData.call(s, id);
+
+        layer.close(index);
+      });
+    });
+  },
+  //获取弹窗表单中的数据
+  getFormData: function getFormData(index) {
+    var form = layer.getChildFrame('form', index);
+    var formData = form.serializeArray();
+    var data = {};
+    $.each(formData, function (i, item) {
+      data[item.name] = item.value;
+    });
+    return data;
+  },
+  //初始化数据
+  initData: function initData() {
+    var s = this;
+    s.data = [];
+    var data = {};
+    var max = 0;
+    s.el.closest('.ez-form-content').find('input').each(function (i, item) {
+      var key = $(item).attr('name');
+      var val = $.trim($(item).val());
+
+      if (val === '') {
+        //保证空字符串不被split, 提前退出.
+        return;
+      }
+
+      data[key] = val.split(',');
+      var len = data[key].length;
+
+      if (len > max) {
+        max = len;
+      }
+    });
+
+    for (var i = 0; i < max; i++) {
+      var d = {};
+      $.each(data, function (key, value) {
+        d[key] = value[i];
+      });
+      s.data.push(d);
+    }
+
+    _addForm.renderItem.call(s);
+  },
+  //添加数据
+  addData: function addData(data) {
+    var s = this;
+
+    if (!s.params.multiple) {
+      s.data = [];
+    }
+
+    s.data.push(data);
+
+    _addForm.renderItem.call(s);
+  },
+  removeData: function removeData(id) {
+    var s = this;
+
+    if (typeof id === 'undefined') {
+      return;
+    }
+
+    s.data.splice(id, 1);
+
+    _addForm.renderItem.call(s);
+  },
+  //渲染
+  renderItem: function renderItem() {
+    var s = this;
+    var control = s.el.parent().find('.ez-form-control');
+    var data = $.extend(true, {}, s.data);
+    var inputValues = {};
+    var label = $('<span>').addClass('ez-form-label');
+    var remove = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '删除');
+    control.empty();
+
+    if (s.data.length === 0) {
+      return;
+    }
+
+    $.each(data, function (i, item) {
+      var tpl = s.params.template;
+
+      var _label = label.clone();
+
+      var _remove = remove.clone();
+
+      _label.data('_id', i);
+
+      if (s.params.cursor) {
+        _label.addClass('ez-cursor-' + s.params.cursor);
+      }
+
+      $.each(item, function (key, value) {
+        _label.data(key, value);
+
+        if (!inputValues[key]) {
+          inputValues[key] = [];
+        }
+
+        inputValues[key].push(value);
+
+        if (tpl.indexOf('{' + key + '}') >= 0) {
+          tpl = tpl.replace('{' + key + '}', value);
+        }
+      });
+
+      _remove.data('_id', i);
+
+      _label.html(tpl);
+
+      _label.append(_remove);
+
+      control.append(_label);
+      control.append(' ');
+    }); //给input赋值
+
+    $.each(inputValues, function (key, value) {
+      s.el.parent().find('input[name="' + key + '"]').val(value.join(','));
+    });
+  }
+};
+$.fn.extend({
+  ez_form_add_form: function ez_form_add_form(params) {
+    _addForm.addForm($(this), params);
+
+    return this;
+  }
+});
+module.exports = _addForm.addForm;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\addForm.js","/form")
+},{"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14242,7 +14447,7 @@ $.fn.extend({
 });
 module.exports = player.Play;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\player.js","/form")
-},{"XJF/FV":7,"buffer":6}],18:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14512,7 +14717,7 @@ $.fn.extend({
 });
 module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":33,"XJF/FV":7,"buffer":6}],19:[function(require,module,exports){
+},{"../tree/tree":34,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14614,7 +14819,7 @@ $.fn.extend({
 });
 module.exports = new _textarea.Textarea();
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\textarea.js","/form")
-},{"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14925,7 +15130,7 @@ $.fn.extend({
 });
 module.exports = _upload.upload;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\upload.js","/form")
-},{"XJF/FV":7,"buffer":6}],21:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14995,7 +15200,7 @@ module.exports = {
   close: _headlines.hide
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/headlines\\headlines.js","/headlines")
-},{"XJF/FV":7,"buffer":6}],22:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15418,7 +15623,7 @@ module.exports = {
   close: _iframeTabs.close
 };
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/iframeTabs\\iframeTabs.js","/iframeTabs")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],23:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15763,7 +15968,7 @@ var imageView = {
 };
 module.exports = imageView.create;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/imageView\\imageView.js","/imageView")
-},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],24:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"draggabilly":2,"jquery-bridget":9,"jquery-mousewheel":10}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15781,7 +15986,7 @@ $.extend({
 });
 module.exports = _log.log;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log\\log.js","/log")
-},{"XJF/FV":7,"buffer":6}],25:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15843,7 +16048,7 @@ $.fn.extend({
 });
 module.exports = _menuTree.menuTree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/menuTree\\menuTree.js","/menuTree")
-},{"XJF/FV":7,"buffer":6}],26:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15879,7 +16084,7 @@ var msg = {
 };
 module.exports = msg;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/msg\\msg.js","/msg")
-},{"XJF/FV":7,"buffer":6}],27:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15892,7 +16097,7 @@ var random = function random(min, max) {
 
 module.exports = random;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/random\\random.js","/random")
-},{"XJF/FV":7,"buffer":6}],28:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],29:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -15946,7 +16151,7 @@ $.fn.renderHeight = function (params) {
 
 module.exports = _renderHeight.renderHeight;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/renderHeight\\renderHeight.js","/renderHeight")
-},{"XJF/FV":7,"buffer":6}],29:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],30:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16042,7 +16247,7 @@ $.fn.extend({
 });
 module.exports = _role.role;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/role\\role.js","/role")
-},{"XJF/FV":7,"buffer":6}],30:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],31:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16081,7 +16286,7 @@ $.fn.extend({
 });
 module.exports = _scrollWheel.scrollWheel;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/scrollWheel\\scrollWheel.js","/scrollWheel")
-},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],31:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6,"jquery-mousewheel":10}],32:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16138,7 +16343,7 @@ $.fn.extend({
 });
 module.exports = _subNav.subNav;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/subNav\\subNav.js","/subNav")
-},{"XJF/FV":7,"buffer":6}],32:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],33:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16207,7 +16412,7 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":7,"buffer":6}],33:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16652,7 +16857,7 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":27,"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
+},{"../random/random":28,"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

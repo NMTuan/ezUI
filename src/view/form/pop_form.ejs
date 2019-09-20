@@ -1,0 +1,19 @@
+<% title = '表单'; %>
+<%- include('../compoents/default/_header.ejs'); %>
+<style>
+    html, body {
+        background-color: #fff;
+    }
+</style>
+
+<div style="padding: 12px;">
+    <div class="ez-form ez-form-inline ez-form-full">
+        <%- include('./_pop_form.ejs'); %>
+    </div>
+</div>
+
+<script>
+    $('.ez-form-inline-horizontal').find('.ez-form-row-tips').remove();   //水平模式下用不到tips
+</script>
+
+<%- include('../compoents/default/_footer.ejs'); %>
