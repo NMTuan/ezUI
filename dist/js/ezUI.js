@@ -14010,8 +14010,10 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c9292b42.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+
+ez.tableList = require('./table/list');
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_27b55ec7.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14717,7 +14719,7 @@ $.fn.extend({
 });
 module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":34,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"../tree/tree":35,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16347,6 +16349,460 @@ module.exports = _subNav.subNav;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var path = location.pathname;
+var delay; //延时
+
+var _list = {
+  defaults: {
+    data: {
+      //数据集, 必须有id
+      header: [],
+      //表头 {field, title}
+      body: [] //主体 {id, field1, field2}
+
+    },
+    selected: [],
+    //默认选中的行, [id1, id2]
+    tableClass: [//table要增加的class
+    'ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-stripe'],
+    hideFields: [],
+    //列隐藏 [field1, field2]
+    sort: [],
+    //列排序及显示    [field1, field2]
+    clickSelected: false,
+    //点击选中
+    multiple: false,
+    //多选   false不开启, option增加配置功能, 其它值则直接显示string
+    cfgTableLocalstorage: true //本地记录配置
+
+  },
+  list: function list(els, params) {
+    $.each(els, function () {
+      new _list.List($(this), params);
+    });
+  },
+  List: function List(el, params) {
+    var s = this;
+    s.el = el;
+    s.params = $.extend(true, {}, _list.defaults, params);
+
+    s.destory = function () {
+      _list.destory.call(s);
+    };
+
+    s.getSelected = function () {
+      return _list.getSelected.call(s);
+    };
+
+    s.getSort = function () {
+      return _list.getSort.call(s);
+    };
+
+    _list.initHideFields.call(s);
+
+    _list.initSort.call(s);
+
+    _list.renderTable.call(s);
+
+    _list.events.call(s);
+
+    return s;
+  },
+  events: function events() {
+    var s = this; //点击选中行(单选)
+
+    if (s.params.clickSelected) {
+      s.el.on('click', '.ez-table-list-body .ez-table-list-row', function () {
+        _list.rowSelected.call(s, this);
+
+        _list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
+
+        $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
+        $(this).find('input').prop('checked', true);
+      });
+    } //勾选(可多选)
+
+
+    s.el.on('click', 'input', function (e) {
+      e.stopPropagation();
+
+      _list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
+    }); //防止意外勾选, 扩大勾选热区
+
+    s.el.on('click', '.ez-table-list-field-checkbox', function (e) {
+      e.stopPropagation();
+
+      _list.rowToggleSelected.call(s, $(this).closest('.ez-table-list-row'));
+    }); //选项
+
+    s.el.on('click', '.ez-table-list-field-option', function (e) {
+      var el = $('<div>').addClass('ez-table-list');
+      el.css({
+        padding: '12px'
+      });
+      var body = [];
+      $.each(s.params.sort, function () {
+        var field = this;
+        $.each(s.params.data.header, function (i, item) {
+          if (item.field === field) {
+            body.push({
+              id: field,
+              col: item.title
+            });
+            return false;
+          }
+        });
+      });
+      var options = {
+        data: {
+          header: [{
+            field: 'id',
+            title: '编号'
+          }, {
+            field: 'col',
+            title: '列'
+          }, {
+            field: 'drag',
+            title: '顺序'
+          }],
+          body: body
+        },
+        tableClass: ['ez-table-list-border', 'ez-table-list-line', 'ez-table-list-vline', 'ez-table-list-hover', 'ez-table-list-full', 'ez-table-list-sm', 'ez-table-list-selected-disabled', 'ez-noselect'],
+        selected: s.params.hideFields,
+        // hideFields: ['id'],
+        sort: ['id', 'col', 'drag', 'checkbox'],
+        multiple: '隐藏',
+        cfgTableLocalstorage: false
+      };
+      $('body').append(el);
+      var cfgTable = new _list.List(el, options);
+      layer.open({
+        type: 1,
+        title: '表格配置',
+        content: el,
+        area: ['640px', 'auto'],
+        btn: ['保存'],
+        zIndex: 10,
+        success: function success() {
+          _list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
+        },
+        yes: function yes(layerIndex, layerObj) {
+          layer.close(layerIndex);
+          s.params.hideFields = cfgTable.getSelected();
+          var checkboxIndex = $.inArray('checkbox', s.params.sort); //找到checkbox的位置
+
+          s.params.sort = cfgTable.getSort();
+          s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
+
+          if (window.localStorage && s.params.cfgTableLocalstorage) {
+            localStorage.setItem('hideFields_' + path, JSON.stringify(s.params.hideFields));
+            localStorage.setItem('sort_' + path, JSON.stringify(s.params.sort));
+          }
+
+          _list.renderTable.call(s);
+        },
+        end: function end() {
+          cfgTable.destory();
+        }
+      });
+    });
+  },
+  //初始化隐藏列
+  initHideFields: function initHideFields() {
+    var s = this;
+    var ls = localStorage.getItem('hideFields_' + path);
+
+    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
+      s.params.hideFields = JSON.parse(ls);
+    }
+  },
+  //初始化排序
+  initSort: function initSort() {
+    var s = this;
+    var ls = localStorage.getItem('sort_' + path);
+
+    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
+      s.params.sort = JSON.parse(ls);
+    } //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
+
+
+    $.each(s.params.data.header, function () {
+      if ($.inArray(this.field, s.params.sort) >= 0) {
+        return;
+      }
+
+      s.params.sort.push(this.field);
+    }); //如果是多选, 并且没有设定checkbox, 则在第一位增加checkbox
+
+    if (s.params.multiple && $.inArray('checkbox', s.params.sort) < 0) {
+      s.params.sort.unshift('checkbox');
+    }
+  },
+  //渲染表格
+  renderTable: function renderTable() {
+    var s = this;
+    var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
+
+    var header = _list.renderHeader.call(s);
+
+    var body = _list.renderBody.call(s);
+
+    table.append(header).append(body);
+    s.el.empty().append(table);
+  },
+  //渲染表头
+  renderHeader: function renderHeader() {
+    var s = this;
+    var html = $('<div>').addClass('ez-table-list-head');
+    var row = $('<div>').addClass('ez-table-list-row'); //多选框
+
+    if (s.params.multiple) {} //按排序构建列
+
+
+    $.each(s.params.sort, function (i, field) {
+      //如果隐藏, 跳过
+      if ($.inArray(field, s.params.hideFields) >= 0) {
+        return;
+      }
+
+      if (field === 'checkbox') {
+        var optionBtn = '';
+
+        if (s.params.multiple === 'option') {
+          optionBtn = $('<i>').addClass('remixicon-settings-line');
+          optionBtn = $('<a>').attr('href', 'javascript:;').append(optionBtn);
+        } else {
+          optionBtn = s.params.multiple;
+        }
+
+        var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
+
+        cell.css('width', '1px');
+        cell.addClass('ez-text-center');
+        cell.html(optionBtn);
+        row.append(cell);
+        return;
+      }
+
+      $.each(s.params.data.header, function (i, item) {
+        if (item.field === field) {
+          var cell = _list.renderCell(item.field, true);
+
+          cell.html(item.title);
+
+          if (item.field === 'drag') {
+            cell.css('width', '1px');
+            cell.addClass('ez-text-center');
+          }
+
+          row.append(cell);
+          return false;
+        }
+      });
+    });
+    html.append(row);
+    return html;
+  },
+  //渲染表格主体
+  renderBody: function renderBody() {
+    var s = this;
+    var html = $('<div>').addClass('ez-table-list-body');
+    $.each(s.params.data.body, function (i, item) {
+      var row = _list.renderRow.call(s, item);
+
+      html.append(row);
+    });
+    return html;
+  },
+  //渲染行, data单元格数据数组
+  renderRow: function renderRow(data) {
+    var s = this;
+    var html = $('<div>').addClass('ez-table-list-row');
+    html.data('id', data.id); //增加选中class
+
+    if ($.inArray(data.id, s.params.selected) >= 0) {
+      html.addClass('ez-table-list-active');
+    } //按排序构建列
+
+
+    $.each(s.params.sort, function (i, field) {
+      if ($.inArray(field, s.params.hideFields) >= 0) {
+        return;
+      } //构建复选框
+
+
+      if (field === 'checkbox') {
+        var checkbox = $('<input>').attr({
+          type: 'checkbox',
+          name: '',
+          value: data.id
+        }); //默认选中
+
+        if ($.inArray(data.id, s.params.selected) >= 0) {
+          checkbox.attr('checked', 'checked');
+        }
+
+        var cell = _list.renderCell('checkbox', true);
+
+        cell.addClass('ez-text-center');
+        cell.append(checkbox);
+        html.append(cell);
+      } //构建拖拽
+
+
+      if (field === 'drag') {
+        var cell = _list.renderCell('drag', true);
+
+        cell.addClass('ez-text-center');
+        cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
+        html.append(cell);
+      }
+
+      $.each(data, function (key, value) {
+        if (key === field) {
+          var cell = _list.renderCell(key);
+
+          cell.html(value);
+          html.append(cell);
+          return false;
+        }
+      });
+    });
+    return html;
+  },
+  //渲染单元格, field字段, th是否为th
+  renderCell: function renderCell(field, th) {
+    var cls = [];
+    cls.push(th ? 'ez-table-list-th' : 'ez-table-list-td');
+
+    if (field) {
+      cls.push('ez-table-list-field-' + field);
+    }
+
+    return $('<div>').addClass(cls.join(' '));
+  },
+  //选中当前行
+  rowSelected: function rowSelected(row) {
+    var s = this;
+    $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
+
+    _list.selectedAdd.call(s, $(row).data('id'));
+  },
+  //取消当前行
+  rowUnselected: function rowUnselected(row) {
+    var s = this;
+    $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
+    var ids = $(row).map(function () {
+      return $(this).data('id');
+    });
+
+    _list.selectedRemove.call(s, ids);
+  },
+  //切换选中状态
+  rowToggleSelected: function rowToggleSelected(row) {
+    var s = this;
+
+    if ($(row).hasClass('ez-table-list-active')) {
+      _list.rowUnselected.call(s, row);
+    } else {
+      _list.rowSelected.call(s, row);
+    }
+  },
+  //销毁
+  destory: function destory() {
+    this.el.remove();
+  },
+  //获取选中数据
+  getSelected: function getSelected() {
+    var s = this;
+    var selected = [];
+    s.el.find(':checked').each(function () {
+      selected.push($(this).val());
+    });
+    return selected;
+  },
+  //添加选中
+  selectedAdd: function selectedAdd(dataId) {
+    if (dataId) {
+      this.params.selected.push(dataId);
+
+      _list.selectedChanged.call(this);
+    }
+  },
+  //移除选中
+  selectedRemove: function selectedRemove(dataIds) {
+    var s = this;
+    $.each(dataIds, function (i, dataId) {
+      var index = s.params.selected.indexOf(dataId);
+
+      if (index < 0) {
+        return;
+      }
+
+      s.params.selected.splice(index, 1);
+    });
+
+    _list.selectedChanged.call(s);
+  },
+  //选中数据改变后
+  selectedChanged: function selectedChanged() {
+    var s = this;
+    clearTimeout(delay);
+    delay = setTimeout(function () {
+      console.log('changed');
+
+      var selected = _list.getSelected.call(s);
+
+      console.log(selected);
+    }, 100);
+  },
+  //获取顺序
+  getSort: function getSort() {
+    var s = this;
+    var sort = [];
+    $.each(s.el.find(':checkbox'), function (i, item) {
+      var val = $.trim($(item).val());
+
+      if (val) {
+        sort.push(val);
+      }
+    });
+    return sort;
+  },
+  //拖拽
+  dragula: function (_dragula) {
+    function dragula(_x) {
+      return _dragula.apply(this, arguments);
+    }
+
+    dragula.toString = function () {
+      return _dragula.toString();
+    };
+
+    return dragula;
+  }(function (container) {
+    dragula([container], {
+      revertOnSpill: true,
+      // direction: 'vertical',
+      moves: function moves(el, container, handle) {
+        return $(handle).hasClass('remixicon-drag-move-fill');
+      }
+    });
+  })
+};
+$.fn.extend({
+  ez_table_list: function ez_table_list(params) {
+    _list.list(this, params);
+
+    return this;
+  }
+});
+module.exports = _list.list;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/table\\list.js","/table")
+},{"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 var _tabs = {
   defaults: {
     currentClass: 'current',
@@ -16412,7 +16868,7 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16857,7 +17313,7 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":28,"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
+},{"../random/random":28,"XJF/FV":7,"buffer":6}],36:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

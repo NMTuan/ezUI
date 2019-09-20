@@ -1,5 +1,5 @@
 var path = location.pathname;
-
+var delay;  //延时
 var list = {
     defaults: {
         data: { //数据集, 必须有id
@@ -299,7 +299,10 @@ var list = {
     rowUnselected: function (row) {
         var s = this;
         $(row).removeClass('ez-table-list-active').find('input').prop('checked', false);
-        list.selectedRemove.call(s, $(row).data('id'));
+        var ids = $(row).map(function () {
+            return $(this).data('id');
+        });
+        list.selectedRemove.call(s, ids);
     },
     //切换选中状态
     rowToggleSelected: function (row) {
@@ -327,15 +330,30 @@ var list = {
     selectedAdd: function (dataId) {
         if (dataId) {
             this.params.selected.push(dataId);
+            list.selectedChanged.call(this);
         }
     },
     //移除选中
-    selectedRemove: function (dataId) {
-        var index = this.params.selected.indexOf(dataId);
-        if (index < 0) {
-            return;
-        }
-        this.params.selected.splice(index, 1);
+    selectedRemove: function (dataIds) {
+        var s = this;
+        $.each(dataIds, function (i, dataId) {
+            var index = s.params.selected.indexOf(dataId);
+            if (index < 0) {
+                return;
+            }
+            s.params.selected.splice(index, 1);
+        });
+        list.selectedChanged.call(s);
+    },
+    //选中数据改变后
+    selectedChanged: function(){
+        var s = this;
+        clearTimeout(delay);
+        delay = setTimeout(function () {
+            console.log('changed');
+            var selected = list.getSelected.call(s);
+            console.log(selected);
+        }, 100);
     },
     //获取顺序
     getSort: function () {
