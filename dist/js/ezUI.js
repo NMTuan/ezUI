@@ -14010,7 +14010,7 @@ ez.watermark = require('./watermark/watermark'); //水印
 ez.textarea = require('./form/textarea'); //文本域
 
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1090df94.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c9292b42.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./tabs/tabs":33,"./tree/tree":34,"./watermark/watermark":35,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
