@@ -20,6 +20,7 @@ var list = {
         clickSelected: false,   //点击选中
         multiple: false, //多选   false不开启, option增加配置功能, 其它值则直接显示string
         cfgTableLocalstorage: true, //本地记录配置
+        btns: [],   //操作按钮
     },
     list: function (els, params) {
         $.each(els, function () {
@@ -43,6 +44,7 @@ var list = {
         list.initHideFields.call(s);
         list.initSort.call(s);
         list.renderTable.call(s);
+        list.renderBtns.call(s);
         list.events.call(s);
         return s;
     },
@@ -369,9 +371,8 @@ var list = {
         var s = this;
         clearTimeout(delay);
         delay = setTimeout(function () {
-            console.log('changed');
             var selected = list.getSelected.call(s);
-            console.log(selected);
+            list.renderBtns.call(s);
         }, 100);
     },
     //获取顺序
@@ -395,7 +396,39 @@ var list = {
                 return $(handle).hasClass('remixicon-drag-move-fill');
             }
         });
-    }
+    },
+
+    //按钮
+    initBtns: function(){
+        this.fnEl = $('<div>').addClass('ez-table-list-fn');
+        this.el.prepend(this.fnEl);
+    },
+    renderBtns: function () {
+        var s = this;
+        if(s.params.btns.length === 0){
+            return;
+        }
+        if(typeof s.fnEl === 'undefined'){
+            list.initBtns.call(s);
+        }
+        s.fnEl.empty();
+
+        $.each(s.params.btns,function (i, item) {
+            var btn = $('<div>');
+            btn.addClass('ez-btn ez-btn-success');
+            btn.html(item.title);
+            var state = item.state.call(s);
+            if(state === 'disabled'){
+                btn.addClass('ez-btn-disabled');
+            }
+            btn.on('click', function () {
+                var selected = list.getSelected.call(s);
+                item.click.call(s, selected);
+            });
+            s.fnEl.append(btn);
+            s.fnEl.append(' ');
+        });
+    },
 };
 
 $.fn.extend({

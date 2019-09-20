@@ -107,11 +107,40 @@ var table = {
                 },
             ]
         },
-        selected: ['BC1909071014379811', 'BC1909060107381625'],
+        // selected: ['BC1909071014379811', 'BC1909060107381625'],
         sort: ['code', 'company'],
         hideFields: ['id'],
         clickSelected: true,
         multiple: 'option',
+        btns: [
+            {
+                title: '按钮111',
+                state: function () {
+
+                },
+                click: function (selected) {
+                    console.log(this);
+                    console.log('click1');
+                    console.log(selected);
+                }
+            },
+            {
+                title: '按钮222',
+                state: function () {
+                    var s = this;
+                    var selected = s.getSelected();
+                    console.log(selected)
+                    if(selected.length > 1){
+                        return 'disabled';
+                    }
+                },
+                click: function (selected) {
+                    console.log(this);
+                    console.log('click2');
+                    console.log(selected);
+                }
+            },
+        ]
     });
 </script>
 
