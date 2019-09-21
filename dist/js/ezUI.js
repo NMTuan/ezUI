@@ -14012,7 +14012,7 @@ ez.textarea = require('./form/textarea'); //文本域
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bcbcd08e.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_308fa86c.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16595,7 +16595,7 @@ var _list = {
 
         var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
 
-        cell.css('width', '1px');
+        cell.css('width', '46px');
         cell.addClass('ez-text-center');
         cell.html(optionBtn);
         row.append(cell);
@@ -16608,8 +16608,12 @@ var _list = {
 
           cell.html(item.title);
 
+          if (item.width) {
+            cell.css('width', item.width);
+          }
+
           if (item.field === 'drag') {
-            cell.css('width', '1px');
+            cell.css('width', '46px');
             cell.addClass('ez-text-center');
           }
 
@@ -16686,6 +16690,7 @@ var _list = {
           var cell = _list.renderCell(key);
 
           cell.html(value);
+          cell.attr('title', value);
           html.append(cell);
           return false;
         }

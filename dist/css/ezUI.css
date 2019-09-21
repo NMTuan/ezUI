@@ -345,6 +345,12 @@ template {
   clear: both;
 }
 
+.ez-table-list-td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1322,6 +1328,7 @@ body {
   border-collapse: collapse;
   color: #212121;
   background-color: #FFFFFF;
+  table-layout: fixed;
 }
 
 .ez-table-list-head {
@@ -1340,6 +1347,7 @@ body {
   display: table-cell;
   line-height: 34px;
   padding: 4px 15px;
+  overflow: hidden;
 }
 
 .ez-table-list-th {

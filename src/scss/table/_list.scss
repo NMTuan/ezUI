@@ -10,7 +10,7 @@
         border-collapse: collapse;
         color: color('grey', 'd4');
         background-color: color('shades', 'white');
-
+        table-layout: fixed;
     }
 
     &-head {
@@ -35,6 +35,10 @@
         display: table-cell;
         line-height: 34px;
         padding: 4px 15px;
+        overflow: hidden;
+    }
+    &-td {
+        @extend %ellipsis;
     }
 
     &-th {

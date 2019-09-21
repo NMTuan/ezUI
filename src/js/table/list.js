@@ -214,7 +214,7 @@ var list = {
                     optionBtn = s.params.multiple;
                 }
                 var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
-                cell.css('width', '1px');
+                cell.css('width', '46px');
                 cell.addClass('ez-text-center');
                 cell.html(optionBtn);
                 row.append(cell);
@@ -224,8 +224,11 @@ var list = {
                 if (item.field === field) {
                     var cell = list.renderCell(item.field, true);
                     cell.html(item.title);
+                    if(item.width){
+                        cell.css('width', item.width);
+                    }
                     if (item.field === 'drag') {
-                        cell.css('width', '1px');
+                        cell.css('width', '46px');
                         cell.addClass('ez-text-center');
                     }
                     row.append(cell);
@@ -294,6 +297,7 @@ var list = {
                 if (key === field) {
                     var cell = list.renderCell(key);
                     cell.html(value);
+                    cell.attr('title', value);
                     html.append(cell);
                     return false;
                 }
