@@ -48,8 +48,17 @@ var list = {
         s.selectedExistence = function () {
             return list.selectedExistence.apply(s, arguments);
         };
-        s.selectedGetValues = function(key){
+        s.selectedGetValues = function (key) {
             return list.selectedGetValues.call(s, key);
+        };
+        s.allSelect = function () {
+            list.allSelect.call(s);
+        };
+        s.unSelect = function () {
+            list.unSelect.call(s);
+        };
+        s.cancelSelect = function () {
+            list.cancelSelect.call(s);
         };
 
         list.initHideFields.call(s);
@@ -327,7 +336,10 @@ var list = {
     rowSelected: function (row) {
         var s = this;
         $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
-        list.selectedAdd.call(s, $(row).data('id'));
+        var ids = $(row).map(function () {
+            return $(this).data('id');
+        });
+        list.selectedAdd.call(s, ids);
     },
     //取消当前行
     rowUnselected: function (row) {
@@ -341,11 +353,23 @@ var list = {
     //切换选中状态
     rowToggleSelected: function (row) {
         var s = this;
-        if ($(row).hasClass('ez-table-list-active')) {
-            list.rowUnselected.call(s, row);
-        } else {
-            list.rowSelected.call(s, row);
-        }
+        var selected = [];
+        var unSelected = [];
+        $.each(row, function () {
+            if($(this).hasClass('ez-table-list-active')){
+                selected.push(this);
+            } else {
+                unSelected.push(this);
+            }
+        });
+        list.rowSelected.call(s, unSelected);
+        list.rowUnselected.call(s, selected);
+
+        // if ($(row).hasClass('ez-table-list-active')) {
+        //     list.rowUnselected.call(s, row);
+        // } else {
+        //     list.rowSelected.call(s, row);
+        // }
     },
     //销毁
     destory: function () {
@@ -367,11 +391,14 @@ var list = {
         return selected;
     },
     //添加选中
-    selectedAdd: function (dataId) {
-        if (typeof dataId !== 'undefined' && $.inArray(dataId, this.params.selected) < 0) {
-            this.params.selected.push(dataId);
-            list.selectedChanged.call(this);
-        }
+    selectedAdd: function (dataIds) {
+        var s = this;
+        $.each(dataIds, function (i, dataId) {
+            if (typeof dataId !== 'undefined' && $.inArray(dataId, s.params.selected) < 0) {
+                s.params.selected.push(dataId);
+                list.selectedChanged.call(s);
+            }
+        });
     },
     //移除选中
     selectedRemove: function (dataIds) {
@@ -390,8 +417,6 @@ var list = {
         var s = this;
         clearTimeout(delay);
         delay = setTimeout(function () {
-            var selected = list.getSelected.call(s);
-            console.log(s);
             list.renderBtns.call(s);
         }, 100);
     },
@@ -416,7 +441,7 @@ var list = {
         return has;
     },
     //从选中数据中找某字段的值
-    selectedGetValues: function(key){
+    selectedGetValues: function (key) {
         var s = this;
         var values = [];
         var datas = list.getSelected.call(s);
@@ -515,6 +540,18 @@ var list = {
         });
     },
 
+    allSelect: function () {
+        var s = this;
+        list.rowSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
+    },
+    unSelect: function () {
+        var s = this;
+        list.rowToggleSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
+    },
+    cancelSelect: function () {
+        var s = this;
+        list.rowUnselected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
+    },
 };
 
 $.fn.extend({

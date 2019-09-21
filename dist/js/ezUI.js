@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a1d6620c.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f2938b19.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16460,6 +16460,18 @@ var _list = {
       return _list.selectedGetValues.call(s, key);
     };
 
+    s.allSelect = function () {
+      _list.allSelect.call(s);
+    };
+
+    s.unSelect = function () {
+      _list.unSelect.call(s);
+    };
+
+    s.cancelSelect = function () {
+      _list.cancelSelect.call(s);
+    };
+
     _list.initHideFields.call(s);
 
     _list.initSort.call(s);
@@ -16775,8 +16787,11 @@ var _list = {
   rowSelected: function rowSelected(row) {
     var s = this;
     $(row).addClass('ez-table-list-active').find('input').prop('checked', true);
+    var ids = $(row).map(function () {
+      return $(this).data('id');
+    });
 
-    _list.selectedAdd.call(s, $(row).data('id'));
+    _list.selectedAdd.call(s, ids);
   },
   //取消当前行
   rowUnselected: function rowUnselected(row) {
@@ -16791,12 +16806,24 @@ var _list = {
   //切换选中状态
   rowToggleSelected: function rowToggleSelected(row) {
     var s = this;
+    var selected = [];
+    var unSelected = [];
+    $.each(row, function () {
+      if ($(this).hasClass('ez-table-list-active')) {
+        selected.push(this);
+      } else {
+        unSelected.push(this);
+      }
+    });
 
-    if ($(row).hasClass('ez-table-list-active')) {
-      _list.rowUnselected.call(s, row);
-    } else {
-      _list.rowSelected.call(s, row);
-    }
+    _list.rowSelected.call(s, unSelected);
+
+    _list.rowUnselected.call(s, selected); // if ($(row).hasClass('ez-table-list-active')) {
+    //     list.rowUnselected.call(s, row);
+    // } else {
+    //     list.rowSelected.call(s, row);
+    // }
+
   },
   //销毁
   destory: function destory() {
@@ -16820,12 +16847,15 @@ var _list = {
     return selected;
   },
   //添加选中
-  selectedAdd: function selectedAdd(dataId) {
-    if (typeof dataId !== 'undefined' && $.inArray(dataId, this.params.selected) < 0) {
-      this.params.selected.push(dataId);
+  selectedAdd: function selectedAdd(dataIds) {
+    var s = this;
+    $.each(dataIds, function (i, dataId) {
+      if (typeof dataId !== 'undefined' && $.inArray(dataId, s.params.selected) < 0) {
+        s.params.selected.push(dataId);
 
-      _list.selectedChanged.call(this);
-    }
+        _list.selectedChanged.call(s);
+      }
+    });
   },
   //移除选中
   selectedRemove: function selectedRemove(dataIds) {
@@ -16847,10 +16877,6 @@ var _list = {
     var s = this;
     clearTimeout(delay);
     delay = setTimeout(function () {
-      var selected = _list.getSelected.call(s);
-
-      console.log(s);
-
       _list.renderBtns.call(s);
     }, 100);
   },
@@ -16998,6 +17024,21 @@ var _list = {
         item.click.call(s, btn, selected);
       });
     });
+  },
+  allSelect: function allSelect() {
+    var s = this;
+
+    _list.rowSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
+  },
+  unSelect: function unSelect() {
+    var s = this;
+
+    _list.rowToggleSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
+  },
+  cancelSelect: function cancelSelect() {
+    var s = this;
+
+    _list.rowUnselected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
   }
 };
 $.fn.extend({

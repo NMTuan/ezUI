@@ -162,7 +162,7 @@
             </tr>
         </tbody>
     </table>
-    <script>var data=ez.getTable("#gridTable",{remove:!0});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){console.log(arguments);return 0===t.length?"disabled":this.selectedExistence("id",["id_3"])?"disabled":this.selectedExistence("field3",["联通4006","电信4009"])?"primary":void 0},click:function(e,t){var l=this.selectedGetValues("field3");console.log("click1"),console.log(l)}},{title:"按钮222",state:function(e,t){if(0===t.length)return"disabled"},click:function(e,t){console.log("click2")}}]})</script>
+    <script>var data=ez.getTable("#gridTable",{remove:!0});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){return 0===t.length?"disabled":this.selectedExistence("id",["id_3"])?"disabled":this.selectedExistence("field3",["联通4006","电信4009"])?"primary":void 0},click:function(e,t){var l=this.selectedGetValues("field3");console.log("click1"),console.log(l)}},{title:"全选",state:function(e,t){if(console.log(t.length,this.params.data.body.length),t.length===this.params.data.body.length)return"disabled"},click:function(e,t){console.log("click2"),this.allSelect()}},{title:"反选",state:function(e,t){console.log(t.length,this.params.data.body.length)},click:function(e,t){console.log("click2"),this.unSelect()}},{title:"取消",state:function(e,t){if(console.log(t.length,this.params.data.body.length),0===t.length)return"disabled"},click:function(e,t){console.log("click2"),this.cancelSelect()}}]})</script>
     <script></script>
 </body>
 

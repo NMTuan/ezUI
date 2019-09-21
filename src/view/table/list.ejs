@@ -91,7 +91,6 @@
                 title: '按钮111',
                 // className: ['ez-btn-danger', 'ez-btn-sm'],
                 state: function (btn, selected) {
-                    console.log(arguments)
                     var s = this;
                     if(selected.length === 0){
                         return 'disabled';
@@ -112,14 +111,39 @@
                 }
             },
             {
-                title: '按钮222',
+                title: '全选',
                 state: function (btn, selected) {
+                    console.log(selected.length, this.params.data.body.length)
+                    if(selected.length === this.params.data.body.length){
+                        return 'disabled';
+                    }
+                },
+                click: function (btn, selected) {
+                    console.log('click2');
+                    this.allSelect();
+                }
+            },
+            {
+                title: '反选',
+                state: function (btn, selected) {
+                    console.log(selected.length, this.params.data.body.length)
+                },
+                click: function (btn, selected) {
+                    console.log('click2');
+                    this.unSelect();
+                }
+            },
+            {
+                title: '取消',
+                state: function (btn, selected) {
+                    console.log(selected.length, this.params.data.body.length)
                     if(selected.length === 0){
                         return 'disabled';
                     }
                 },
                 click: function (btn, selected) {
                     console.log('click2');
+                    this.cancelSelect();
                 }
             },
         ]
