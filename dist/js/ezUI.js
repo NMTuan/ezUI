@@ -14012,7 +14012,7 @@ ez.textarea = require('./form/textarea'); //文本域
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_c8842949.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_459b4f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16400,6 +16400,10 @@ var _list = {
       return _list.getSort.call(s);
     };
 
+    s.selectedExistence = function () {
+      return _list.selectedExistence.apply(s, arguments);
+    };
+
     _list.initHideFields.call(s);
 
     _list.initSort.call(s);
@@ -16420,9 +16424,6 @@ var _list = {
         _list.rowSelected.call(s, this);
 
         _list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
-
-        $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
-        $(this).find('input').prop('checked', true);
       });
     } //勾选(可多选)
 
@@ -16749,7 +16750,7 @@ var _list = {
   },
   //添加选中
   selectedAdd: function selectedAdd(dataId) {
-    if (dataId) {
+    if (dataId && $.inArray(dataId, this.params.selected) < 0) {
       this.params.selected.push(dataId);
 
       _list.selectedChanged.call(this);
@@ -16779,6 +16780,31 @@ var _list = {
 
       _list.renderBtns.call(s);
     }, 100);
+  },
+  //在选中的数据中找key的值是否等于value
+  selectedExistence: function selectedExistence(key, values) {
+    var s = this;
+    var has = false;
+
+    if (typeof key === 'undefined') {
+      return has;
+    }
+
+    values = values || [];
+
+    if (values.length === 0) {
+      return has;
+    }
+
+    var datas = _list.getSelected.call(s);
+
+    $.each(datas, function (i, item) {
+      if (item[key] && $.inArray(item[key], values) >= 0) {
+        has = true;
+        return false;
+      }
+    });
+    return has;
   },
   //获取顺序
   getSort: function getSort() {
@@ -16832,21 +16858,43 @@ var _list = {
     s.fnEl.empty();
     $.each(s.params.btns, function (i, item) {
       var btn = $('<div>');
-      btn.addClass('ez-btn ez-btn-success');
+      var selected = s.params.selected; //选中数据id;
+      //state false隐藏 disabled禁用 success通过 danger危险
+
+      var state = item.state.call(s, btn, selected);
+      btn.addClass('ez-btn');
       btn.html(item.title);
-      var state = item.state.call(s);
+
+      if (item.className) {
+        $.each(item.className, function () {
+          btn.addClass(this);
+        });
+      }
+
+      if (state === false) {
+        //返回false直接跳过此按钮
+        return;
+      }
+
+      s.fnEl.append(btn);
+      s.fnEl.append(' ');
 
       if (state === 'disabled') {
         btn.addClass('ez-btn-disabled');
+        return;
+      }
+
+      if (state === 'success') {
+        btn.addClass('ez-btn-success');
+      }
+
+      if (state === 'danger') {
+        btn.addClass('ez-btn-danger');
       }
 
       btn.on('click', function () {
-        var selected = _list.getSelected.call(s);
-
-        item.click.call(s, selected);
+        item.click.call(s, btn, selected);
       });
-      s.fnEl.append(btn);
-      s.fnEl.append(' ');
     });
   }
 };

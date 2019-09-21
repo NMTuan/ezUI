@@ -40,6 +40,9 @@ var list = {
         s.getSort = function () {
             return list.getSort.call(s);
         };
+        s.selectedExistence = function () {
+            return list.selectedExistence.apply(s, arguments);
+        };
 
         list.initHideFields.call(s);
         list.initSort.call(s);
@@ -55,8 +58,6 @@ var list = {
             s.el.on('click', '.ez-table-list-body .ez-table-list-row', function () {
                 list.rowSelected.call(s, this);
                 list.rowUnselected.call(s, $(this).siblings('.ez-table-list-active'));
-                $(this).addClass('ez-table-list-active').siblings().removeClass('ez-table-list-active').find('input').prop('checked', false);
-                $(this).find('input').prop('checked', true);
             });
         }
         //勾选(可多选)
@@ -349,7 +350,7 @@ var list = {
     },
     //添加选中
     selectedAdd: function (dataId) {
-        if (dataId) {
+        if (dataId && $.inArray(dataId, this.params.selected) < 0) {
             this.params.selected.push(dataId);
             list.selectedChanged.call(this);
         }
@@ -375,6 +376,26 @@ var list = {
             list.renderBtns.call(s);
         }, 100);
     },
+    //在选中的数据中找key的值是否等于value
+    selectedExistence: function (key, values) {
+        var s = this;
+        var has = false;
+        if (typeof key === 'undefined') {
+            return has;
+        }
+        values = values || [];
+        if (values.length === 0) {
+            return has;
+        }
+        var datas = list.getSelected.call(s);
+        $.each(datas, function (i, item) {
+            if (item[key] && $.inArray(item[key], values) >= 0) {
+                has = true;
+                return false;
+            }
+        });
+        return has;
+    },
     //获取顺序
     getSort: function () {
         var s = this;
@@ -399,36 +420,59 @@ var list = {
     },
 
     //按钮
-    initBtns: function(){
+    initBtns: function () {
         this.fnEl = $('<div>').addClass('ez-table-list-fn');
         this.el.prepend(this.fnEl);
     },
     renderBtns: function () {
         var s = this;
-        if(s.params.btns.length === 0){
+        if (s.params.btns.length === 0) {
             return;
         }
-        if(typeof s.fnEl === 'undefined'){
+        if (typeof s.fnEl === 'undefined') {
             list.initBtns.call(s);
         }
         s.fnEl.empty();
 
-        $.each(s.params.btns,function (i, item) {
+        $.each(s.params.btns, function (i, item) {
             var btn = $('<div>');
-            btn.addClass('ez-btn ez-btn-success');
+            var selected = s.params.selected;  //选中数据id;
+            //state false隐藏 disabled禁用 success通过 danger危险
+            var state = item.state.call(s, btn, selected);
+
+            btn.addClass('ez-btn');
             btn.html(item.title);
-            var state = item.state.call(s);
-            if(state === 'disabled'){
-                btn.addClass('ez-btn-disabled');
+
+            if (item.className) {
+                $.each(item.className, function () {
+                    btn.addClass(this);
+                });
             }
-            btn.on('click', function () {
-                var selected = list.getSelected.call(s);
-                item.click.call(s, selected);
-            });
+
+            if (state === false) {    //返回false直接跳过此按钮
+                return;
+            }
+
             s.fnEl.append(btn);
             s.fnEl.append(' ');
+
+            if (state === 'disabled') {
+                btn.addClass('ez-btn-disabled');
+                return;
+            }
+            if (state === 'success') {
+                btn.addClass('ez-btn-success');
+            }
+            if (state === 'danger') {
+                btn.addClass('ez-btn-danger');
+            }
+
+            btn.on('click', function () {
+                item.click.call(s, btn, selected);
+            });
         });
     },
+
 };
 
 $.fn.extend({

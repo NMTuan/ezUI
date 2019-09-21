@@ -115,29 +115,29 @@ var table = {
         btns: [
             {
                 title: '按钮111',
-                state: function () {
-
+                // className: ['ez-btn-danger', 'ez-btn-sm'],
+                state: function (btn, selected) {
+                    var s = this;
+                    if(s.selectedExistence('id', ['BC1909071014379811'])){
+                        return 'disabled';
+                    }
+                    if(s.selectedExistence('address', ['杭州新增服务器'])){
+                        return 'success';
+                    }
                 },
-                click: function (selected) {
-                    console.log(this);
+                click: function (btn, selected) {
                     console.log('click1');
-                    console.log(selected);
                 }
             },
             {
                 title: '按钮222',
-                state: function () {
-                    var s = this;
-                    var selected = s.getSelected();
-                    console.log(selected)
+                state: function (btn, selected) {
                     if(selected.length > 1){
                         return 'disabled';
                     }
                 },
-                click: function (selected) {
-                    console.log(this);
+                click: function (btn, selected) {
                     console.log('click2');
-                    console.log(selected);
                 }
             },
         ]
