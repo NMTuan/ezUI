@@ -26,3 +26,6 @@ ez.tree = require('./tree/tree');   //树结构
 ez.watermark = require('./watermark/watermark');    //水印
 ez.textarea = require('./form/textarea');   //文本域
 ez.addForm = require('./form/addForm');     //表单中, 添加表单
+
+ez.tableList = require('./table/list'); //表格列表
+ez.getTable = require('./table/getTable');  //抓取表格数据

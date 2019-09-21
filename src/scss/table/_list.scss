@@ -1,0 +1,171 @@
+.ez-table-list {
+    overflow: auto;
+    $table-list: &;
+    $borderColor: color('grey', 'l2');
+
+    &-table {
+        display: table;
+        white-space: nowrap;
+        font-size: 14px;
+        border-collapse: collapse;
+        color: color('grey', 'd4');
+        background-color: color('shades', 'white');
+        //table-layout: fixed;
+    }
+
+    &-head {
+        display: table-header-group;
+    }
+
+    &-body {
+        display: table-row-group;
+    }
+
+    &-row {
+        //width: 100%;
+        display: table-row;
+        &.gu-mirror {
+            //display: table;
+        }
+    }
+
+    &-cell,
+    &-th,
+    &-td {
+        display: table-cell;
+        line-height: 34px;
+        padding: 4px 15px;
+        overflow: hidden;
+    }
+    &-cell-hide {
+        padding: 0 1px 0 0;
+        //padding: 0;
+    }
+    &-td {
+        @extend %ellipsis;
+    }
+
+    &-th {
+        color: color('grey', 'd3');
+        //text-align: left;
+        background-color: color('grey', 'l4');
+        font-weight: bold;
+    }
+
+    &-border {
+        border: 1px solid $borderColor;
+    }
+
+    &-line {
+        #{$table-list} {
+            &-cell,
+            &-th,
+            &-td {
+                border-bottom: 1px solid $borderColor;
+
+                &:last-child {
+                    border-right: 0;
+                }
+            }
+        }
+    }
+
+    &-vline {
+        #{$table-list} {
+            &-cell,
+            &-th,
+            &-td {
+                border-right: 1px solid $borderColor;
+
+                &:last-child {
+                    border-right: 0;
+                }
+            }
+        }
+    }
+
+    &-stripe {
+        #{$table-list}-body {
+            #{$table-list}-row:nth-child(even) {
+                background-color: color('grey', 'l5');
+            }
+        }
+    }
+
+    &-hover {
+        #{$table-list}-body {
+            #{$table-list}-row {
+                &:hover {
+                    #{$table-list}-cell,
+                    #{$table-list}-th,
+                    #{$table-list}-td {
+                        background-color: color('grey', 'l4');
+                    }
+                }
+
+                #{$table-list}-active,
+                &#{$table-list}-active,
+                &#{$table-list}-active:hover {
+                    #{$table-list}-cell,
+                    #{$table-list}-th,
+                    #{$table-list}-td {
+                        background-color: color('grey', 'l4');
+                        //background-color: transparent;
+                        //font-weight: bold;
+                        box-shadow: 0 -1px 0 color('grey', 'l1') inset;
+                    }
+                }
+            }
+        }
+    }
+
+    //表格单元格设定
+    &-selected-disabled {
+        #{$table-list}-body {
+            #{$table-list}-active {
+                color: color('grey', 'l1');
+                text-decoration: line-through;
+            }
+        }
+    }
+
+
+    &-full {
+        width: 100%;
+    }
+
+    &-sm {
+        #{$table-list}-cell,
+        #{$table-list}-th,
+        #{$table-list}-td {
+            line-height: 26px;
+            padding: 3px 10px;
+        }
+    }
+
+    &-xs {
+        #{$table-list}-cell,
+        #{$table-list}-th,
+        #{$table-list}-td {
+            line-height: 20px;
+            padding: 2px 5px;
+            font-size: 12px;
+        }
+    }
+
+    &-lg {
+        #{$table-list}-cell,
+        #{$table-list}-th,
+        #{$table-list}-td {
+            line-height: 42px;
+            padding: 4px 20px;
+        }
+    }
+
+    //按钮
+    &-fn {
+        margin: 8px 0;
+
+    }
+
+}

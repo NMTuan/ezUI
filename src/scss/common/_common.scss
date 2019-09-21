@@ -8,3 +8,10 @@
     }
 }
 
+//溢出隐藏, 显示省略号
+%ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
