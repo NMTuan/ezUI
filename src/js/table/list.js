@@ -48,6 +48,9 @@ var list = {
         s.selectedExistence = function () {
             return list.selectedExistence.apply(s, arguments);
         };
+        s.selectedGetValues = function(key){
+            return list.selectedGetValues.call(s, key);
+        };
 
         list.initHideFields.call(s);
         list.initSort.call(s);
@@ -221,7 +224,7 @@ var list = {
                     var cell = list.renderCell(item.field, true);
                     if ($.inArray(field, s.params.hideFields) < 0) {
                         cell.html(item.title);
-                        if(item.width){
+                        if (item.width) {
                             cell.css('width', item.width);
                         }
                     } else {    //如果隐藏, 显示一条线
@@ -246,6 +249,9 @@ var list = {
         var s = this;
         var html = $('<div>').addClass('ez-table-list-body');
         $.each(s.params.data.body, function (i, item) {
+            if (typeof item.id === 'undefined') {   //没有id就造一个.
+                item.id = 'id_' + i;
+            }
             var row = list.renderRow.call(s, item);
             html.append(row);
         });
@@ -362,7 +368,7 @@ var list = {
     },
     //添加选中
     selectedAdd: function (dataId) {
-        if (dataId && $.inArray(dataId, this.params.selected) < 0) {
+        if (typeof dataId !== 'undefined' && $.inArray(dataId, this.params.selected) < 0) {
             this.params.selected.push(dataId);
             list.selectedChanged.call(this);
         }
@@ -408,6 +414,16 @@ var list = {
             }
         });
         return has;
+    },
+    //从选中数据中找某字段的值
+    selectedGetValues: function(key){
+        var s = this;
+        var values = [];
+        var datas = list.getSelected.call(s);
+        $.each(datas, function (i, item) {
+            values.push(item[key]);
+        });
+        return values;
     },
     //获取顺序
     getSort: function () {

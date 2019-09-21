@@ -89,19 +89,24 @@
                 title: '按钮111',
                 // className: ['ez-btn-danger', 'ez-btn-sm'],
                 state: function (btn, selected) {
+                    console.log(arguments)
                     var s = this;
                     if(selected.length === 0){
                         return 'disabled';
                     }
-                    if(s.selectedExistence('id', ['BC1909071014379811'])){
+                    if(s.selectedExistence('id', ['id_3'])){
                         return 'disabled';
                     }
-                    if(s.selectedExistence('address', ['杭州新增服务器'])){
+                    if(s.selectedExistence('field3', ['联通4006', '电信4009'])){
                         return 'primary';
                     }
                 },
                 click: function (btn, selected) {
+                    var s = this;
+                    var field3 = s.selectedGetValues('field3');
                     console.log('click1');
+                    console.log(field3);
+
                 }
             },
             {

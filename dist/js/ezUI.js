@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9a08a9a5.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4de98500.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16443,6 +16443,10 @@ var _list = {
       return _list.selectedExistence.apply(s, arguments);
     };
 
+    s.selectedGetValues = function (key) {
+      return _list.selectedGetValues.call(s, key);
+    };
+
     _list.initHideFields.call(s);
 
     _list.initSort.call(s);
@@ -16668,6 +16672,11 @@ var _list = {
     var s = this;
     var html = $('<div>').addClass('ez-table-list-body');
     $.each(s.params.data.body, function (i, item) {
+      if (typeof item.id === 'undefined') {
+        //没有id就造一个.
+        item.id = 'id_' + i;
+      }
+
       var row = _list.renderRow.call(s, item);
 
       html.append(row);
@@ -16799,7 +16808,7 @@ var _list = {
   },
   //添加选中
   selectedAdd: function selectedAdd(dataId) {
-    if (dataId && $.inArray(dataId, this.params.selected) < 0) {
+    if (typeof dataId !== 'undefined' && $.inArray(dataId, this.params.selected) < 0) {
       this.params.selected.push(dataId);
 
       _list.selectedChanged.call(this);
@@ -16856,6 +16865,18 @@ var _list = {
       }
     });
     return has;
+  },
+  //从选中数据中找某字段的值
+  selectedGetValues: function selectedGetValues(key) {
+    var s = this;
+    var values = [];
+
+    var datas = _list.getSelected.call(s);
+
+    $.each(datas, function (i, item) {
+      values.push(item[key]);
+    });
+    return values;
   },
   //获取顺序
   getSort: function getSort() {

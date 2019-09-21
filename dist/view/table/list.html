@@ -162,7 +162,7 @@
             </tr>
         </tbody>
     </table>
-    <script>var data=ez.getTable("#gridTable",{});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){return 0===t.length?"disabled":this.selectedExistence("id",["BC1909071014379811"])?"disabled":this.selectedExistence("address",["杭州新增服务器"])?"primary":void 0},click:function(e,t){console.log("click1")}},{title:"按钮222",state:function(e,t){if(0===t.length)return"disabled"},click:function(e,t){console.log("click2")}}]})</script>
+    <script>var data=ez.getTable("#gridTable",{});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){console.log(arguments);return 0===t.length?"disabled":this.selectedExistence("id",["id_3"])?"disabled":this.selectedExistence("field3",["联通4006","电信4009"])?"primary":void 0},click:function(e,t){var l=this.selectedGetValues("field3");console.log("click1"),console.log(l)}},{title:"按钮222",state:function(e,t){if(0===t.length)return"disabled"},click:function(e,t){console.log("click2")}}]})</script>
     <script></script>
 </body>
 
