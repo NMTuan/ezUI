@@ -14012,7 +14012,7 @@ ez.textarea = require('./form/textarea'); //文本域
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
 ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_459b4f.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bcbcd08e.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16375,8 +16375,11 @@ var _list = {
     //多选   false不开启, option增加配置功能, 其它值则直接显示string
     cfgTableLocalstorage: true,
     //本地记录配置
-    btns: [] //操作按钮
-
+    btns: [],
+    //操作按钮
+    btnsClassName: [//按钮默认样式
+    // 'ez-btn-sm',
+    'ez-btn-radius']
   },
   list: function list(els, params) {
     $.each(els, function () {
@@ -16562,7 +16565,8 @@ var _list = {
     var body = _list.renderBody.call(s);
 
     table.append(header).append(body);
-    s.el.empty().append(table);
+    s.el.find('.ez-table-list-table').remove();
+    s.el.append(table);
   },
   //渲染表头
   renderHeader: function renderHeader() {
@@ -16863,6 +16867,7 @@ var _list = {
 
       var state = item.state.call(s, btn, selected);
       btn.addClass('ez-btn');
+      btn.addClass(s.params.btnsClassName.join(' '));
       btn.html(item.title);
 
       if (item.className) {
@@ -16879,17 +16884,33 @@ var _list = {
       s.fnEl.append(btn);
       s.fnEl.append(' ');
 
-      if (state === 'disabled') {
-        btn.addClass('ez-btn-disabled');
-        return;
+      if (state === 'primary') {
+        btn.addClass('ez-btn-primary');
+      }
+
+      if (state === 'secondary') {
+        btn.addClass('ez-btn-secondary');
       }
 
       if (state === 'success') {
         btn.addClass('ez-btn-success');
       }
 
+      if (state === 'warning') {
+        btn.addClass('ez-btn-warning');
+      }
+
       if (state === 'danger') {
         btn.addClass('ez-btn-danger');
+      }
+
+      if (state === 'link') {
+        btn.addClass('ez-btn-link');
+      }
+
+      if (state === 'disabled') {
+        btn.addClass('ez-btn-disabled');
+        return;
       }
 
       btn.on('click', function () {

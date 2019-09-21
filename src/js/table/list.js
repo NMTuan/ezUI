@@ -14,6 +14,7 @@ var list = {
             'ez-table-list-hover',
             'ez-table-list-full',
             'ez-table-list-stripe',
+            // 'ez-table-list-sm'
         ],
         hideFields: [], //列隐藏 [field1, field2]
         sort: [],   //列排序及显示    [field1, field2]
@@ -21,6 +22,10 @@ var list = {
         multiple: false, //多选   false不开启, option增加配置功能, 其它值则直接显示string
         cfgTableLocalstorage: true, //本地记录配置
         btns: [],   //操作按钮
+        btnsClassName: [    //按钮默认样式
+            // 'ez-btn-sm',
+            'ez-btn-radius'
+        ],
     },
     list: function (els, params) {
         $.each(els, function () {
@@ -183,7 +188,8 @@ var list = {
         var header = list.renderHeader.call(s);
         var body = list.renderBody.call(s);
         table.append(header).append(body);
-        s.el.empty().append(table);
+        s.el.find('.ez-table-list-table').remove();
+        s.el.append(table);
     },
     //渲染表头
     renderHeader: function () {
@@ -441,6 +447,7 @@ var list = {
             var state = item.state.call(s, btn, selected);
 
             btn.addClass('ez-btn');
+            btn.addClass(s.params.btnsClassName.join(' '));
             btn.html(item.title);
 
             if (item.className) {
@@ -456,15 +463,27 @@ var list = {
             s.fnEl.append(btn);
             s.fnEl.append(' ');
 
-            if (state === 'disabled') {
-                btn.addClass('ez-btn-disabled');
-                return;
+            if (state === 'primary') {
+                btn.addClass('ez-btn-primary');
+            }
+            if (state === 'secondary') {
+                btn.addClass('ez-btn-secondary');
             }
             if (state === 'success') {
                 btn.addClass('ez-btn-success');
             }
+            if (state === 'warning') {
+                btn.addClass('ez-btn-warning');
+            }
             if (state === 'danger') {
                 btn.addClass('ez-btn-danger');
+            }
+            if (state === 'link') {
+                btn.addClass('ez-btn-link');
+            }
+            if (state === 'disabled') {
+                btn.addClass('ez-btn-disabled');
+                return;
             }
 
             btn.on('click', function () {

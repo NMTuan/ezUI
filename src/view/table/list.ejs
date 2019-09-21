@@ -13,7 +13,7 @@ var table = {
     body: [
         {
             id: 'BC1909090542555642',
-            code: '<a href="#" class="ez-btn">按钮</a>',
+            code: '111111',
             company: '北京几克餐饮管理有限公司【beijingjike】',
             agent: '山东中呼信息科技有限公司【sdzhonghu】',
             site: '杭州电信',
@@ -46,10 +46,6 @@ var table = {
     ]
 }
 %>
-<div class="">
-    <a href="#" class="ez-btn">操作按钮</a>
-</div>
-
 <div id="tableList" class="ez-table-list"></div>
 <script>
     $('#tableList').ez_table_list({
@@ -67,7 +63,7 @@ var table = {
             body: [
                 {
                     id: 'BC1909090542555642',
-                    code: '<a href="#" class="ez-btn">按钮</a>',
+                    code: '111111',
                     company: '北京几克餐饮管理有限公司【beijingjike】',
                     agent: '山东中呼信息科技有限公司【sdzhonghu】',
                     site: '杭州电信',
@@ -118,11 +114,14 @@ var table = {
                 // className: ['ez-btn-danger', 'ez-btn-sm'],
                 state: function (btn, selected) {
                     var s = this;
+                    if(selected.length === 0){
+                        return 'disabled';
+                    }
                     if(s.selectedExistence('id', ['BC1909071014379811'])){
                         return 'disabled';
                     }
                     if(s.selectedExistence('address', ['杭州新增服务器'])){
-                        return 'success';
+                        return 'primary';
                     }
                 },
                 click: function (btn, selected) {
@@ -132,7 +131,7 @@ var table = {
             {
                 title: '按钮222',
                 state: function (btn, selected) {
-                    if(selected.length > 1){
+                    if(selected.length === 0){
                         return 'disabled';
                     }
                 },
