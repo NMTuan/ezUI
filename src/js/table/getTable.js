@@ -1,7 +1,11 @@
 var getTable = {
-    defaults: {},
+    defaults: {
+        hide: false,
+        remove: false
+    },
     getTable: function (el, params) {
         var data = {header: [], body: []};
+        var params = $.extend(true, {}, getTable.defaults, params);
         el = $(el);
 
         //header
@@ -22,6 +26,12 @@ var getTable = {
             });
             data.body.push(item);
         });
+        if(params.hide){
+            el.hide();
+        }
+        if(params.remove){
+            el.remove();
+        }
         return data;
     },
 };

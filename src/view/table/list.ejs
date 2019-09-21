@@ -21,7 +21,9 @@
     </tbody>
 </table>
 <script>
-    var data = ez.getTable('#gridTable', {});
+    var data = ez.getTable('#gridTable', {
+        remove: true
+    });
     console.log(data);
     $('#tableList').ez_table_list({
         data: data,
