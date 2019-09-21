@@ -14011,9 +14011,11 @@ ez.textarea = require('./form/textarea'); //文本域
 
 ez.addForm = require('./form/addForm'); //表单中, 添加表单
 
-ez.tableList = require('./table/list');
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_308fa86c.js","/")
-},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/list":33,"./tabs/tabs":34,"./tree/tree":35,"./watermark/watermark":36,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
+ez.tableList = require('./table/list'); //表格列表
+
+ez.getTable = require('./table/getTable'); //抓取表格数据
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9a08a9a5.js","/")
+},{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -14719,7 +14721,7 @@ $.fn.extend({
 });
 module.exports = select.Select;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/form\\select.js","/form")
-},{"../tree/tree":35,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
+},{"../tree/tree":36,"XJF/FV":7,"buffer":6}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -16349,6 +16351,40 @@ module.exports = _subNav.subNav;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
+var getTable = {
+  defaults: {},
+  getTable: function getTable(el, params) {
+    var data = {
+      header: [],
+      body: []
+    };
+    el = $(el); //header
+
+    el.find('thead th, thead td').each(function (i, item) {
+      data.header.push({
+        field: $(item).data('filed') || 'field' + i,
+        title: $.trim($(item).html())
+      });
+    }); //body
+
+    el.find('tbody tr').each(function (i, tr) {
+      var item = {};
+      $(tr).find('th, td').each(function (i, cell) {
+        var field = $(cell).data('field') || 'field' + i;
+        var title = $.trim($(cell).html());
+        item[field] = title;
+      });
+      data.body.push(item);
+    });
+    return data;
+  }
+};
+module.exports = getTable.getTable;
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/table\\getTable.js","/table")
+},{"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
 var path = location.pathname;
 var delay; //延时
 
@@ -16578,11 +16614,6 @@ var _list = {
 
 
     $.each(s.params.sort, function (i, field) {
-      //如果隐藏, 跳过
-      if ($.inArray(field, s.params.hideFields) >= 0) {
-        return;
-      }
-
       if (field === 'checkbox') {
         var optionBtn = '';
 
@@ -16606,11 +16637,18 @@ var _list = {
         if (item.field === field) {
           var cell = _list.renderCell(item.field, true);
 
-          cell.html(item.title);
+          if ($.inArray(field, s.params.hideFields) < 0) {
+            cell.html(item.title);
 
-          if (item.width) {
-            cell.css('width', item.width);
+            if (item.width) {
+              cell.css('width', item.width);
+            }
+          } else {
+            //如果隐藏, 显示一条线
+            cell.addClass('ez-table-list-cell-hide');
           }
+
+          cell.attr('title', item.title);
 
           if (item.field === 'drag') {
             cell.css('width', '46px');
@@ -16650,11 +16688,7 @@ var _list = {
 
 
     $.each(s.params.sort, function (i, field) {
-      if ($.inArray(field, s.params.hideFields) >= 0) {
-        return;
-      } //构建复选框
-
-
+      //构建复选框
       if (field === 'checkbox') {
         var checkbox = $('<input>').attr({
           type: 'checkbox',
@@ -16689,8 +16723,14 @@ var _list = {
         if (key === field) {
           var cell = _list.renderCell(key);
 
-          cell.html(value);
-          cell.attr('title', value);
+          if ($.inArray(field, s.params.hideFields) < 0) {
+            cell.html(value);
+            cell.attr('title', value);
+          } else {
+            //隐藏数据显示一条线
+            cell.addClass('ez-table-list-cell-hide');
+          }
+
           html.append(cell);
           return false;
         }
@@ -16786,6 +16826,8 @@ var _list = {
     clearTimeout(delay);
     delay = setTimeout(function () {
       var selected = _list.getSelected.call(s);
+
+      console.log(s);
 
       _list.renderBtns.call(s);
     }, 100);
@@ -16933,7 +16975,7 @@ $.fn.extend({
 });
 module.exports = _list.list;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/table\\list.js","/table")
-},{"XJF/FV":7,"buffer":6}],34:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -17002,7 +17044,7 @@ $.fn.extend({
 });
 module.exports = _tabs.tabs;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tabs\\tabs.js","/tabs")
-},{"XJF/FV":7,"buffer":6}],35:[function(require,module,exports){
+},{"XJF/FV":7,"buffer":6}],36:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -17447,7 +17489,7 @@ $.fn.extend({
 });
 module.exports = tree.Tree;
 }).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/tree\\tree.js","/tree")
-},{"../random/random":28,"XJF/FV":7,"buffer":6}],36:[function(require,module,exports){
+},{"../random/random":28,"XJF/FV":7,"buffer":6}],37:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 

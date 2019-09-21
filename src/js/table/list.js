@@ -201,10 +201,6 @@ var list = {
         }
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
-            //如果隐藏, 跳过
-            if ($.inArray(field, s.params.hideFields) >= 0) {
-                return;
-            }
             if (field === 'checkbox') {
                 var optionBtn = '';
                 if (s.params.multiple === 'option') {
@@ -223,10 +219,15 @@ var list = {
             $.each(s.params.data.header, function (i, item) {
                 if (item.field === field) {
                     var cell = list.renderCell(item.field, true);
-                    cell.html(item.title);
-                    if(item.width){
-                        cell.css('width', item.width);
+                    if ($.inArray(field, s.params.hideFields) < 0) {
+                        cell.html(item.title);
+                        if(item.width){
+                            cell.css('width', item.width);
+                        }
+                    } else {    //如果隐藏, 显示一条线
+                        cell.addClass('ez-table-list-cell-hide')
                     }
+                    cell.attr('title', item.title);
                     if (item.field === 'drag') {
                         cell.css('width', '46px');
                         cell.addClass('ez-text-center');
@@ -264,9 +265,6 @@ var list = {
 
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
-            if ($.inArray(field, s.params.hideFields) >= 0) {
-                return;
-            }
             //构建复选框
             if (field === 'checkbox') {
                 var checkbox = $('<input>').attr({
@@ -296,8 +294,12 @@ var list = {
             $.each(data, function (key, value) {
                 if (key === field) {
                     var cell = list.renderCell(key);
-                    cell.html(value);
-                    cell.attr('title', value);
+                    if ($.inArray(field, s.params.hideFields) < 0) {
+                        cell.html(value);
+                        cell.attr('title', value);
+                    } else {    //隐藏数据显示一条线
+                        cell.addClass('ez-table-list-cell-hide')
+                    }
                     html.append(cell);
                     return false;
                 }
@@ -383,6 +385,7 @@ var list = {
         clearTimeout(delay);
         delay = setTimeout(function () {
             var selected = list.getSelected.call(s);
+            console.log(s);
             list.renderBtns.call(s);
         }, 100);
     },

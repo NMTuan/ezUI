@@ -24,166 +24,145 @@
 
 <body>
     <div id="tableList" class="ez-table-list"></div>
-    <script>$("#tableList").ez_table_list({data:{header:[{field:"address",title:"服务器地址"},{field:"id",title:"编号"},{field:"code",title:"服务号"},{field:"company",title:"所属企业"},{field:"agent",title:"所属机构"},{field:"site",title:"归属落地",width:100},{field:"_category",title:"category"},{field:"_type",title:"type"}],body:[{id:"BC1909090542555642",code:"111111",company:"北京几克餐饮管理有限公司【beijingjike】",agent:"山东中呼信息科技有限公司【sdzhonghu】",site:"杭州电信",address:"杭州新增服务器",_category:"A",_type:"1"},{id:"BC1909071014379811",code:"4000661975",company:"山东省菏泽信息工程学校【4000661975】",agent:"山东咕果信息技术有限公司【guguo】",site:"盘锦联通",address:"",_category:"B",_type:"2"},{id:"BC1909060324338145",code:"4009915525",company:"黑龙江厚东科技有限公司【houdongkeji】",agent:"山东中呼信息科技有限公司【sdzhonghu】",site:"杭州电信",address:"杭州新增服务器",_category:"C",_type:"3"},{id:"BC1909060107381625",code:"4006662087",company:"上海克骏文化传播有限公司【kejun】",agent:"山东中呼信息科技有限公司【sdzhonghu】",site:"盘锦联通",address:"盘锦新增服务器",_category:"D",_type:"4"}]},sort:["code","company"],hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){return 0===t.length?"disabled":this.selectedExistence("id",["BC1909071014379811"])?"disabled":this.selectedExistence("address",["杭州新增服务器"])?"primary":void 0},click:function(e,t){console.log("click1")}},{title:"按钮222",state:function(e,t){if(0===t.length)return"disabled"},click:function(e,t){console.log("click2")}}]})</script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <table id="gridTable" class="table text-nowrap table-border table-hover no-margin">
+        <thead>
+            <tr>
+                <th>类型编号</th>
+                <th>分类名称</th>
+                <th>分类模型</th>
+                <th>号段</th>
+                <th>活动月低消</th>
+                <th>标准月低消</th>
+                <th>单次预占天数</th>
+                <th>大网预占天数</th>
+                <th>分类备注</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-key="330">
+                <td>TNC201905221051320001</td>
+                <td>4006_4006AA*AA*</td>
+                <td>B类号码</td>
+                <td>联通4006</td>
+                <td>20000.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>30</td>
+                <td></td>
+                <td>2019-05-22 10:52:42</td>
+            </tr>
+            <tr data-key="329">
+                <td>TNC201905220852210002</td>
+                <td>4009_4009***AAA(尾号非6,8,9)</td>
+                <td>D类号码</td>
+                <td>电信4009</td>
+                <td>3000.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-05-22 08:55:25</td>
+            </tr>
+            <tr data-key="328">
+                <td>TNC201905220852210001</td>
+                <td>4008_4008***AAA(尾号非6,8,9)</td>
+                <td>D类号码</td>
+                <td>电信4008</td>
+                <td>3000.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-05-22 08:54:18</td>
+            </tr>
+            <tr data-key="327">
+                <td>TNC201902122043722019</td>
+                <td>4008_4008***ABC(abc为降序)</td>
+                <td>C类号码</td>
+                <td>电信4008</td>
+                <td>200.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="326">
+                <td>TNC201902122043713506</td>
+                <td>4009_4009***ABC(abc为降序)</td>
+                <td>C类号码</td>
+                <td>电信4009</td>
+                <td>200.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="325">
+                <td>TNC201902122043707837</td>
+                <td>4008_4008***ABC(abc为升序)</td>
+                <td>C类号码</td>
+                <td>电信4008</td>
+                <td>500.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="324">
+                <td>TNC201902122043698560</td>
+                <td>4009_4009***ABC(abc为升序)</td>
+                <td>C类号码</td>
+                <td>电信4009</td>
+                <td>500.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="323">
+                <td>TNC201902122043688321</td>
+                <td>4008_4008****EE(E=6,8,9)</td>
+                <td>C类号码</td>
+                <td>电信4008</td>
+                <td>200.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="322">
+                <td>TNC201902122043671681</td>
+                <td>4009_4009****EE(E=6,8,9)</td>
+                <td>C类号码</td>
+                <td>电信4009</td>
+                <td>200.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+            <tr data-key="321">
+                <td>TNC201902122043662695</td>
+                <td>4008_4008**ABBA</td>
+                <td>C类号码</td>
+                <td>电信4008</td>
+                <td>200.00</td>
+                <td><span class="text-red">0.00</span></td>
+                <td>14</td>
+                <td>40</td>
+                <td></td>
+                <td>2019-02-12 17:42:00</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>var data=ez.getTable("#gridTable",{});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{title:"按钮111",state:function(e,t){return 0===t.length?"disabled":this.selectedExistence("id",["BC1909071014379811"])?"disabled":this.selectedExistence("address",["杭州新增服务器"])?"primary":void 0},click:function(e,t){console.log("click1")}},{title:"按钮222",state:function(e,t){if(0===t.length)return"disabled"},click:function(e,t){console.log("click2")}}]})</script>
     <script></script>
 </body>
 
