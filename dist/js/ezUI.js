@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e7aad340.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_46f4843.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -15195,7 +15195,7 @@ var _headlines = {
     el.html(_headlines.tpl());
 
     if (_headlines.params.close) {
-      el.prepend('<i class="eza headlines-close remixicon-close-circle-fill"></i>');
+      el.prepend('<i class="ez-headlines-close remixicon-close-circle-fill"></i>');
     }
 
     _headlines.show();
@@ -15367,9 +15367,9 @@ var _iframeTabs = {
     } //每次切换，重置当前iframe高度。
 
 
-    var iframe = _iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
+    var iframe = _iframeTabs.params.contentEl.find('iframe, .ez').eq(index);
 
-    iframe.show().siblings('iframe, .eza').hide();
+    iframe.show().siblings('iframe, .ez').hide();
     iframe.renderHeight();
   },
   //高亮当前菜单
@@ -15453,7 +15453,7 @@ var _iframeTabs = {
       var parentName = li.data('parent');
       li.remove();
 
-      _iframeTabs.params.contentEl.find('iframe, .eza').eq(index).remove();
+      _iframeTabs.params.contentEl.find('iframe, .ez').eq(index).remove();
 
       _iframeTabs.urls.splice($.inArray(url, _iframeTabs.urls), 1); //移除urls里的记录。
       //如果关闭高亮标签，如果有父窗口，则高亮父窗口，否则高亮上一个，
@@ -15511,7 +15511,7 @@ var _iframeTabs = {
       var index = _iframeTabs.params.headerEl.find('li.current').index();
     }
 
-    var iframe = _iframeTabs.params.contentEl.find('iframe, .eza').eq(index);
+    var iframe = _iframeTabs.params.contentEl.find('iframe, .ez').eq(index);
 
     if (iframe.length === 0) {
       return;
@@ -15561,7 +15561,7 @@ var _iframeTabs = {
       }
     });
 
-    _iframeTabs.params.contentEl.find('iframe, .eza').renderHeight(); //菜单绑定
+    _iframeTabs.params.contentEl.find('iframe, .ez').renderHeight(); //菜单绑定
 
 
     el.on('click', function () {

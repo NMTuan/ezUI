@@ -1,5 +1,5 @@
 //临时
-.ez.role {
+.ez-role {
     $role: &;
     width: 100%;
     margin: 0;
@@ -12,7 +12,7 @@
     line-height: 1;
     background-color: color('shades', 'white');
     flex: 1;
-    .role {
+    .ez-role {
         border-width: 0;
     }
     &-item {

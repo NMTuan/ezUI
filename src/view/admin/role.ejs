@@ -1,9 +1,9 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
-<div class="ez sidebar sidebar-left" style="width: 260px;">
+<div class="ez-sidebar ez-sidebar-left" style="width: 260px;">
     <%- include('../compoents/_menuTree.ejs'); %>
 </div>
-<div class="ez container">
+<div class="ez-container">
     <%
     var role = [
         {
@@ -106,16 +106,16 @@
     ];
     %>
     <% var render_role = function (data) { %>
-        <ul class="ez role">
+        <ul class="ez-role">
             <% data.forEach(function(item, i){ %>
-                <li class="ez role-item">
+                <li class="ez-role-item">
                     <label>
-                        <span class="ez role-bar">
+                        <span class="ez-role-bar">
                         <i class="remixicon-add-box-line"></i>
                         <i class="remixicon-edit-box-line"></i>
                         <i class="remixicon-delete-bin-7-line"></i>
                         </span>
-                        <span class="ez role-name">
+                        <span class="ez-role-name">
                             <input type="checkbox"
                                    name=""<%- typeof item.checked !== 'undefined' && item.checked ? ' checked="checked"' : '' %>>
                             <%- item.name %>
@@ -133,8 +133,8 @@
 
 </div>
 <script>
-    $('.ez.container').fixedContainer();
-    $('.role').role();
+    $('.ez-container').fixedContainer();
+    $('.ez-role').role();
 </script>
 
 
