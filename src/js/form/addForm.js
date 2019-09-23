@@ -6,7 +6,7 @@ var addForm = {
         btn: ['确定', '取消'],
         multiple: true,  //多选
         template: '{title}', //item中展示的内容
-        cursor: '', //item鼠标样式 ez-cursor-x
+        cursor: 'pointer', //item鼠标样式 ez-cursor-x
     },
     addForm: function (els, params) {
         $.each(els, function () {
@@ -34,24 +34,24 @@ var addForm = {
     },
     events: function () {
         var s = this;
+        //点击添加
         s.el.on('click', function () {
-            layer.open({
-                type: 2,
-                title: s.params.title,
-                content: s.params.url,
-                area: s.params.area,
-                btn: s.params.btn,
-                yes: function (index) {
-                    var formData = addForm.getFormData(index);
-                    addForm.addData.call(s, formData);
-                    layer.close(index);
-                }
-            });
+            addForm.popForm.call(s);
         });
-        s.el.parent().on('click', '.ez-form-label-remove', function () {
-            var id = $(this).data('_id');
+        //点击编辑
+        s.el.parent().on('click', '.ez-form-label', function () {
+            var datas = $(this).data();
+            var dataStr = $.map(datas, function (value, key) {
+                return key + '=' + value;
+            }).join('&');
+            addForm.popForm.call(s, dataStr);
+        });
+        //点击删除
+        s.el.parent().on('click', '.ez-form-label-remove', function (e) {
+            e.stopPropagation();
+            var _id = $(this).data('_id');
             layer.confirm('确定要移除么?', function (index) {
-                addForm.removeData.call(s, id);
+                addForm.removeData.call(s, _id);
                 layer.close(index);
             });
         });
@@ -99,7 +99,11 @@ var addForm = {
         if (!s.params.multiple) {
             s.data = [];
         }
-        s.data.push(data);
+        if(data._id){
+            s.data.splice(data._id, 1, data);
+        } else {
+            s.data.push(data);
+        }
         addForm.renderItem.call(s);
     },
     removeData: function (id) {
@@ -151,6 +155,23 @@ var addForm = {
         //给input赋值
         $.each(inputValues, function (key, value) {
             s.el.parent().find('input[name="' + key + '"]').val(value.join(','));
+        });
+    },
+    //弹窗表单
+    popForm: function (dataStr) {
+        var s = this;
+        var url = dataStr ? s.params.url + '?' + dataStr : s.params.url;
+        layer.open({
+            type: 2,
+            title: s.params.title,
+            content: url,
+            area: s.params.area,
+            btn: s.params.btn,
+            yes: function (index) {
+                var formData = addForm.getFormData(index);
+                addForm.addData.call(s, formData);
+                layer.close(index);
+            }
         });
     }
 };

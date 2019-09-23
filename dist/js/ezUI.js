@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f2938b19.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_af3fbcfb.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14068,7 +14068,7 @@ var _addForm = {
     //多选
     template: '{title}',
     //item中展示的内容
-    cursor: '' //item鼠标样式 ez-cursor-x
+    cursor: 'pointer' //item鼠标样式 ez-cursor-x
 
   },
   addForm: function addForm(els, params) {
@@ -14100,27 +14100,28 @@ var _addForm = {
     });
   },
   events: function events() {
-    var s = this;
+    var s = this; //点击添加
+
     s.el.on('click', function () {
-      layer.open({
-        type: 2,
-        title: s.params.title,
-        content: s.params.url,
-        area: s.params.area,
-        btn: s.params.btn,
-        yes: function yes(index) {
-          var formData = _addForm.getFormData(index);
+      _addForm.popForm.call(s);
+    }); //点击编辑
 
-          _addForm.addData.call(s, formData);
+    s.el.parent().on('click', '.ez-form-label', function () {
+      var datas = $(this).data();
+      var dataStr = $.map(datas, function (value, key) {
+        return key + '=' + value;
+      }).join('&');
 
-          layer.close(index);
-        }
-      });
-    });
-    s.el.parent().on('click', '.ez-form-label-remove', function () {
-      var id = $(this).data('_id');
+      _addForm.popForm.call(s, dataStr);
+    }); //点击删除
+
+    s.el.parent().on('click', '.ez-form-label-remove', function (e) {
+      e.stopPropagation();
+
+      var _id = $(this).data('_id');
+
       layer.confirm('确定要移除么?', function (index) {
-        _addForm.removeData.call(s, id);
+        _addForm.removeData.call(s, _id);
 
         layer.close(index);
       });
@@ -14177,7 +14178,11 @@ var _addForm = {
       s.data = [];
     }
 
-    s.data.push(data);
+    if (data._id) {
+      s.data.splice(data._id, 1, data);
+    } else {
+      s.data.push(data);
+    }
 
     _addForm.renderItem.call(s);
   },
@@ -14245,6 +14250,25 @@ var _addForm = {
 
     $.each(inputValues, function (key, value) {
       s.el.parent().find('input[name="' + key + '"]').val(value.join(','));
+    });
+  },
+  //弹窗表单
+  popForm: function popForm(dataStr) {
+    var s = this;
+    var url = dataStr ? s.params.url + '?' + dataStr : s.params.url;
+    layer.open({
+      type: 2,
+      title: s.params.title,
+      content: url,
+      area: s.params.area,
+      btn: s.params.btn,
+      yes: function yes(index) {
+        var formData = _addForm.getFormData(index);
+
+        _addForm.addData.call(s, formData);
+
+        layer.close(index);
+      }
     });
   }
 };
