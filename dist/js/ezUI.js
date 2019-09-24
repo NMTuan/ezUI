@@ -13757,10 +13757,10 @@ var audioPlayer = {
   //播放器
   template: function template() {
     var el = $("<div>");
-    el.attr('class', 'ez audio-player');
-    var html = '' + '<div class="ez audio-player-header layui-clear">' + '<div id="audio_title" class="ez audio-player-title">播放器</div>' + '</div>' + '<table class="ez audio-player-wave">' + '<tr>' + '<td width="12"></td>' + '<td class="waveform"></td>' + '<td width="12"></td>' + '</tr>' + '</table>' + '<div class="ez audio-player-ctrl">' + '<div id="audio_play" class="ez audio-player-play"><i class="fa fa-play"></i></div>' + '<div id="audio_pause" class="ez audio-player-pause"><i class="fa fa-pause"></i></div>' + '<div id="audio_refresh" class="ez audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' + '<div id="audio_loading" class="ez audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' + '<div id="audio_volume" class="ez audio-player-volume">' + '<i class="fa fa-volume-down"></i>' + '<span>100%</span>' + '<i class="fa fa-volume-up"></i>' + '</div>' + // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
+    el.attr('class', 'ez-audio-player');
+    var html = '' + '<div class="ez-audio-player-header layui-clear">' + '<div id="audio_title" class="ez-audio-player-title">播放器</div>' + '</div>' + '<table class="ez-audio-player-wave">' + '<tr>' + '<td width="12"></td>' + '<td class="waveform"></td>' + '<td width="12"></td>' + '</tr>' + '</table>' + '<div class="ez-audio-player-ctrl">' + '<div id="audio_play" class="ez-audio-player-play"><i class="fa fa-play"></i></div>' + '<div id="audio_pause" class="ez-audio-player-pause"><i class="fa fa-pause"></i></div>' + '<div id="audio_refresh" class="ez-audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' + '<div id="audio_loading" class="ez-audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' + '<div id="audio_volume" class="ez-audio-player-volume">' + '<i class="fa fa-volume-down"></i>' + '<span>100%</span>' + '<i class="fa fa-volume-up"></i>' + '</div>' + // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
     // '<div id="audio_volume-bar" class="ez audio-player-volume-bar demo-slider"></div>' +
-    '<div class="ez audio-player-time">' + '<span id="audio_time_current" class="ez audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez audio-player-time_duration">00:00</span>' + '</div>' + '</div>' + '<i id="audio_close" class="ez audio-player-close remixicon-close-line"></i>' + '' + '';
+    '<div class="ez-audio-player-time">' + '<span id="audio_time_current" class="ez-audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez-audio-player-time_duration">00:00</span>' + '</div>' + '</div>' + '<i id="audio_close" class="ez-audio-player-close remixicon-close-line"></i>' + '' + '';
     el.append(html);
     audioPlayer.player = el;
     return el;
@@ -13795,7 +13795,7 @@ var audioPlayer = {
       $('body').append(audioPlayer.template()); //拖拽
 
       audioPlayer.player.draggabilly({
-        handle: '.audio-player-header',
+        handle: '.ez-audio-player-header',
         containment: 'html'
       }); //初始位置
 
@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d5048090.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_501e57fd.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -15675,8 +15675,8 @@ var imageView = {
 
   },
   windowTpl: function windowTpl() {
-    var el = $('<div>').attr('class', 'ez image-view');
-    var html = '' + '<div class="ez image-view-head"></div>' + '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' + '<div class="ez image-view-bar">' + '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<i class="ez image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' + '<i class="ez image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' + '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez image-view-foot">' + '<i class="ez image-view-resize"></i>' + '</div>' + '';
+    var el = $('<div>').attr('class', 'ez-image-view');
+    var html = '' + '<div class="ez-image-view-head"></div>' + '<i class="ez-image-view-close ez-image-view-icon remixicon-close-line"></i>' + '<div class="ez-image-view-bar">' + '<i class="ez-image-view-prev ez-image-view-icon remixicon-skip-back-line"></i>' + '<i class="ez-image-view-rotate ez-image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' + '<i class="ez-image-view-rotate ez-image-view-icon remixicon-clockwise-line" data-dir="left"></i>' + '<i class="ez-image-view-next ez-image-view-icon remixicon-skip-forward-line"></i>' + '</div>' + '<i class="ez-image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' + '<i class="ez-image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' + '<table class="ez-image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' + '<div class="ez-image-view-foot">' + '<i class="ez-image-view-resize"></i>' + '</div>' + '';
     el.append(html);
     return el;
   },
@@ -15722,7 +15722,7 @@ var imageView = {
   },
   //设置窗口大小
   viewResizeDrag: function viewResizeDrag(el) {
-    var resizeBtn = el.find('.image-view-resize');
+    var resizeBtn = el.find('.ez-image-view-resize');
     var fixed = imageView.fixedIframe();
     var width, height, x, y;
 
@@ -15803,24 +15803,24 @@ var imageView = {
 
 
     el.find('img').remove();
-    el.find('.image-view-error').hide(); //2.显示loading
+    el.find('.ez-image-view-error').hide(); //2.显示loading
 
-    el.find('.image-view-loading').show(); //3.loading img
+    el.find('.ez-image-view-loading').show(); //3.loading img
 
     imageView.imageCreate(src, function (error, img) {
-      el.find('.image-view-loading').hide();
+      el.find('.ez-image-view-loading').hide();
 
       if (title) {
-        el.find('.image-view-head').html(title);
+        el.find('.ez-image-view-head').html(title);
       }
 
       if (error) {
-        el.find('.image-view-error').show();
+        el.find('.ez-image-view-error').show();
         return;
       }
 
-      el.find('.image-view-body td').append(img);
-      el.find('.image-view-body').css({
+      el.find('.ez-image-view-body td').append(img);
+      el.find('.ez-image-view-body').css({
         top: 0,
         left: 0
       });
@@ -15946,13 +15946,13 @@ var imageView = {
     }); //窗口拖拽
 
     el.draggabilly({
-      handle: '.image-view-head',
+      handle: '.ez-image-view-head',
       containment: 'html'
     }); //初始位置
 
     el.draggabilly('setPosition', 100, 100); //图片拖拽
 
-    el.find('.image-view-body').draggabilly({
+    el.find('.ez-image-view-body').draggabilly({
       contrainment: true
     }); //鼠标按下，调整当前窗口在其它窗口上面
 
@@ -15961,7 +15961,7 @@ var imageView = {
       $(this).css('z-index', params.zIndex + 1);
     }); //关闭
 
-    el.find('.image-view-close').on('click', function () {
+    el.find('.ez-image-view-close').on('click', function () {
       imageView.viewClose(el);
     }); //滚动缩放
 
@@ -15971,15 +15971,15 @@ var imageView = {
       imageView.scale($(this), e.deltaY > 0 ? 0.2 : -0.2);
     }); //旋转
 
-    el.find('.image-view-rotate').on('click', function () {
+    el.find('.ez-image-view-rotate').on('click', function () {
       var dir = $(this).data('dir') ? $(this).data('dir') : 'right';
       imageView.rotate(el.find('img'), dir);
     }); //翻页
 
-    el.find('.image-view-next, .image-view-prev').on('click', function () {
+    el.find('.ez-image-view-next, .ez-image-view-prev').on('click', function () {
       var index = el.data('index');
 
-      if ($(this).hasClass('image-view-next')) {
+      if ($(this).hasClass('ez-image-view-next')) {
         index++;
       } else {
         index--;

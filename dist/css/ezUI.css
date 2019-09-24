@@ -1435,7 +1435,7 @@ body {
   margin: 8px 0;
 }
 
-.ez.image-view {
+.ez-image-view {
   overflow: hidden;
   border: 1px solid #9e9e9e;
   border-radius: 2px;
@@ -1444,12 +1444,12 @@ body {
   user-select: none;
 }
 
-.ez.image-view img {
+.ez-image-view img {
   display: block;
   margin: 0 auto;
 }
 
-.ez.image-view-close {
+.ez-image-view-close {
   width: 32px;
   height: 32px;
   line-height: 32px;
@@ -1465,11 +1465,11 @@ body {
   cursor: pointer;
 }
 
-.ez.image-view-close:hover {
+.ez-image-view-close:hover {
   color: #F44336;
 }
 
-.ez.image-view-head {
+.ez-image-view-head {
   height: 32px;
   overflow: hidden;
   line-height: 32px;
@@ -1483,7 +1483,7 @@ body {
   color: #616161;
 }
 
-.ez.image-view-body {
+.ez-image-view-body {
   width: 100%;
   height: 100%;
   border: 0;
@@ -1493,18 +1493,18 @@ body {
   left: 0;
 }
 
-.ez.image-view-body td {
+.ez-image-view-body td {
   padding: 0;
   text-align: center;
   vertical-align: middle;
 }
 
-.ez.image-view-body img {
+.ez-image-view-body img {
   display: block;
   cursor: move;
 }
 
-.ez.image-view-bar {
+.ez-image-view-bar {
   background-color: #f5f5f5;
   border-bottom: 0;
   width: 200px;
@@ -1517,7 +1517,7 @@ body {
   bottom: 0;
 }
 
-.ez.image-view-bar i {
+.ez-image-view-bar i {
   float: left;
   width: 40px;
   height: 40px;
@@ -1528,11 +1528,11 @@ body {
   cursor: pointer;
 }
 
-.ez.image-view-bar i:hover {
+.ez-image-view-bar i:hover {
   background-color: #e0e0e0;
 }
 
-.ez.image-view-foot {
+.ez-image-view-foot {
   width: 0;
   height: 0;
   border: 7px solid #9e9e9e;
@@ -1544,7 +1544,7 @@ body {
   z-index: 10;
 }
 
-.ez.image-view-resize {
+.ez-image-view-resize {
   width: 0;
   height: 0;
   overflow: hidden;
@@ -1557,12 +1557,12 @@ body {
   bottom: -7px;
 }
 
-.ez.image-view-resize:hover {
+.ez-image-view-resize:hover {
   border-right-color: #9e9e9e;
   border-bottom-color: #9e9e9e;
 }
 
-.ez.image-view-loading {
+.ez-image-view-loading {
   display: none;
   margin: -24px 0 0 -24px;
   color: #e0e0e0;
@@ -1572,7 +1572,7 @@ body {
   left: 50%;
 }
 
-.ez.image-view-error {
+.ez-image-view-error {
   display: none;
   width: 90px;
   height: 84px;
@@ -1585,14 +1585,14 @@ body {
   left: 50%;
 }
 
-.ez.image-view-error span {
+.ez-image-view-error span {
   display: block;
   font-size: 18px;
   line-height: 2;
   color: #757575;
 }
 
-.ez.audio-player {
+.ez-audio-player {
   background-color: #383c48;
   width: 500px;
   height: 138px;
@@ -1603,7 +1603,7 @@ body {
   user-select: none;
 }
 
-.ez.audio-player-header {
+.ez-audio-player-header {
   color: #c1c2c6;
   height: 28px;
   line-height: 28px;
@@ -1613,17 +1613,17 @@ body {
   cursor: move;
 }
 
-.ez.audio-player-wave {
+.ez-audio-player-wave {
   border-top: 1px solid #434959;
   height: 80px;
   width: 100%;
 }
 
-.ez.audio-player-wave wave {
+.ez-audio-player-wave wave {
   cursor: pointer;
 }
 
-.ez.audio-player-ctrl {
+.ez-audio-player-ctrl {
   height: 28px;
   background-color: #2d313c;
   box-shadow: 0 0 100px #000;
@@ -1632,7 +1632,7 @@ body {
   text-align: center;
 }
 
-.ez.audio-player-play, .ez.audio-player-pause, .ez.audio-player-loading, .ez.audio-player-refresh {
+.ez-audio-player-play, .ez-audio-player-pause, .ez-audio-player-loading, .ez-audio-player-refresh {
   display: block;
   padding: 12px;
   background-color: #1e88e5;
@@ -1646,11 +1646,11 @@ body {
   z-index: 100;
 }
 
-.ez.audio-player-play:hover, .ez.audio-player-pause:hover, .ez.audio-player-loading:hover, .ez.audio-player-refresh:hover {
+.ez-audio-player-play:hover, .ez-audio-player-pause:hover, .ez-audio-player-loading:hover, .ez-audio-player-refresh:hover {
   background-color: #1e88e5;
 }
 
-.ez.audio-player-play .fa, .ez.audio-player-pause .fa, .ez.audio-player-loading .fa, .ez.audio-player-refresh .fa {
+.ez-audio-player-play .fa, .ez-audio-player-pause .fa, .ez-audio-player-loading .fa, .ez-audio-player-refresh .fa {
   width: 14px;
   height: 14px;
   overflow: hidden;
@@ -1658,7 +1658,7 @@ body {
   line-height: 1;
 }
 
-.ez.audio-player-volume {
+.ez-audio-player-volume {
   border: 1px solid #434959;
   border-radius: 2px;
   line-height: 18px;
@@ -1668,36 +1668,36 @@ body {
   left: 12px;
 }
 
-.ez.audio-player-volume i, .ez.audio-player-volume span {
+.ez-audio-player-volume i, .ez-audio-player-volume span {
   float: left;
   line-height: 18px;
 }
 
-.ez.audio-player-volume i {
+.ez-audio-player-volume i {
   font-size: 12px;
   padding: 0 4px;
   cursor: pointer;
 }
 
-.ez.audio-player-volume i:hover {
+.ez-audio-player-volume i:hover {
   color: #1e88e5;
 }
 
-.ez.audio-player-volume span {
+.ez-audio-player-volume span {
   width: 50px;
   text-align: center;
   border: 1px solid #434959;
   border-width: 0 1px;
 }
 
-.ez.audio-player-time {
+.ez-audio-player-time {
   position: absolute;
   top: 6px;
   right: 12px;
   color: #93959b;
 }
 
-.ez.audio-player-close {
+.ez-audio-player-close {
   cursor: pointer;
   padding: 5px;
   color: #93959b;
@@ -1706,7 +1706,7 @@ body {
   right: 0;
 }
 
-.ez.audio-player-close:hover {
+.ez-audio-player-close:hover {
   color: #1e88e5;
 }
 

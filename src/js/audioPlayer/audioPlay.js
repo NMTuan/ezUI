@@ -8,35 +8,35 @@ var audioPlayer = {
     player: null,   //播放器
     template: function () {
         var el = $("<div>");
-        el.attr('class', 'ez audio-player');
+        el.attr('class', 'ez-audio-player');
         var html = '' +
-            '<div class="ez audio-player-header layui-clear">' +
-            '<div id="audio_title" class="ez audio-player-title">播放器</div>' +
+            '<div class="ez-audio-player-header layui-clear">' +
+            '<div id="audio_title" class="ez-audio-player-title">播放器</div>' +
             '</div>' +
-            '<table class="ez audio-player-wave">' +
+            '<table class="ez-audio-player-wave">' +
             '<tr>' +
             '<td width="12"></td>' +
             '<td class="waveform"></td>' +
             '<td width="12"></td>' +
             '</tr>' +
             '</table>' +
-            '<div class="ez audio-player-ctrl">' +
-            '<div id="audio_play" class="ez audio-player-play"><i class="fa fa-play"></i></div>' +
-            '<div id="audio_pause" class="ez audio-player-pause"><i class="fa fa-pause"></i></div>' +
-            '<div id="audio_refresh" class="ez audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' +
-            '<div id="audio_loading" class="ez audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' +
-            '<div id="audio_volume" class="ez audio-player-volume">' +
+            '<div class="ez-audio-player-ctrl">' +
+            '<div id="audio_play" class="ez-audio-player-play"><i class="fa fa-play"></i></div>' +
+            '<div id="audio_pause" class="ez-audio-player-pause"><i class="fa fa-pause"></i></div>' +
+            '<div id="audio_refresh" class="ez-audio-player-refresh"><i class="fa fa-sync-alt"></i></div>' +
+            '<div id="audio_loading" class="ez-audio-player-loading"><i class="fas fa-spinner fa-pulse"></i></div>' +
+            '<div id="audio_volume" class="ez-audio-player-volume">' +
             '<i class="fa fa-volume-down"></i>' +
             '<span>100%</span>' +
             '<i class="fa fa-volume-up"></i>' +
             '</div>' +
             // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
             // '<div id="audio_volume-bar" class="ez audio-player-volume-bar demo-slider"></div>' +
-            '<div class="ez audio-player-time">' +
-            '<span id="audio_time_current" class="ez audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez audio-player-time_duration">00:00</span>' +
+            '<div class="ez-audio-player-time">' +
+            '<span id="audio_time_current" class="ez-audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez-audio-player-time_duration">00:00</span>' +
             '</div>' +
             '</div>' +
-            '<i id="audio_close" class="ez audio-player-close remixicon-close-line"></i>' +
+            '<i id="audio_close" class="ez-audio-player-close remixicon-close-line"></i>' +
             '' +
             '';
         el.append(html);
@@ -73,7 +73,7 @@ var audioPlayer = {
             $('body').append(audioPlayer.template());
             //拖拽
             audioPlayer.player.draggabilly({
-                handle: '.audio-player-header',
+                handle: '.ez-audio-player-header',
                 containment: 'html'
             });
             //初始位置

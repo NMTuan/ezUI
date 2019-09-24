@@ -11,21 +11,21 @@ var imageView = {
         height: 480,    //默认高度
     },
     windowTpl: function () {
-        var el = $('<div>').attr('class', 'ez image-view');
+        var el = $('<div>').attr('class', 'ez-image-view');
         var html = '' +
-            '<div class="ez image-view-head"></div>' +
-            '<i class="ez image-view-close image-view-icon remixicon-close-line"></i>' +
-            '<div class="ez image-view-bar">' +
-            '<i class="ez image-view-prev image-view-icon remixicon-skip-back-line"></i>' +
-            '<i class="ez image-view-rotate image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' +
-            '<i class="ez image-view-rotate image-view-icon remixicon-clockwise-line" data-dir="left"></i>' +
-            '<i class="ez image-view-next image-view-icon remixicon-skip-forward-line"></i>' +
+            '<div class="ez-image-view-head"></div>' +
+            '<i class="ez-image-view-close ez-image-view-icon remixicon-close-line"></i>' +
+            '<div class="ez-image-view-bar">' +
+            '<i class="ez-image-view-prev ez-image-view-icon remixicon-skip-back-line"></i>' +
+            '<i class="ez-image-view-rotate ez-image-view-icon remixicon-anticlockwise-line" data-dir="right"></i>' +
+            '<i class="ez-image-view-rotate ez-image-view-icon remixicon-clockwise-line" data-dir="left"></i>' +
+            '<i class="ez-image-view-next ez-image-view-icon remixicon-skip-forward-line"></i>' +
             '</div>' +
-            '<i class="ez image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' +
-            '<i class="ez image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' +
-            '<table class="ez image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' +
-            '<div class="ez image-view-foot">' +
-            '<i class="ez image-view-resize"></i>' +
+            '<i class="ez-image-view-loading remixicon-loader-2-line ri-3x fa-spin"></i>' +
+            '<i class="ez-image-view-error remixicon-landscape-line ri-3x"> <span>未找到图片</span></i>' +
+            '<table class="ez-image-view-body"><tr><td align="center" valign="middle"></td></tr></table>' +
+            '<div class="ez-image-view-foot">' +
+            '<i class="ez-image-view-resize"></i>' +
             '</div>' +
             '';
         el.append(html);
@@ -71,7 +71,7 @@ var imageView = {
     },
     //设置窗口大小
     viewResizeDrag: function (el) {
-        var resizeBtn = el.find('.image-view-resize');
+        var resizeBtn = el.find('.ez-image-view-resize');
         var fixed = imageView.fixedIframe();
         var width, height, x, y;
         var down = function (e) {
@@ -147,21 +147,21 @@ var imageView = {
         }
         //1.清除原图, 清楚error
         el.find('img').remove();
-        el.find('.image-view-error').hide();
+        el.find('.ez-image-view-error').hide();
         //2.显示loading
-        el.find('.image-view-loading').show();
+        el.find('.ez-image-view-loading').show();
         //3.loading img
         imageView.imageCreate(src, function (error, img) {
-            el.find('.image-view-loading').hide();
+            el.find('.ez-image-view-loading').hide();
             if (title) {
-                el.find('.image-view-head').html(title);
+                el.find('.ez-image-view-head').html(title);
             }
             if (error) {
-                el.find('.image-view-error').show();
+                el.find('.ez-image-view-error').show();
                 return;
             }
-            el.find('.image-view-body td').append(img);
-            el.find('.image-view-body').css({top: 0, left: 0});
+            el.find('.ez-image-view-body td').append(img);
+            el.find('.ez-image-view-body').css({top: 0, left: 0});
             imageView.imageResize(el, img);
         });
         //4.移除loading
@@ -266,7 +266,7 @@ var imageView = {
 
         //窗口拖拽
         el.draggabilly({
-            handle: '.image-view-head',
+            handle: '.ez-image-view-head',
             containment: 'html'
         });
 
@@ -274,7 +274,7 @@ var imageView = {
         el.draggabilly('setPosition', 100, 100);
 
         //图片拖拽
-        el.find('.image-view-body').draggabilly({
+        el.find('.ez-image-view-body').draggabilly({
             contrainment: true
         });
 
@@ -285,7 +285,7 @@ var imageView = {
         });
 
         //关闭
-        el.find('.image-view-close').on('click', function () {
+        el.find('.ez-image-view-close').on('click', function () {
             imageView.viewClose(el);
         });
 
@@ -297,14 +297,14 @@ var imageView = {
         });
 
         //旋转
-        el.find('.image-view-rotate').on('click', function () {
+        el.find('.ez-image-view-rotate').on('click', function () {
             var dir = $(this).data('dir') ? $(this).data('dir') : 'right';
             imageView.rotate(el.find('img'), dir);
         });
         //翻页
-        el.find('.image-view-next, .image-view-prev').on('click', function () {
+        el.find('.ez-image-view-next, .ez-image-view-prev').on('click', function () {
             var index = el.data('index');
-            if ($(this).hasClass('image-view-next')) {
+            if ($(this).hasClass('ez-image-view-next')) {
                 index++;
             } else {
                 index--;
