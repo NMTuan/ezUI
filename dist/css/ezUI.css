@@ -614,7 +614,7 @@ body {
   flex: 1;
 }
 
-.ez.sidebar {
+.ez-sidebar {
   min-width: 100px;
   min-height: 100px;
   margin: 0;
@@ -624,21 +624,21 @@ body {
   position: fixed;
 }
 
-.ez.sidebar-left {
+.ez-sidebar-left {
   top: 0;
   left: 0;
   bottom: 0;
   border-right: 1px solid #e0e0e0;
 }
 
-.ez.sidebar-right {
+.ez-sidebar-right {
   top: 0;
   right: 0;
   bottom: 0;
   border-left: 1px solid #e0e0e0;
 }
 
-.ez.container {
+.ez-container {
   overflow: hidden;
   width: auto;
   padding: 0;

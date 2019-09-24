@@ -1,17 +1,17 @@
 <% title = '管理端布局'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
-<div class="ez sidebar sidebar-left" style="width: 300px;">
+<div class="ez-sidebar ez-sidebar-left" style="width: 300px;">
     <%- include('../compoents/_menuTree.ejs'); %>
 </div>
 <script>
-    $('.sidebar-left').scrollWheel();
+    $('.ez-sidebar-left').scrollWheel();
     $('.menuTree').menuTree();
 </script>
-<div class="ez sidebar sidebar-right">
+<div class="ez-sidebar ez-sidebar-right">
     right
 </div>
-<div class="ez container">
+<div class="ez-container">
     <button class="ez btn btn-primary" onclick="ez.iframeTabs.close()">关闭当前窗口</button>
     <button class="ez btn btn-primary" onclick="ez.iframeTabs.open('../test/index.html')">新开标签</button>
     <button class="ez btn btn-primary" onclick="ez.iframeTabs.open('../table/table.html', '', true)">后台打开</button>
@@ -29,7 +29,7 @@
 
 </div>
 <script>
-    $('.ez.container').fixedContainer();
+    $('.ez-container').fixedContainer();
 </script>
 
 <%- include('../compoents/default/_footer.ejs'); %>

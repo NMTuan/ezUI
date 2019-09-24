@@ -1,7 +1,7 @@
 var fixedContainer = {
     defaults: {
-        leftClass: '.sidebar-left',
-        rightClass: '.sidebar-right',
+        leftClass: '.ez-sidebar-left',
+        rightClass: '.ez-sidebar-right',
         // topClass: '.sidebar-top',
         // bottomClass: '.sidebar-bottom'
     },
