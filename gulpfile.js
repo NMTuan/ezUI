@@ -199,9 +199,11 @@ gulp.task('rev:js', function () {
         .pipe(rev())
         .pipe(gulp.dest(config.distPath + '/js'))
         .pipe(gulp.dest('../octopus/backend/web/static/ezui/js'))
+        .pipe(gulp.dest('../octopus/agent/web/static/ezui/js'))
         .pipe(rev.manifest())
         .pipe(gulp.dest(config.distPath + '/js'))
         .pipe(gulp.dest('../octopus/backend/web/static/ezui/js'))
+        .pipe(gulp.dest('../octopus/agent/web/static/ezui/js'))
         ;
 });
 
