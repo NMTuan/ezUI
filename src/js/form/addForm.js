@@ -7,6 +7,7 @@ var addForm = {
         multiple: true,  //多选
         template: '{title}', //item中展示的内容
         cursor: 'pointer', //item鼠标样式 ez-cursor-x
+        data: {},   //弹窗的参数
     },
     addForm: function (els, params) {
         $.each(els, function () {
@@ -41,10 +42,7 @@ var addForm = {
         //点击编辑
         s.el.parent().on('click', '.ez-form-label', function () {
             var datas = $(this).data();
-            var dataStr = $.map(datas, function (value, key) {
-                return key + '=' + value;
-            }).join('&');
-            addForm.popForm.call(s, dataStr);
+            addForm.popForm.call(s, datas);
         });
         //点击删除
         s.el.parent().on('click', '.ez-form-label-remove', function (e) {
@@ -158,9 +156,19 @@ var addForm = {
         });
     },
     //弹窗表单
-    popForm: function (dataStr) {
+    popForm: function (datas) {
         var s = this;
+
+        datas = datas || {};
+        $.each(s.params.data, function (key, value) {
+            datas[key] = value;
+        });
+        var dataStr = $.map(datas, function (value, key) {
+            return key + '=' + value;
+        }).join('&');
+
         var url = dataStr ? s.params.url + '?' + dataStr : s.params.url;
+
         layer.open({
             type: 2,
             title: s.params.title,
