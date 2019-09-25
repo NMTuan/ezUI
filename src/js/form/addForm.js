@@ -126,7 +126,7 @@ var addForm = {
             return;
         }
         $.each(data, function (i, item) {
-            var tpl = s.params.template;
+            var tpl = s.params.template
             var _label = label.clone();
             var _remove = remove.clone();
             _label.data('_id', i);
@@ -169,7 +169,7 @@ var addForm = {
 
         var url = dataStr ? s.params.url + '?' + dataStr : s.params.url;
 
-        layer.open({
+        top.layer.open({
             type: 2,
             title: s.params.title,
             content: url,
@@ -178,7 +178,7 @@ var addForm = {
             yes: function (index) {
                 var formData = addForm.getFormData(index);
                 addForm.addData.call(s, formData);
-                layer.close(index);
+                top.layer.close(index);
             }
         });
     }
