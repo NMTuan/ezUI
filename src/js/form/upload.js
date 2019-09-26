@@ -256,6 +256,7 @@ var upload = {
         control.html('');
         if (s.values.length === 0) {
             control.html(s.params.placeholder);
+            s.select.html('<option value=""></option>');    //无值时, 生成一个空, $.serializeArray()才能取到值
             return;
         }
         $.each(s.values, function (i, item) {

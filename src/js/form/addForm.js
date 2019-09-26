@@ -122,6 +122,7 @@ var addForm = {
         var remove = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '删除');
 
         control.empty();
+        s.el.closest('.ez-form-content').find('input').val('');
         if (s.data.length === 0) {
             return;
         }
@@ -177,7 +178,6 @@ var addForm = {
             btn: s.params.btn,
             yes: function (index) {
                 var formData = addForm.getFormData(index);
-                console.log(formData);
                 addForm.addData.call(s, formData);
                 top.layer.close(index);
             }

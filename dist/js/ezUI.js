@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_90ba9d6a.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bee5f378.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14057,6 +14057,8 @@ module.exports = _fixedContainer.fixedContainer;
 },{"XJF/FV":7,"buffer":6}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var _addForm = {
   defaults: {
@@ -14205,6 +14207,7 @@ var _addForm = {
     var label = $('<span>').addClass('ez-form-label');
     var remove = $('<i>').addClass('ez-form-label-remove remixicon-close-fill').attr('title', '删除');
     control.empty();
+    s.el.closest('.ez-form-content').find('input').val('');
 
     if (s.data.length === 0) {
       return;
@@ -14230,12 +14233,14 @@ var _addForm = {
           inputValues[key] = [];
         }
 
+        console.log(key, value, _typeof(value));
         inputValues[key].push(value);
 
         if (tpl.indexOf('{' + key + '}') >= 0) {
           tpl = tpl.replace('{' + key + '}', value);
         }
       });
+      console.log(inputValues);
 
       _remove.data('_id', i);
 
@@ -15134,6 +15139,8 @@ var _upload = {
 
     if (s.values.length === 0) {
       control.html(s.params.placeholder);
+      s.select.html('<option value=""></option>'); //无值时, 生成一个空, $.serializeArray()才能取到值
+
       return;
     }
 
