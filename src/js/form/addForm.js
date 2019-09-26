@@ -126,10 +126,10 @@ var addForm = {
             return;
         }
         $.each(data, function (i, item) {
-            var tpl = s.params.template
+            var tpl = s.params.template;
             var _label = label.clone();
             var _remove = remove.clone();
-            _label.data('_id', i);
+            item._id = i;
             if(s.params.cursor){
                 _label.addClass('ez-cursor-' + s.params.cursor);
             }
