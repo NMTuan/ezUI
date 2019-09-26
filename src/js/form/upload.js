@@ -90,7 +90,7 @@ var upload = {
     events: function () {
         var s = this;
         s.el.on('click', function () {
-            upload.layerId = parent.layer.open({
+            upload.layerId = layer.open({
                 type: 1,
                 title: s.params.title,
                 area: s.params.area,

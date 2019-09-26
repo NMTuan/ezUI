@@ -56,7 +56,7 @@ var addForm = {
     },
     //获取弹窗表单中的数据
     getFormData: function (index) {
-        var form = layer.getChildFrame('form', index);
+        var form = top.layer.getChildFrame('form', index);
         var formData = form.serializeArray();
         var data = {};
         $.each(formData, function (i, item) {
@@ -177,6 +177,7 @@ var addForm = {
             btn: s.params.btn,
             yes: function (index) {
                 var formData = addForm.getFormData(index);
+                console.log(formData);
                 addForm.addData.call(s, formData);
                 top.layer.close(index);
             }
