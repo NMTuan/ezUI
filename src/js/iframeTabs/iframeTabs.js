@@ -127,7 +127,7 @@ var iframeTabs = {
                     dl.addClass('current').siblings('dl').removeClass('current');
                 }
                 //顶级
-                var id = $(item).closest('.sub-nav-item').attr('id');
+                var id = $(item).closest('.ez-sub-nav-item').attr('id');
                 var current = iframeTabs.params.parentEl.filter('.current');
                 if (current.attr('href') !== '#' + id) {   //判断当前高亮是否为已高亮。
                     current.removeClass('current');
