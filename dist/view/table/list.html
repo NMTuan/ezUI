@@ -27,7 +27,7 @@
     <table id="gridTable" class="table text-nowrap table-border table-hover no-margin">
         <thead>
             <tr>
-                <th>操作按钮</th>
+                <th data-field="_btnStatus">操作按钮</th>
                 <th>类型编号</th>
                 <th>分类名称</th>
                 <th>分类模型</th>
@@ -42,7 +42,7 @@
         </thead>
         <tbody>
             <tr data-key="330">
-                <td data-btnstatus>btn</td>
+                <td data-field="_btnStatus">btn</td>
                 <td>TNC201905221051320001</td>
                 <td>4006_4006AA*AA*</td>
                 <td>B类号码</td>
@@ -55,7 +55,7 @@
                 <td>2019-05-22 10:52:42</td>
             </tr>
             <tr data-key="329">
-                <td data-btnstatus>selectAll</td>
+                <td data-field="_btnStatus">selectAll</td>
                 <td>TNC201905220852210002</td>
                 <td>4009_4009***AAA(尾号非6,8,9)</td>
                 <td>D类号码</td>
@@ -68,7 +68,7 @@
                 <td>2019-05-22 08:55:25</td>
             </tr>
             <tr data-key="328">
-                <td data-btnstatus>unSelect</td>
+                <td data-field="_btnStatus">unSelect</td>
                 <td>TNC201905220852210001</td>
                 <td>4008_4008***AAA(尾号非6,8,9)</td>
                 <td>D类号码</td>
@@ -81,7 +81,7 @@
                 <td>2019-05-22 08:54:18</td>
             </tr>
             <tr data-key="327">
-                <td data-btnstatus>cancelSelect</td>
+                <td data-field="_btnStatus">cancelSelect</td>
                 <td>TNC201902122043722019</td>
                 <td>4008_4008***ABC(abc为降序)</td>
                 <td>C类号码</td>
@@ -94,7 +94,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="326">
-                <td data-btnstatus>btn,unSelect,cancelSelect</td>
+                <td data-field="_btnStatus">btn,unSelect,cancelSelect</td>
                 <td>TNC201902122043713506</td>
                 <td>4009_4009***ABC(abc为降序)</td>
                 <td>C类号码</td>
@@ -107,7 +107,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="325">
-                <td data-btnstatus>btn,selectAll,cancelSelect</td>
+                <td data-field="_btnStatus">btn,selectAll,cancelSelect</td>
                 <td>TNC201902122043707837</td>
                 <td>4008_4008***ABC(abc为升序)</td>
                 <td>C类号码</td>
@@ -120,7 +120,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="324">
-                <td data-btnstatus>btn,selectAll,unSelect</td>
+                <td data-field="_btnStatus">btn,selectAll,unSelect</td>
                 <td>TNC201902122043698560</td>
                 <td>4009_4009***ABC(abc为升序)</td>
                 <td>C类号码</td>
@@ -133,7 +133,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="323">
-                <td data-btnstatus>btn,cancelSelect</td>
+                <td data-field="_btnStatus">btn,cancelSelect</td>
                 <td>TNC201902122043688321</td>
                 <td>4008_4008****EE(E=6,8,9)</td>
                 <td>C类号码</td>
@@ -146,7 +146,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="322">
-                <td data-btnstatus>selectAll,unSelect</td>
+                <td data-field="_btnStatus">selectAll,unSelect</td>
                 <td>TNC201902122043671681</td>
                 <td>4009_4009****EE(E=6,8,9)</td>
                 <td>C类号码</td>
@@ -159,7 +159,7 @@
                 <td>2019-02-12 17:42:00</td>
             </tr>
             <tr data-key="321">
-                <td data-btnstatus>unSelect,cancelSelect</td>
+                <td data-field="_btnStatus">unSelect,cancelSelect</td>
                 <td>TNC201902122043662695</td>
                 <td>4008_4008**ABBA</td>
                 <td>C类号码</td>
@@ -173,7 +173,7 @@
             </tr>
         </tbody>
     </table>
-    <script>var data=ez.getTable("#gridTable",{remove:!0});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{id:"btn",title:"按钮111",state:function(t,e){},click:function(t,e){var l=this.selectedGetValues("field3");console.log("click1"),console.log(l)}},{id:"selectAll",title:"全选",state:function(t,e){},click:function(t,e){console.log("click2"),this.allSelect()}},{id:"unSelect",title:"反选",state:function(t,e){},click:function(t,e){console.log("click2"),this.unSelect()}},{id:"cancelSelect",title:"取消",state:function(t,e){},click:function(t,e){console.log("click2"),this.cancelSelect()}}]})</script>
+    <script>var data=ez.getTable("#gridTable",{remove:!0});console.log(data),$("#tableList").ez_table_list({data:data,hideFields:["id"],clickSelected:!0,multiple:"option",btns:[{id:"btn",title:"按钮111",className:["ez-btn-warning"],click:function(e,l){var c=this.selectedGetValues("field3");console.log("click1"),console.log(c)}},{id:"selectAll",title:"全选",className:["ez-btn-primary"],click:function(e,l){console.log("click2"),this.allSelect()}},{id:"unSelect",title:"反选",className:["ez-btn-secondary"],click:function(e,l){console.log("click2"),this.unSelect()}},{id:"cancelSelect",title:"取消",className:["ez-btn-success"],click:function(e,l){console.log("click2"),this.cancelSelect()}}]})</script>
     <script></script>
 </body>
 

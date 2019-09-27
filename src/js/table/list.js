@@ -488,11 +488,29 @@ var list = {
         }
         s.fnEl.empty();
 
+        //先取按钮交集
+        var intersection = [];
+        $.each(s.getSelected(), function (i, item) {
+            var btnStatus = item._btnStatus.split(',');
+            if(i === 0){
+                intersection = btnStatus;
+                return;
+            }
+            var _intersection = [];
+            $.each(intersection, function () {
+                var existence = $.inArray(this, btnStatus);
+                if(existence >= 0){
+                    _intersection.push(this);
+                }
+            });
+            intersection = _intersection;
+        });
+
         $.each(s.params.btns, function (i, item) {
             var btn = $('<div>');
-            var selected = s.params.selected;  //选中数据id;
+            // var selected = s.params.selected;  //选中数据id;
             //state false隐藏 disabled禁用 success通过 danger危险
-            var state = item.state.call(s, btn, selected);
+            // var state = item.state.call(s, btn, selected);
 
             btn.addClass('ez-btn');
             btn.addClass(s.params.btnsClassName.join(' '));
@@ -504,35 +522,40 @@ var list = {
                 });
             }
 
-            if (state === false) {    //返回false直接跳过此按钮
-                return;
-            }
+            // if (state === false) {    //返回false直接跳过此按钮
+            //     return;
+            // }
 
             s.fnEl.append(btn);
             s.fnEl.append(' ');
 
-            if (state === 'primary') {
-                btn.addClass('ez-btn-primary');
-            }
-            if (state === 'secondary') {
-                btn.addClass('ez-btn-secondary');
-            }
-            if (state === 'success') {
-                btn.addClass('ez-btn-success');
-            }
-            if (state === 'warning') {
-                btn.addClass('ez-btn-warning');
-            }
-            if (state === 'danger') {
-                btn.addClass('ez-btn-danger');
-            }
-            if (state === 'link') {
-                btn.addClass('ez-btn-link');
-            }
-            if (state === 'disabled') {
+            if($.inArray(item.id, intersection) < 0){
                 btn.addClass('ez-btn-disabled');
                 return;
             }
+
+            // if (state === 'primary') {
+            //     btn.addClass('ez-btn-primary');
+            // }
+            // if (state === 'secondary') {
+            //     btn.addClass('ez-btn-secondary');
+            // }
+            // if (state === 'success') {
+            //     btn.addClass('ez-btn-success');
+            // }
+            // if (state === 'warning') {
+            //     btn.addClass('ez-btn-warning');
+            // }
+            // if (state === 'danger') {
+            //     btn.addClass('ez-btn-danger');
+            // }
+            // if (state === 'link') {
+            //     btn.addClass('ez-btn-link');
+            // }
+            // if (state === 'disabled') {
+            //     btn.addClass('ez-btn-disabled');
+            //     return;
+            // }
 
             btn.on('click', function () {
                 item.click.call(s, btn, selected);

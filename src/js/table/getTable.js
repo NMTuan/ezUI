@@ -11,7 +11,7 @@ var getTable = {
         //header
         el.find('thead th, thead td').each(function (i, item) {
             data.header.push({
-                field: $(item).data('filed') || 'field' + i,
+                field: $(item).data('field') || 'field' + i,
                 title: $.trim($(item).html())
             });
         });

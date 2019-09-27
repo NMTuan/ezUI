@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d7b94aac.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_554236de.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16399,7 +16399,7 @@ var _getTable = {
 
     el.find('thead th, thead td').each(function (i, item) {
       data.header.push({
-        field: $(item).data('filed') || 'field' + i,
+        field: $(item).data('field') || 'field' + i,
         title: $.trim($(item).html())
       });
     }); //body
@@ -16999,13 +16999,32 @@ var _list = {
       _list.initBtns.call(s);
     }
 
-    s.fnEl.empty();
-    $.each(s.params.btns, function (i, item) {
-      var btn = $('<div>');
-      var selected = s.params.selected; //选中数据id;
-      //state false隐藏 disabled禁用 success通过 danger危险
+    s.fnEl.empty(); //先取按钮交集
 
-      var state = item.state.call(s, btn, selected);
+    var intersection = [];
+    $.each(s.getSelected(), function (i, item) {
+      var btnStatus = item._btnStatus.split(',');
+
+      if (i === 0) {
+        intersection = btnStatus;
+        return;
+      }
+
+      var _intersection = [];
+      $.each(intersection, function () {
+        var existence = $.inArray(this, btnStatus);
+
+        if (existence >= 0) {
+          _intersection.push(this);
+        }
+      });
+      intersection = _intersection;
+    });
+    $.each(s.params.btns, function (i, item) {
+      var btn = $('<div>'); // var selected = s.params.selected;  //选中数据id;
+      //state false隐藏 disabled禁用 success通过 danger危险
+      // var state = item.state.call(s, btn, selected);
+
       btn.addClass('ez-btn');
       btn.addClass(s.params.btnsClassName.join(' '));
       btn.html(item.title);
@@ -17014,44 +17033,40 @@ var _list = {
         $.each(item.className, function () {
           btn.addClass(this);
         });
-      }
+      } // if (state === false) {    //返回false直接跳过此按钮
+      //     return;
+      // }
 
-      if (state === false) {
-        //返回false直接跳过此按钮
-        return;
-      }
 
       s.fnEl.append(btn);
       s.fnEl.append(' ');
 
-      if (state === 'primary') {
-        btn.addClass('ez-btn-primary');
-      }
-
-      if (state === 'secondary') {
-        btn.addClass('ez-btn-secondary');
-      }
-
-      if (state === 'success') {
-        btn.addClass('ez-btn-success');
-      }
-
-      if (state === 'warning') {
-        btn.addClass('ez-btn-warning');
-      }
-
-      if (state === 'danger') {
-        btn.addClass('ez-btn-danger');
-      }
-
-      if (state === 'link') {
-        btn.addClass('ez-btn-link');
-      }
-
-      if (state === 'disabled') {
+      if ($.inArray(item.id, intersection) < 0) {
         btn.addClass('ez-btn-disabled');
         return;
-      }
+      } // if (state === 'primary') {
+      //     btn.addClass('ez-btn-primary');
+      // }
+      // if (state === 'secondary') {
+      //     btn.addClass('ez-btn-secondary');
+      // }
+      // if (state === 'success') {
+      //     btn.addClass('ez-btn-success');
+      // }
+      // if (state === 'warning') {
+      //     btn.addClass('ez-btn-warning');
+      // }
+      // if (state === 'danger') {
+      //     btn.addClass('ez-btn-danger');
+      // }
+      // if (state === 'link') {
+      //     btn.addClass('ez-btn-link');
+      // }
+      // if (state === 'disabled') {
+      //     btn.addClass('ez-btn-disabled');
+      //     return;
+      // }
+
 
       btn.on('click', function () {
         item.click.call(s, btn, selected);
