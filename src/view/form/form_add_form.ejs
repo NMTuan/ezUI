@@ -18,9 +18,13 @@
     $('.ez-form-inline-horizontal').find('.ez-form-row-tips').remove();   //水平模式下用不到tips
 
     $('.add').ez_form_add_form({
-        template: '{number}',
+        template: '{number}-{LaNumberManage400[seat_num]}!!',
+        data: {
+            a: 1,
+            b: 2
+        }
         // multiple: false,
-        cursor: 'view',
+        // cursor: 'view',
     });
 </script>
 

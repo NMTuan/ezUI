@@ -1,5 +1,5 @@
 .ez {
-    &.sidebar {
+    &-sidebar {
         min-width: 100px;
         min-height: 100px;
         margin: 0;
@@ -32,7 +32,7 @@
         //    border-top: 1px solid color('grey', 'l2');
         //}
     }
-    &.container {
+    &-container {
         overflow: hidden;
         width: auto;
         padding: 0;

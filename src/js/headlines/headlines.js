@@ -29,7 +29,7 @@ var headlines = {
 
         el.html(headlines.tpl());
         if(headlines.params.close){
-            el.prepend('<i class="eza headlines-close remixicon-close-circle-fill"></i>');
+            el.prepend('<i class="ez-headlines-close remixicon-close-circle-fill"></i>');
         }
         headlines.show();
 

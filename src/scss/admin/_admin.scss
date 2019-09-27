@@ -2,13 +2,13 @@
 html, body {
     background-color: color($base-color, 'l5');
 }
-.eza {
+.ez {
     $nav-width: 50px;
     $sub-nav-width: 170px;
     $header-height: 35px;
     $user-height: 80px;
 
-    &.nav {
+    &-nav {
         width: $nav-width;
         height: 100%;
         //overflow: hidden;
@@ -22,7 +22,7 @@ html, body {
         @import "nav";
     }
 
-    &.sub-nav {
+    &-sub-nav {
         width: $sub-nav-width;
         height: 100%;
         overflow: hidden;
@@ -36,20 +36,20 @@ html, body {
         @import "sub-nav";
     }
 
-    &.scroll-box-v {
+    &-scroll-box-v {
         height: 100%;
         margin-right: -100px;
         overflow: auto;
         position: relative;
     }
-    &.scroll-box-h {
+    &-scroll-box-h {
         width: 100%;
         margin-bottom: -100px;
         overflow: auto;
         position: relative;
     }
 
-    &.user {
+    &-user {
         $user: &;
         width: $nav-width + $sub-nav-width;
         height: $user-height;
@@ -113,14 +113,14 @@ html, body {
             }
         }
     }
-    &.headlines {
+    &-headlines {
         display: none;
         overflow: hidden;
         margin: 0 0 0 $nav-width+$sub-nav-width;
         position: relative;
         @import "headlines";
     }
-    &.header {
+    &-header {
         $border: 4px;
         height: $header-height + $border;
         border-top: $border solid color($base-color, 'd2');
@@ -130,7 +130,7 @@ html, body {
         @import "header";
     }
 
-    &.main {
+    &-main {
         clear: both;
         overflow: hidden;
         height: 100%;
@@ -142,17 +142,17 @@ html, body {
 }
 
 //临时
-.eza.guide {
-    padding: 6px 12px;
-    border-bottom: 1px solid #ddd;
-    font-size: 12px;
-    line-height: 1;
-    color: color('grey', 'base');
-    &-item {
-        color: color('grey', 'base');
-        text-decoration: none;
-    }
-    &-space {
-        margin: 0 6px;
-    }
-}
+//.ez-guide {
+//    padding: 6px 12px;
+//    border-bottom: 1px solid #ddd;
+//    font-size: 12px;
+//    line-height: 1;
+//    color: color('grey', 'base');
+//    &-item {
+//        color: color('grey', 'base');
+//        text-decoration: none;
+//    }
+//    &-space {
+//        margin: 0 6px;
+//    }
+//}

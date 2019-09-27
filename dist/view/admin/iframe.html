@@ -24,7 +24,7 @@
 
 <body>
     <style>body,html{overflow:hidden}</style>
-    <div id="parentMenu" class="eza nav">
+    <div id="parentMenu" class="ez-nav">
         
         <ul>
             <li>
@@ -57,7 +57,7 @@
                     <i class="remixicon-bank-card-line"></i>
                 </a>
             </li>
-            <li class="eza nav-line"></li>
+            <li class="ez-nav-line"></li>
             <li>
                 <a href="#sub-nav-0" class="current">
                     <i class="remixicon-home-line"></i>
@@ -91,13 +91,13 @@
         </ul>
         
     </div>
-    <div class="eza sub-nav">
-        <div class="eza scroll-box-v">
-            <div id="sub-nav-0" class="sub-nav-item">
-                <div class="eza sub-nav-header">
-                    <div class="eza sub-nav-title">标题啊</div>
+    <div class="ez-sub-nav">
+        <div class="ez-scroll-box-v">
+            <div id="sub-nav-0" class="ez-sub-nav-item">
+                <div class="ez-sub-nav-header">
+                    <div class="ez-sub-nav-title">标题啊</div>
                 </div>
-                <div class="eza sub-nav-body">
+                <div class="ez-sub-nav-body">
                     <dl>
                         <dt><a href="#">首页</a></dt>
                         <dd>
@@ -203,8 +203,8 @@
                     </dl>
                 </div>
             </div>
-            <div id="sub-nav-1" class="sub-nav-item">
-                <div class="eza sub-nav-body">
+            <div id="sub-nav-1" class="ez-sub-nav-item">
+                <div class="ez-sub-nav-body">
                     <dl class="current">
                         <dt><a href="#">流水</a></dt>
                         <dd>
@@ -220,18 +220,18 @@
                     </dl>
                 </div>
             </div>
-            <div id="sub-nav-2" class="sub-nav-item">222</div>
-            <div id="sub-nav-3" class="sub-nav-item">333</div>
-            <div id="sub-nav-4" class="sub-nav-item">444</div>
-            <div id="sub-nav-5" class="sub-nav-item">555</div>
+            <div id="sub-nav-2" class="ez-sub-nav-item">222</div>
+            <div id="sub-nav-3" class="ez-sub-nav-item">333</div>
+            <div id="sub-nav-4" class="ez-sub-nav-item">444</div>
+            <div id="sub-nav-5" class="ez-sub-nav-item">555</div>
         </div>
     </div>
-    <div class="eza user">
+    <div class="ez-user">
         <dl>
             <dt>
-                <img class="eza pull-left" src="https://qytx.k400.cc/Public/home/images/logo_min-6e97a9aae9.png" alt="">
-                <a href="#" class="eza pull-right" title="退出"><i class="remixicon-login-box-line"></i></a>
-                <a href="#" class="eza user-name">牟艺</a>
+                <img class="ez-pull-left" src="https://qytx.k400.cc/Public/home/images/logo_min-6e97a9aae9.png" alt="">
+                <a href="#" class="ez-pull-right" title="退出"><i class="remixicon-login-box-line"></i></a>
+                <a href="#" class="ez-user-name">牟艺</a>
             </dt>
             <dd>
                 <a href="#" class="active"><i class="remixicon-message-3-line ri-fw"> 消息 <span id="msgTips">12</span></i></a>
@@ -239,16 +239,16 @@
             </dd>
         </dl>
     </div>
-    <div id="headlines" class="eza headlines">
-        <i class="eza headlines-close remixicon-close-circle-fill"></i>
+    <div id="headlines" class="ez-headlines">
+        <i class="ez-headlines-close remixicon-close-circle-fill"></i>
         <dl>
             <dt>这里是公告的标题啊 <span>2019-08-07 16:43:03</span></dt>
             <dd>这是公告的内容，可能会很长，很长很长的内容。这是公告的内容，可能会很长，很长很长的内容。这是公告的内容，可能会很长，很长很长的内容。<br>这是公告的内容，可能会很长，很长很长的内容。</dd>
             
         </dl>
     </div>
-    <div class="eza header">
-        <div class="eza header-logo pull-left">
+    <div class="ez-header">
+        <div class="ez-header-logo pull-left">
             <a href="#">系统管理中心</a>
         </div>
         
@@ -259,16 +259,16 @@
         
         
         
-        <i id="header-arrow-left" class="eza header-arrow pull-left remixicon-arrow-left-s-line"></i>
-        <i id="header-arrow-refresh" class="eza header-arrow pull-right remixicon-refresh-line"></i>
-        <i id="header-arrow-right" class="eza header-arrow pull-right remixicon-arrow-right-s-line"></i>
-        <div class="eza header-tabs">
+        <i id="header-arrow-left" class="ez-header-arrow pull-left remixicon-arrow-left-s-line"></i>
+        <i id="header-arrow-refresh" class="ez-header-arrow pull-right remixicon-refresh-line"></i>
+        <i id="header-arrow-right" class="ez-header-arrow pull-right remixicon-arrow-right-s-line"></i>
+        <div class="ez-header-tabs">
             <ul id="iframeTabsHeader">
                 <li class="current" data-url="overview">这是个固定页面</li>
             </ul>
         </div>
     </div>
-    <div id="iframeTabsContent" class="eza main">
+    <div id="iframeTabsContent" class="ez-main">
         
         
         
@@ -478,4 +478,4 @@
 </body>
 
 </html>
-<script>$(".nav li a").tabs(),$(".sub-nav dt a").subNav(),$(".sub-nav-item a").iframeTabs({parentEl:$("#parentMenu a"),headerEl:$("#iframeTabsHeader"),contentEl:$("#iframeTabsContent"),leftArrow:$("#header-arrow-left"),rightArrow:$("#header-arrow-right"),refreshEl:$("#header-arrow-refresh")})</script>
+<script>$(".ez-nav li a").tabs(),$(".ez-sub-nav dt a").subNav(),$(".ez-sub-nav-item a").iframeTabs({parentEl:$("#parentMenu a"),headerEl:$("#iframeTabsHeader"),contentEl:$("#iframeTabsContent"),leftArrow:$("#header-arrow-left"),rightArrow:$("#header-arrow-right"),refreshEl:$("#header-arrow-refresh")})</script>

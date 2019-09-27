@@ -56,7 +56,7 @@ var role = {
             }
         });
         //操作项不触发勾选操作
-        el.find('.role-bar').on('click', function (e) {
+        el.find('.ez-role-bar').on('click', function (e) {
             e.preventDefault();
         });
         //勾选操作
