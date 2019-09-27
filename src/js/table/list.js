@@ -506,9 +506,16 @@ var list = {
             intersection = _intersection;
         });
 
+        //btn: {
+        // id:按钮编号,
+        // title:按钮显示名称,
+        // className:额外class,
+        // available:始终可用(不守所选数据影响),
+        // click:点击事件
+        // }
         $.each(s.params.btns, function (i, item) {
             var btn = $('<div>');
-            // var selected = s.params.selected;  //选中数据id;
+            var selected = s.params.selected;  //选中数据id;
             //state false隐藏 disabled禁用 success通过 danger危险
             // var state = item.state.call(s, btn, selected);
 
@@ -529,7 +536,7 @@ var list = {
             s.fnEl.append(btn);
             s.fnEl.append(' ');
 
-            if($.inArray(item.id, intersection) < 0){
+            if(!item.available && $.inArray(item.id, intersection) < 0){
                 btn.addClass('ez-btn-disabled');
                 return;
             }
