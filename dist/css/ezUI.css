@@ -345,12 +345,6 @@ template {
   clear: both;
 }
 
-.ez-table-list-td {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -1374,7 +1368,6 @@ body {
   display: table-cell;
   line-height: 34px;
   padding: 4px 15px;
-  overflow: hidden;
 }
 
 .ez-table-list-cell-hide {
@@ -1424,7 +1417,7 @@ body {
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-cell,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
-  background-color: #f5f5f5;
+  font-weight: bold;
   box-shadow: 0 -1px 0 #bdbdbd inset;
 }
 

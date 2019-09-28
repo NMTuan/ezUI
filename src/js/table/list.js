@@ -510,7 +510,6 @@ var list = {
         });
 
         var selected = s.params.selected;  //选中数据id;
-        console.log(selected);
         var btn = $('<div>');
         btn.addClass('ez-btn');
         btn.addClass(s.params.btnsClassName.join(' '));
@@ -535,6 +534,7 @@ var list = {
 
             //处理available状态
             if(
+                ($.inArray(item.id, intersection) < 0) ||   //没按钮
                 (item.available === 'unSelected' && selected.length > 0) || //未选状态, 但已选数量大于0
                 (item.available === 'selected' && selected.length === 0) ||  //有选状态, 但已选数量等于0
                 (item.available === 'allSelect' && selected.length !== s.params.data.body.length) || //全选状态, 但已选数量不等于最大数据
@@ -544,6 +544,7 @@ var list = {
                 _btn.addClass('ez-btn-disabled');
                 return;
             }
+
             _btn.on('click', function () {
                 item.click.call(s, _btn, selected);
             });

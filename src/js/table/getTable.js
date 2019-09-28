@@ -23,6 +23,9 @@ var getTable = {
                 var field = $(cell).data('field') ||  'field' + i;
                 var title = $.trim($(cell).html());
                 item[field] = title;
+                if($(cell).data('value')){
+                    item['_'+field] = $(cell).data('value');
+                }
             });
             data.body.push(item);
         });

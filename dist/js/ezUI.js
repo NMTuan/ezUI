@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_54db2d63.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d8f979bb.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16410,6 +16410,10 @@ var _getTable = {
         var field = $(cell).data('field') || 'field' + i;
         var title = $.trim($(cell).html());
         item[field] = title;
+
+        if ($(cell).data('value')) {
+          item['_' + field] = $(cell).data('value');
+        }
       });
       data.body.push(item);
     });
@@ -17026,7 +17030,6 @@ var _list = {
     });
     var selected = s.params.selected; //选中数据id;
 
-    console.log(selected);
     var btn = $('<div>');
     btn.addClass('ez-btn');
     btn.addClass(s.params.btnsClassName.join(' ')); //btn: {
@@ -17051,7 +17054,8 @@ var _list = {
       s.fnEl.append(_btn);
       s.fnEl.append(' '); //处理available状态
 
-      if (item.available === 'unSelected' && selected.length > 0 || //未选状态, 但已选数量大于0
+      if ($.inArray(item.id, intersection) < 0 || //没按钮
+      item.available === 'unSelected' && selected.length > 0 || //未选状态, 但已选数量大于0
       item.available === 'selected' && selected.length === 0 || //有选状态, 但已选数量等于0
       item.available === 'allSelect' && selected.length !== s.params.data.body.length || //全选状态, 但已选数量不等于最大数据
       item.available === 'single' && selected.length !== 1 || //单选状态, 但已选数量不是1
