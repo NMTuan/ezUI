@@ -134,7 +134,7 @@ var list = {
                 type: 1,
                 title: '表格配置',
                 content: el,
-                area: ['640px', 'auto'],
+                area: ['640px', '480px'],
                 btn: ['保存'],
                 zIndex: 10,
                 success: function () {
