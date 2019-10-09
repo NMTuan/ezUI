@@ -1339,7 +1339,7 @@ body {
   border-color: #FFCDD2;
 }
 
-.ez-table-list {
+.ez-table-list-wrap {
   overflow: auto;
 }
 
@@ -1423,7 +1423,6 @@ body {
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
   font-weight: bold;
-  color: #424242;
   box-shadow: 0 -1px 0 #bdbdbd inset;
 }
 

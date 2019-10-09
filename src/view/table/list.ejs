@@ -1,23 +1,166 @@
 <% title = '表格列表'; %>
 <%- include('../compoents/default/_header.ejs'); %>
 
-<div id="tableList" class="ez-table-list"></div>
+<div class="margin">
+    <div class="box">
+<!--        <div class="box-header">标题部分</div>-->
+        <div class="box-body">
+            <div id="tableList" class="ez-table-list"></div>
+        </div>
+    </div>
+</div>
 
 <table id="gridTable" class="table text-nowrap table-border table-hover no-margin">
     <thead>
-    <tr><th data-field="_btnStatus">操作按钮</th><th>类型编号</th><th>分类名称</th><th>分类模型</th><th>号段</th><th>活动月低消</th><th>标准月低消</th><th>单次预占天数</th><th>大网预占天数</th><th>分类备注</th><th>创建时间</th></tr>
+    <tr>
+        <th data-field="_btnStatus">操作按钮</th>
+        <th>类型编号</th>
+        <th>分类名称</th>
+        <th>分类模型</th>
+        <th>号段</th>
+        <th>活动月低消</th>
+        <th>标准月低消</th>
+        <th>单次预占天数</th>
+        <th>大网预占天数</th>
+        <th>分类备注</th>
+        <th>创建时间</th>
+    </tr>
     </thead>
     <tbody>
-    <tr data-key="330"><td data-field="_btnStatus">btn</td><td>TNC201905221051320001<button class="ez-btn ez-btn-sm">按钮</button></td><td>4006_4006AA*AA*</td><td>B类号码</td><td>联通4006</td><td>20000.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>30</td><td></td><td>2019-05-22 10:52:42</td></tr>
-    <tr data-key="329"><td data-field="_btnStatus">selectAll</td><td>TNC201905220852210002</td><td>4009_4009***AAA(尾号非6,8,9)</td><td>D类号码</td><td>电信4009</td><td>3000.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-05-22 08:55:25</td></tr>
-    <tr data-key="328"><td data-field="_btnStatus">unSelect</td><td>TNC201905220852210001<button class="ez-btn ez-btn-sm ez-btn-border">按钮</button></td><td>4008_4008***AAA(尾号非6,8,9)</td><td>D类号码</td><td>电信4008</td><td>3000.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-05-22 08:54:18</td></tr>
-    <tr data-key="327"><td data-field="_btnStatus">cancelSelect</td><td>TNC201902122043722019</td><td>4008_4008***ABC(abc为降序)</td><td>C类号码</td><td>电信4008</td><td>200.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="326"><td data-field="_btnStatus">btn,unSelect,cancelSelect</td><td>TNC201902122043713506</td><td>4009_4009***ABC(abc为降序)</td><td>C类号码</td><td>电信4009</td><td>200.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="325"><td data-field="_btnStatus">btn,selectAll,cancelSelect</td><td>TNC201902122043707837</td><td>4008_4008***ABC(abc为升序)</td><td>C类号码</td><td>电信4008</td><td>500.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="324"><td data-field="_btnStatus">btn,selectAll,unSelect</td><td>TNC201902122043698560</td><td>4009_4009***ABC(abc为升序)</td><td>C类号码</td><td>电信4009</td><td>500.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="323"><td data-field="_btnStatus">btn,cancelSelect</td><td>TNC201902122043688321</td><td>4008_4008****EE(E=6,8,9)</td><td>C类号码</td><td>电信4008</td><td>200.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="322"><td data-field="_btnStatus">selectAll,unSelect</td><td>TNC201902122043671681</td><td>4009_4009****EE(E=6,8,9)</td><td>C类号码</td><td>电信4009</td><td>200.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
-    <tr data-key="321"><td data-field="_btnStatus">unSelect,cancelSelect</td><td>TNC201902122043662695</td><td>4008_4008**ABBA</td><td>C类号码</td><td>电信4008</td><td>200.00</td><td><span class="text-red">0.00</span></td><td>14</td><td>40</td><td></td><td>2019-02-12 17:42:00</td></tr>
+    <tr data-key="330">
+        <td data-field="_btnStatus">btn</td>
+        <td>TNC201905221051320001
+            <button class="ez-btn ez-btn-sm">按钮</button>
+        </td>
+        <td>4006_4006AA*AA*</td>
+        <td>B类号码</td>
+        <td>联通4006</td>
+        <td>20000.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>30</td>
+        <td></td>
+        <td>2019-05-22 10:52:42</td>
+    </tr>
+    <tr data-key="329">
+        <td data-field="_btnStatus">selectAll</td>
+        <td>TNC201905220852210002</td>
+        <td>4009_4009***AAA(尾号非6,8,9)</td>
+        <td>D类号码</td>
+        <td>电信4009</td>
+        <td>3000.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-05-22 08:55:25</td>
+    </tr>
+    <tr data-key="328">
+        <td data-field="_btnStatus">unSelect</td>
+        <td>TNC201905220852210001
+            <button class="ez-btn ez-btn-sm ez-btn-border">按钮</button>
+        </td>
+        <td>4008_4008***AAA(尾号非6,8,9)</td>
+        <td>D类号码</td>
+        <td>电信4008</td>
+        <td>3000.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-05-22 08:54:18</td>
+    </tr>
+    <tr data-key="327">
+        <td data-field="_btnStatus">cancelSelect</td>
+        <td>TNC201902122043722019</td>
+        <td>4008_4008***ABC(abc为降序)</td>
+        <td>C类号码</td>
+        <td>电信4008</td>
+        <td>200.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="326">
+        <td data-field="_btnStatus">btn,unSelect,cancelSelect</td>
+        <td>TNC201902122043713506</td>
+        <td>4009_4009***ABC(abc为降序)</td>
+        <td>C类号码</td>
+        <td>电信4009</td>
+        <td>200.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="325">
+        <td data-field="_btnStatus">btn,selectAll,cancelSelect</td>
+        <td>TNC201902122043707837</td>
+        <td>4008_4008***ABC(abc为升序)</td>
+        <td>C类号码</td>
+        <td>电信4008</td>
+        <td>500.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="324">
+        <td data-field="_btnStatus">btn,selectAll,unSelect</td>
+        <td>TNC201902122043698560</td>
+        <td>4009_4009***ABC(abc为升序)</td>
+        <td>C类号码</td>
+        <td>电信4009</td>
+        <td>500.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="323">
+        <td data-field="_btnStatus">btn,cancelSelect</td>
+        <td>TNC201902122043688321</td>
+        <td>4008_4008****EE(E=6,8,9)</td>
+        <td>C类号码</td>
+        <td>电信4008</td>
+        <td>200.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="322">
+        <td data-field="_btnStatus">selectAll,unSelect</td>
+        <td>TNC201902122043671681</td>
+        <td>4009_4009****EE(E=6,8,9)</td>
+        <td>C类号码</td>
+        <td>电信4009</td>
+        <td>200.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
+    <tr data-key="321">
+        <td data-field="_btnStatus">unSelect,cancelSelect</td>
+        <td>TNC201902122043662695</td>
+        <td>4008_4008**ABBA</td>
+        <td>C类号码</td>
+        <td>电信4008</td>
+        <td>200.00</td>
+        <td><span class="text-red">0.00</span></td>
+        <td>14</td>
+        <td>40</td>
+        <td></td>
+        <td>2019-02-12 17:42:00</td>
+    </tr>
     </tbody>
 </table>
 <script>
@@ -88,7 +231,7 @@
         multiple: 'option',
         btns: [
             {
-                id:'btn',
+                id: 'btn',
                 title: '按钮111',
                 className: ['ez-btn-warning'],
                 available: 'multiple',

@@ -201,7 +201,7 @@ var list = {
         var body = list.renderBody.call(s);
         table.append(header).append(body);
         s.el.find('.ez-table-list-table').remove();
-        s.el.append(table);
+        s.el.append($('<div class="ez-table-list-wrap"/>').append(table));
     },
     //渲染表头
     renderHeader: function () {
@@ -239,7 +239,7 @@ var list = {
                     } else {    //如果隐藏, 显示一条线
                         cell.addClass('ez-table-list-cell-hide')
                     }
-                    cell.attr('title', item.title);
+                    // cell.attr('title', cell.text());
                     if (item.field === 'drag') {
                         cell.css('width', '46px');
                         cell.addClass('ez-text-center');
@@ -311,7 +311,7 @@ var list = {
                     var cell = list.renderCell(key);
                     if ($.inArray(field, s.params.hideFields) < 0) {
                         cell.html(value);
-                        cell.attr('title', value);
+                        // cell.attr('title', cell.text());
                     } else {    //隐藏数据显示一条线
                         cell.addClass('ez-table-list-cell-hide')
                     }

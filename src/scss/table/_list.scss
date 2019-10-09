@@ -1,7 +1,9 @@
 .ez-table-list {
-    overflow: auto;
     $table-list: &;
     $borderColor: color('grey', 'l3');
+    &-wrap {
+        overflow: auto;
+    }
 
     &-table {
         display: table;
@@ -116,7 +118,7 @@
                         //background-color: color('grey', 'l3');
                         //background-color: transparent;
                         font-weight: bold;
-                        color: color('grey', 'd3');
+                        //color: color('grey', 'd3');
                         box-shadow: 0 -1px 0 color('grey', 'l1') inset;
                     }
                 }
