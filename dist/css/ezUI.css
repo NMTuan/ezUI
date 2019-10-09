@@ -1366,8 +1366,13 @@ body {
 
 .ez-table-list-cell, .ez-table-list-th, .ez-table-list-td {
   display: table-cell;
-  line-height: 34px;
+  line-height: 29px;
   padding: 4px 15px;
+}
+
+.ez-table-list-cell input, .ez-table-list-cell button, .ez-table-list-th input, .ez-table-list-th button, .ez-table-list-td input, .ez-table-list-td button {
+  vertical-align: middle;
+  margin: 0;
 }
 
 .ez-table-list-cell-hide {
@@ -1381,11 +1386,11 @@ body {
 }
 
 .ez-table-list-border {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #eeeeee;
 }
 
 .ez-table-list-line .ez-table-list-cell, .ez-table-list-line .ez-table-list-th, .ez-table-list-line .ez-table-list-td {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .ez-table-list-line .ez-table-list-cell:last-child, .ez-table-list-line .ez-table-list-th:last-child, .ez-table-list-line .ez-table-list-td:last-child {
@@ -1393,7 +1398,7 @@ body {
 }
 
 .ez-table-list-vline .ez-table-list-cell, .ez-table-list-vline .ez-table-list-th, .ez-table-list-vline .ez-table-list-td {
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid #eeeeee;
 }
 
 .ez-table-list-vline .ez-table-list-cell:last-child, .ez-table-list-vline .ez-table-list-th:last-child, .ez-table-list-vline .ez-table-list-td:last-child {
@@ -1418,6 +1423,7 @@ body {
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
   font-weight: bold;
+  color: #424242;
   box-shadow: 0 -1px 0 #bdbdbd inset;
 }
 
@@ -1433,7 +1439,7 @@ body {
 .ez-table-list-sm .ez-table-list-cell,
 .ez-table-list-sm .ez-table-list-th,
 .ez-table-list-sm .ez-table-list-td {
-  line-height: 26px;
+  line-height: 24px;
   padding: 3px 10px;
 }
 
