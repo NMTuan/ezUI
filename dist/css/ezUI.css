@@ -996,19 +996,32 @@ body {
 
 .ez-btn {
   display: inline-block;
-  background-color: #e0e0e0;
+  background-color: #fafafa;
   color: #212121;
   cursor: pointer;
   border: 1px solid #e0e0e0;
   font-size: 14px;
   line-height: 1;
-  padding: 7px 12px;
+  padding: 7px 10px;
 }
 
-.ez-btn.ez-btn-border {
-  color: #212121;
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
+.ez-btn:hover {
+  opacity: 0.8;
+}
+
+.ez-btn-sm {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.ez-btn-xs {
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.ez-btn-lg {
+  padding: 8px 14px;
+  font-size: 16px;
 }
 
 .ez-btn-radius {
@@ -1016,25 +1029,10 @@ body {
 }
 
 .ez-btn-round {
-  border-radius: 32px;
+  border-radius: 14px;
 }
 
-.ez-btn-sm {
-  padding: 6px 10px;
-  font-size: 12px;
-}
-
-.ez-btn-xs {
-  padding: 3px 5px;
-  font-size: 12px;
-}
-
-.ez-btn-lg {
-  padding: 12px 20px;
-  font-size: 16px;
-}
-
-.ez-btn-block {
+.ez-btn-full {
   display: block;
   width: 100%;
 }
@@ -1042,7 +1040,7 @@ body {
 .ez-btn-primary {
   background-color: #1E88E5;
   color: #FFFFFF;
-  border: 1px solid #1E88E5;
+  border: 1px solid #1976D2;
 }
 
 .ez-btn-primary:hover {
@@ -1052,7 +1050,7 @@ body {
 .ez-btn-secondary {
   background-color: #039be5;
   color: #FFFFFF;
-  border: 1px solid #039be5;
+  border: 1px solid #0288d1;
 }
 
 .ez-btn-secondary:hover {
@@ -1062,7 +1060,7 @@ body {
 .ez-btn-success {
   background-color: #43A047;
   color: #FFFFFF;
-  border: 1px solid #43A047;
+  border: 1px solid #388E3C;
 }
 
 .ez-btn-success:hover {
@@ -1072,7 +1070,7 @@ body {
 .ez-btn-warning {
   background-color: #fb8c00;
   color: #FFFFFF;
-  border: 1px solid #fb8c00;
+  border: 1px solid #f57c00;
 }
 
 .ez-btn-warning:hover {
@@ -1082,7 +1080,7 @@ body {
 .ez-btn-danger {
   background-color: #E53935;
   color: #FFFFFF;
-  border: 1px solid #E53935;
+  border: 1px solid #D32F2F;
 }
 
 .ez-btn-danger:hover {
@@ -1096,7 +1094,8 @@ body {
 }
 
 .ez-btn-link:hover {
-  color: #FFFFFF;
+  color: #1976D2;
+  text-decoration: underline;
 }
 
 .ez-btn-disabled {
@@ -1107,7 +1106,44 @@ body {
 }
 
 .ez-btn-disabled:hover {
-  color: #FFFFFF;
+  color: #9e9e9e;
+}
+
+.ez-btn-group {
+  display: inline-block;
+}
+
+.ez-btn-group .ez-btn {
+  float: left;
+  border-right-width: 0;
+}
+
+.ez-btn-group .ez-btn:last-child {
+  border-right-width: 1px;
+}
+
+.ez-btn-group-radius .ez-btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.ez-btn-group-radius .ez-btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.ez-btn-group-round .ez-btn:first-child {
+  border-radius: 14px 0 0 14px;
+}
+
+.ez-btn-group-round .ez-btn:last-child {
+  border-radius: 0 14px 14px 0;
+}
+
+.ez-btn-group-full {
+  display: flex;
+}
+
+.ez-btn-group-full .ez-btn {
+  flex: 1;
 }
 
 .ez-table {
