@@ -878,16 +878,16 @@ body {
 
 .ez-form-sm .ez-form-control {
   padding: 0 6px;
-  min-height: 26px;
-  line-height: 26px;
+  min-height: 24px;
+  line-height: 24px;
 }
 
 .ez-form-sm .ez-form-select-head {
-  line-height: 26px;
+  line-height: 24px;
 }
 
 .ez-form-sm .ez-form-select-body {
-  line-height: 26px;
+  line-height: 24px;
 }
 
 .ez-form-sm .ez-form-addon {
@@ -1450,8 +1450,8 @@ body {
   padding: 4px 20px;
 }
 
-.ez-table-list-fn {
-  margin: 8px 0;
+.ez-table-list-fn .ez-btn {
+  margin-bottom: 8px;
 }
 
 .ez-image-view {
