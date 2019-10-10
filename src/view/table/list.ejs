@@ -244,23 +244,63 @@
                 }
             },
             {
-                id: 'selectAll',
-                title: '全选',
-                className: ['ez-btn-primary'],
-                click: function (btn, selected) {
-                    console.log('click2');
-                    this.allSelect();
-                }
+                group: true,
+                className: ['ez-btn-group-radius'],
+                btns: [
+                    {
+                        id: 'selectAll',
+                        title: '全选11',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.allSelect();
+                        }
+                    }, {
+                        id: 'unSelect',
+                        title: '反选22',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.unSelect();
+                        }
+                    }
+                ]
             },
-            {
-                id: 'unSelect',
-                title: '反选',
-                className: ['ez-btn-secondary'],
-                click: function (btn, selected) {
-                    console.log('click2');
-                    this.unSelect();
-                }
-            },
+            // [{
+            //     id: 'selectAll',
+            //     title: '全选11',
+            //     className: ['ez-btn-primary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.allSelect();
+            //     }
+            // }, {
+            //     id: 'unSelect',
+            //     title: '反选22',
+            //     className: ['ez-btn-secondary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.unSelect();
+            //     }
+            // }],
+            // {
+            //     id: 'selectAll',
+            //     title: '全选',
+            //     className: ['ez-btn-primary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.allSelect();
+            //     }
+            // },
+            // {
+            //     id: 'unSelect',
+            //     title: '反选',
+            //     className: ['ez-btn-secondary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.unSelect();
+            //     }
+            // },
             {
                 id: 'cancelSelect',
                 title: '取消',

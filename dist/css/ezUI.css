@@ -1003,6 +1003,7 @@ body {
   font-size: 14px;
   line-height: 1;
   padding: 7px 10px;
+  vertical-align: middle;
 }
 
 .ez-btn:hover {
@@ -1111,6 +1112,7 @@ body {
 
 .ez-btn-group {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .ez-btn-group .ez-btn {
@@ -1416,7 +1418,6 @@ body {
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
   font-weight: bold;
-  box-shadow: 0 -1px 0 #bdbdbd inset;
 }
 
 .ez-table-list-selected-disabled .ez-table-list-body .ez-table-list-active {
@@ -1450,8 +1451,14 @@ body {
   padding: 4px 20px;
 }
 
+.ez-table-list-fn .ez-btn-group,
 .ez-table-list-fn .ez-btn {
   margin-bottom: 8px;
+}
+
+.ez-table-list-fn .ez-btn-group .ez-btn,
+.ez-table-list-fn .ez-btn .ez-btn {
+  margin-bottom: 0;
 }
 
 .ez-image-view {
