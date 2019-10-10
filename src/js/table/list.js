@@ -134,7 +134,7 @@ var list = {
                 type: 1,
                 title: '表格配置',
                 content: el,
-                area: ['640px', 'auto'],
+                area: ['640px', '480px'],
                 btn: ['保存'],
                 zIndex: 10,
                 success: function () {
@@ -201,7 +201,7 @@ var list = {
         var body = list.renderBody.call(s);
         table.append(header).append(body);
         s.el.find('.ez-table-list-table').remove();
-        s.el.append(table);
+        s.el.append($('<div class="ez-table-list-wrap"/>').append(table));
     },
     //渲染表头
     renderHeader: function () {
@@ -239,7 +239,7 @@ var list = {
                     } else {    //如果隐藏, 显示一条线
                         cell.addClass('ez-table-list-cell-hide')
                     }
-                    cell.attr('title', item.title);
+                    // cell.attr('title', cell.text());
                     if (item.field === 'drag') {
                         cell.css('width', '46px');
                         cell.addClass('ez-text-center');
@@ -311,7 +311,7 @@ var list = {
                     var cell = list.renderCell(key);
                     if ($.inArray(field, s.params.hideFields) < 0) {
                         cell.html(value);
-                        cell.attr('title', value);
+                        // cell.attr('title', cell.text());
                     } else {    //隐藏数据显示一条线
                         cell.addClass('ez-table-list-cell-hide')
                     }
@@ -488,54 +488,65 @@ var list = {
         }
         s.fnEl.empty();
 
+        //先取按钮交集
+        var intersection = [];
+        $.each(s.getSelected(), function (i, item) {
+            if(typeof item._btnStatus === 'undefined'){
+                return;
+            }
+            var btnStatus = item._btnStatus.split(',');
+            if(i === 0){
+                intersection = btnStatus;
+                return;
+            }
+            var _intersection = [];
+            $.each(intersection, function () {
+                var existence = $.inArray(this, btnStatus);
+                if(existence >= 0){
+                    _intersection.push(this);
+                }
+            });
+            intersection = _intersection;
+        });
+
+        var selected = s.params.selected;  //选中数据id;
+        var btn = $('<div>');
+        btn.addClass('ez-btn');
+        btn.addClass(s.params.btnsClassName.join(' '));
+
+        //btn: {
+        // id:按钮编号,
+        // title:按钮显示名称,
+        // className:额外class,
+        // available:可用状态, 默认可用 unSelected:未选择可用, selected:有选择可用, allSelect:全选可用, single:单选可用, multiple:多选可用
+        // click:点击事件
+        // }
         $.each(s.params.btns, function (i, item) {
-            var btn = $('<div>');
-            var selected = s.params.selected;  //选中数据id;
-            //state false隐藏 disabled禁用 success通过 danger危险
-            var state = item.state.call(s, btn, selected);
-
-            btn.addClass('ez-btn');
-            btn.addClass(s.params.btnsClassName.join(' '));
-            btn.html(item.title);
-
+            var _btn = btn.clone();
+            _btn.html(item.title);
             if (item.className) {
                 $.each(item.className, function () {
-                    btn.addClass(this);
+                    _btn.addClass(this);
                 });
             }
-
-            if (state === false) {    //返回false直接跳过此按钮
-                return;
-            }
-
-            s.fnEl.append(btn);
+            s.fnEl.append(_btn);
             s.fnEl.append(' ');
 
-            if (state === 'primary') {
-                btn.addClass('ez-btn-primary');
-            }
-            if (state === 'secondary') {
-                btn.addClass('ez-btn-secondary');
-            }
-            if (state === 'success') {
-                btn.addClass('ez-btn-success');
-            }
-            if (state === 'warning') {
-                btn.addClass('ez-btn-warning');
-            }
-            if (state === 'danger') {
-                btn.addClass('ez-btn-danger');
-            }
-            if (state === 'link') {
-                btn.addClass('ez-btn-link');
-            }
-            if (state === 'disabled') {
-                btn.addClass('ez-btn-disabled');
+            //处理available状态
+            if(
+                ($.inArray(item.id, intersection) < 0) ||   //没按钮
+                (item.available === 'unSelected' && selected.length > 0) || //未选状态, 但已选数量大于0
+                (item.available === 'selected' && selected.length === 0) ||  //有选状态, 但已选数量等于0
+                (item.available === 'allSelect' && selected.length !== s.params.data.body.length) || //全选状态, 但已选数量不等于最大数据
+                (item.available === 'single' && selected.length !== 1) || //单选状态, 但已选数量不是1
+                (item.available === 'multiple' && selected.length <= 1) //多选状态, 但已选数量不够
+            ){
+                _btn.addClass('ez-btn-disabled');
                 return;
             }
 
-            btn.on('click', function () {
-                item.click.call(s, btn, selected);
+            _btn.on('click', function () {
+                item.click.call(s, _btn, selected);
             });
         });
     },

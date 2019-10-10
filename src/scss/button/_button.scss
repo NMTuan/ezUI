@@ -1,185 +1,163 @@
 .ez {
     $ez: &;
-    $defaultColor: color('grey', 'd4');
-    $defaultBgColor: color('grey', 'l2');
-    $defaultBgColor2: color('grey', 'l5');
-
-    $primaryColor: color('shades', 'white');
-    $primaryBgColor: color('blue', 'd1');
-    $primaryBgColor2: color('blue', 'l5');
-
-    $secondaryColor: color('shades', 'white');
-    $secondaryBgColor: color('light-blue', 'd1');
-    $secondaryBgColor2: color('light-blue', 'l5');
-
-    $successColor: color('shades', 'white');
-    $successBgColor: color('green', 'd1');
-    $successBgColor2: color('green', 'l5');
-
-    $warningColor: color('shades', 'white');
-    $warningBgColor: color('orange', 'd1');
-    $warningBgColor2: color('orange', 'l5');
-
-    $dangerColor: color('shades', 'white');
-    $dangerBgColor: color('red', 'd1');
-    $dangerBgColor2: color('red', 'l5');
-
-    $linkColor: color('blue', 'd2');
-    $linkBgColor: color('shades', 'transparent');
-
-    $disabledColor: color('grey', 'base');
-    $disabledBgColor: color('grey', 'l4');
-    $disabledBgColor2: color('grey', 'l5');
 
     &-btn {
         display: inline-block;
-        background-color: $defaultBgColor;
-        color: $defaultColor;
+        background-color: color('grey', 'l5');
+        color: color('grey', 'd4');
         cursor: pointer;
-        border: 1px solid $defaultBgColor;
+        border: 1px solid color('grey', 'l2');
         font-size: 14px;
         line-height: 1;
-        padding: 9px 15px;
+        padding: 7px 10px; //9px 15px;
 
-        &#{$ez}-btn-border {
-            color: $defaultColor;
-            background-color: $defaultBgColor2;
-            border: 1px solid $defaultBgColor;
-        }
-    }
-
-    &-btn-radius {
-        border-radius: 4px;
-    }
-
-    &-btn-round {
-        border-radius: 32px;
-    }
-
-    &-btn-sm {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-
-    &-btn-xs {
-        padding: 3px 5px;
-        font-size: 12px;
-    }
-
-    &-btn-lg {
-        padding: 12px 20px;
-        font-size: 16px;
-    }
-
-    &-btn-block {
-        display: block;
-        width: 100%;
-    }
-
-    &-btn-primary {
-        background-color: $primaryBgColor;
-        color: $primaryColor;
-        border: 1px solid $primaryBgColor;
-
-        &#{$ez}-btn-border {
-            color: $primaryBgColor;
-            background-color: $primaryBgColor2;
-            border: 1px solid $primaryBgColor;
-        }
         &:hover {
-            color: $primaryColor;
+            opacity: 0.8;
         }
+
+        &-sm {
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+
+        &-xs {
+            padding: 4px 6px;
+            font-size: 12px;
+        }
+
+        &-lg {
+            padding: 8px 14px;
+            font-size: 16px;
+        }
+
+        &-radius {
+            border-radius: 4px;
+        }
+
+        &-round {
+            border-radius: 14px;
+        }
+
+        &-full {
+            display: block;
+            width: 100%;
+        }
+
+        &-primary {
+            background-color: color('blue', 'd1');
+            color: color('shades', 'white');
+            border: 1px solid color('blue', 'd2');
+
+            &:hover {
+                color: color('shades', 'white');
+            }
+        }
+
+        &-secondary {
+            background-color: color('light-blue', 'd1');
+            color: color('shades', 'white');
+            border: 1px solid color('light-blue', 'd2');
+
+            &:hover {
+                color: color('shades', 'white');
+            }
+        }
+
+        &-success {
+            background-color: color('green', 'd1');
+            color: color('shades', 'white');
+            border: 1px solid color('green', 'd2');
+
+            &:hover {
+                color: color('shades', 'white');
+            }
+        }
+
+        &-warning {
+            background-color: color('orange', 'd1');
+            color: color('shades', 'white');
+            border: 1px solid color('orange', 'd2');
+
+            &:hover {
+                color: color('shades', 'white');
+            }
+        }
+
+        &-danger {
+            background-color: color('red', 'd1');
+            color: color('shades', 'white');
+            border: 1px solid color('red', 'd2');
+
+            &:hover {
+                color: color('shades', 'white');
+            }
+        }
+
+        &-link {
+            background-color: color('shades', 'transparent');
+            color: color('blue', 'd2');
+            border: 1px solid color('shades', 'transparent');
+
+            &:hover {
+                color: color('blue', 'd2');
+                text-decoration: underline;
+            }
+        }
+
+        &-disabled {
+            background-color: color('grey', 'l4');
+            color: color('grey', 'base');
+            border: 1px solid color('grey', 'l4');
+            cursor: not-allowed;
+
+            &:hover {
+                color: color('grey', 'base');
+            }
+        }
+
+        &-group {
+            display: inline-block;
+
+            #{$ez}-btn {
+                //flex: 1;
+                float: left;
+                //margin: 0 0 0 -1px;
+                border-right-width: 0;
+                &:last-child {
+                    border-right-width: 1px;
+                }
+            }
+
+            &-radius {
+                #{$ez}-btn {
+                    &:first-child {
+                        border-radius: 4px 0 0 4px;
+                    }
+
+                    &:last-child {
+                        border-radius: 0 4px 4px 0 ;
+                    }
+                }
+            }
+            &-round {
+                #{$ez}-btn {
+                    &:first-child {
+                        border-radius: 14px 0 0 14px;
+                    }
+
+                    &:last-child {
+                        border-radius: 0 14px 14px 0 ;
+                    }
+                }
+            }
+            &-full {
+                display: flex;
+                #{$ez}-btn {
+                    flex: 1;
+                }
+            }
+        }
+
     }
 
-    &-btn-secondary {
-        background-color: $secondaryBgColor;
-        color: $secondaryColor;
-        border: 1px solid $secondaryBgColor;
-
-        &#{$ez}-btn-border {
-            color: $secondaryBgColor;
-            background-color: $secondaryBgColor2;
-            border: 1px solid $secondaryBgColor;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
-
-    &-btn-success {
-        background-color: $successBgColor;
-        color: $successColor;
-        border: 1px solid $successBgColor;
-
-        &#{$ez}-btn-border {
-            color: $successBgColor;
-            background-color: $successBgColor2;
-            border: 1px solid $successBgColor;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
-
-    &-btn-warning {
-        background-color: $warningBgColor;
-        color: $warningColor;
-        border: 1px solid $warningBgColor;
-
-        &#{$ez}-btn-border {
-            color: $warningBgColor;
-            background-color: $warningBgColor2;
-            border: 1px solid $warningBgColor;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
-
-    &-btn-danger {
-        background-color: $dangerBgColor;
-        color: $dangerColor;
-        border: 1px solid $dangerBgColor;
-
-        &#{$ez}-btn-border {
-            color: $dangerBgColor;
-            background-color: $dangerBgColor2;
-            border: 1px solid $dangerBgColor;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
-
-    &-btn-link {
-        background-color: $linkBgColor;
-        color: $linkColor;
-        border: 1px solid $linkBgColor;
-
-        &#{$ez}-btn-border {
-            color: $linkColor;
-            background-color: $linkBgColor;
-            border: 1px solid $linkBgColor;
-            text-decoration: underline;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
-
-    &-btn-disabled {
-        background-color: $disabledBgColor;
-        color: $disabledColor;
-        border: 1px solid $disabledBgColor;
-        cursor: not-allowed;
-
-        &#{$ez}-btn-border {
-            color: $disabledColor;
-            background-color: $disabledBgColor2;
-            border: 1px solid $disabledBgColor;
-        }
-        &:hover {
-            color: $primaryColor;
-        }
-    }
 }

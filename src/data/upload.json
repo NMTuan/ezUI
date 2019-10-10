@@ -3,7 +3,7 @@
     "msg": "",
     "result": [
         {
-            "path": "/data/music_1.mp3",
+            "path": "../../data/music_1.mp3",
             "src": "",
             "name": "music_1.mp3"
         }
