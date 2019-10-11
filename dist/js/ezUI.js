@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_69a96706.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_52c88f77.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16464,7 +16464,9 @@ var _list = {
     btns: [],
     //操作按钮
     btnsClassName: [//按钮默认样式
-    'ez-btn-sm', 'ez-btn-radius']
+    'ez-btn-sm', 'ez-btn-radius'],
+    groupClassName: [//组默认样式
+    'ez-btn-group-radius']
   },
   list: function list(els, params) {
     $.each(els, function () {
@@ -16986,8 +16988,32 @@ var _list = {
   }),
   //按钮
   initBtns: function initBtns() {
-    this.fnEl = $('<div>').addClass('ez-table-list-fn');
-    this.el.prepend(this.fnEl);
+    var s = this;
+    s.fnEl = $('<div>').addClass('ez-table-list-fn');
+    s.el.prepend(this.fnEl); //如果开启多选, 则会直接跟上全选/反选两个操作按钮
+
+    if (s.params.multiple !== false) {
+      var multBtns = {
+        group: true,
+        className: ['ez-btn-group-radius'],
+        btns: [{
+          id: 'selectAll',
+          title: '全选',
+          available: 'always',
+          click: function click(btn, selected) {
+            this.allSelect();
+          }
+        }, {
+          id: 'unSelected',
+          title: '反选',
+          available: 'always',
+          click: function click(btn, selected) {
+            this.unSelect();
+          }
+        }]
+      };
+      s.params.btns.unshift(multBtns);
+    }
   },
   renderBtns: function renderBtns() {
     var s = this;
@@ -17036,6 +17062,7 @@ var _list = {
       if (item.group && item.btns.length > 0) {
         //按钮组
         var group = $('<span>').addClass('ez-btn-group');
+        group.addClass(s.params.groupClassName.join(' '));
 
         if (item.className && item.className.length > 0) {
           group.addClass(item.className.join(' '));
