@@ -231,36 +231,71 @@
         multiple: 'option',
         btns: [
             {
-                id: 'btn',
-                title: '按钮111',
+                id: 'aa',
+                title: '全选按钮',
                 className: ['ez-btn-warning'],
-                available: 'multiple',
+                available: 'always',
                 click: function (btn, selected) {
-                    var s = this;
-                    var field3 = s.selectedGetValues('field3');
-                    console.log('click1');
-                    console.log(field3);
-
-                }
-            },
-            {
-                id: 'selectAll',
-                title: '全选',
-                className: ['ez-btn-primary'],
-                click: function (btn, selected) {
-                    console.log('click2');
                     this.allSelect();
                 }
             },
             {
-                id: 'unSelect',
-                title: '反选',
-                className: ['ez-btn-secondary'],
-                click: function (btn, selected) {
-                    console.log('click2');
-                    this.unSelect();
-                }
+                group: true,
+                btns: [
+                    {
+                        id: 'selectAll',
+                        title: '全选11',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.allSelect();
+                        }
+                    }, {
+                        id: 'unSelect',
+                        title: '反选22',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.unSelect();
+                        }
+                    }
+                ]
             },
+            // [{
+            //     id: 'selectAll',
+            //     title: '全选11',
+            //     className: ['ez-btn-primary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.allSelect();
+            //     }
+            // }, {
+            //     id: 'unSelect',
+            //     title: '反选22',
+            //     className: ['ez-btn-secondary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.unSelect();
+            //     }
+            // }],
+            // {
+            //     id: 'selectAll',
+            //     title: '全选',
+            //     className: ['ez-btn-primary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.allSelect();
+            //     }
+            // },
+            // {
+            //     id: 'unSelect',
+            //     title: '反选',
+            //     className: ['ez-btn-secondary'],
+            //     click: function (btn, selected) {
+            //         console.log('click2');
+            //         this.unSelect();
+            //     }
+            // },
             {
                 id: 'cancelSelect',
                 title: '取消',
