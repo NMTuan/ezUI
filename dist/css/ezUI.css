@@ -1770,8 +1770,9 @@ body {
   border-radius: 3px;
   color: #9e9e9e;
   text-align: center;
-  line-height: 38px;
   text-decoration: none;
+  font-size: 12px;
+  padding: 3px 0;
 }
 
 .ez-nav li a:hover {

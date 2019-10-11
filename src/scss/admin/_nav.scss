@@ -26,8 +26,10 @@ li {
         border-radius: 3px;
         color: color('grey', 'base');
         text-align: center;
-        line-height: $nav-width - $padding*2;
+        //line-height: $nav-width - $padding*2;
         text-decoration: none;
+        font-size: 12px;
+        padding: $padding/2 0;
 
         &:hover {
             color: color('grey', 'l3');
