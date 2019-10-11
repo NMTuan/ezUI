@@ -582,7 +582,8 @@ var list = {
         }
         //处理available状态
         if(
-            ($.inArray(btnData.id, intersection) < 0) ||   //没按钮
+            // (btnData.available !== 'always') ||   //不是一直
+            (btnData.available !== 'always' && $.inArray(btnData.id, intersection) < 0) ||   //没按钮
             (btnData.available === 'unSelected' && selected.length > 0) || //未选状态, 但已选数量大于0
             (btnData.available === 'selected' && selected.length === 0) ||  //有选状态, 但已选数量等于0
             (btnData.available === 'allSelect' && selected.length !== s.params.data.body.length) || //全选状态, 但已选数量不等于最大数据
