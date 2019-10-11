@@ -106,13 +106,14 @@
         }
 
         &-disabled {
-            background-color: color('grey', 'l4');
-            color: color('grey', 'base');
-            border: 1px solid color('grey', 'l4');
+            //background-color: color('grey', 'l4');
+            //color: color('grey', 'base');
+            //border: 1px solid color('grey', 'l4');
             cursor: not-allowed;
+            opacity: 0.3;
 
             &:hover {
-                color: color('grey', 'base');
+                opacity: 0.2;
             }
         }
 

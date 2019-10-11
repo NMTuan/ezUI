@@ -165,7 +165,7 @@
 </table>
 <script>
     var data = ez.getTable('#gridTable', {
-        remove: true
+        // remove: true
     });
     console.log(data);
     $('#tableList').ez_table_list({
@@ -231,16 +231,12 @@
         multiple: 'option',
         btns: [
             {
-                id: 'btn',
-                title: '按钮111',
+                id: 'aa',
+                title: '全选按钮',
                 className: ['ez-btn-warning'],
-                available: 'multiple',
+                available: 'always',
                 click: function (btn, selected) {
-                    var s = this;
-                    var field3 = s.selectedGetValues('field3');
-                    console.log('click1');
-                    console.log(field3);
-
+                    this.allSelect();
                 }
             },
             {
