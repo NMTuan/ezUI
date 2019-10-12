@@ -228,7 +228,6 @@
         // sort: ['code', 'company'],
         hideFields: ['id'],
         clickSelected: true,
-        multiple: 'option',
         btns: [
             {
                 id: 'aa',
@@ -305,7 +304,10 @@
                     this.cancelSelect();
                 }
             },
-        ]
+        ],
+        selectedChanged: function () {
+            console.log(this);
+        }
     });
 </script>
 
