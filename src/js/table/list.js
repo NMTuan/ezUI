@@ -21,7 +21,7 @@ var list = {
         clickSelected: true,   //点击选中
         multiple: '<input type="checkbox" class="ez-table-list-head-allChecked" />', //多选: 值是什么, 显示什么; false不开启; 如果为option 则为设定按钮, 同时, 不处理下面的optionsBtn.
         optionsBtn: '<i class="remixicon-settings-line">',   //功能设置按钮, false则不显示 remixicon-table-line
-        cfgTableLocalstorage: true, //本地记录配置, 如果是string, 则为ls_key的一部分, 解决一个url多个table无法独立配置的问题.
+        localStorage: true, //本地记录配置, 如果是string, 则为ls_key的一部分, 解决一个url多个table无法独立配置的问题.
         btns: [],   //操作按钮
         btnsClassName: [    //按钮默认样式
             'ez-btn-sm',
@@ -152,8 +152,8 @@ var list = {
     //初始化隐藏列
     initHideFields: function () {
         var s = this;
-        if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
-            var ls = localStorage.getItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_' + path);
+        if (window.localStorage && s.params.localStorage !== false) {
+            var ls = localStorage.getItem('hideFields_' + s.params.localStorage.toString() + '_' + path);
             if(ls){
                 s.params.hideFields = JSON.parse(ls);
             }
@@ -162,8 +162,8 @@ var list = {
     //初始化排序
     initSort: function () {
         var s = this;
-        if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
-            var ls = localStorage.getItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_'  + path);
+        if (window.localStorage && s.params.localStorage !== false) {
+            var ls = localStorage.getItem('sort_' + s.params.localStorage.toString() + '_'  + path);
             if(ls){
                 s.params.sort = JSON.parse(ls);
             }
@@ -628,7 +628,7 @@ var list = {
             optionsBtn: false,
             sort: ['col', 'id',  'drag', 'checkbox'],
             multiple: '隐藏',
-            cfgTableLocalstorage: false
+            localStorage: false
         };
         $('body').append(el);
         var cfgTable = new list.List(el, options);
@@ -653,9 +653,9 @@ var list = {
                 var checkboxIndex = $.inArray('checkbox', s.params.sort);   //找到checkbox的位置
                 s.params.sort = cfgTable.getSort();
                 s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
-                if (window.localStorage && s.params.cfgTableLocalstorage) {
-                    localStorage.setItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_'  + path, JSON.stringify(s.params.hideFields));
-                    localStorage.setItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_'  + path, JSON.stringify(s.params.sort));
+                if (window.localStorage && s.params.localStorage) {
+                    localStorage.setItem('hideFields_' + s.params.localStorage.toString() + '_'  + path, JSON.stringify(s.params.hideFields));
+                    localStorage.setItem('sort_' + s.params.localStorage.toString() + '_'  + path, JSON.stringify(s.params.sort));
                 }
                 list.renderTable.call(s);
             },
