@@ -30,7 +30,7 @@ var list = {
         groupClassName: [   //组默认样式
             'ez-btn-group-radius'
         ],
-        selectedChanged: function (selected) {  //选中改变后执行
+        selectedChange: function (selected) {  //选中改变后执行
 
         }
     },
@@ -390,7 +390,7 @@ var list = {
         $.each(dataIds, function (i, dataId) {
             if (typeof dataId !== 'undefined' && $.inArray(dataId, s.params.selected) < 0) {
                 s.params.selected.push(dataId);
-                list.selectedChanged.call(s);
+                list.selectedChange.call(s);
             }
         });
     },
@@ -404,10 +404,10 @@ var list = {
             }
             s.params.selected.splice(index, 1);
         });
-        list.selectedChanged.call(s);
+        list.selectedChange.call(s);
     },
     //选中数据改变后
-    selectedChanged: function () {
+    selectedChange: function () {
         var s = this;
         clearTimeout(delay);
         delay = setTimeout(function () {
@@ -421,7 +421,7 @@ var list = {
                 allChecked.removeAttr('checked');
                 allChecked.prop('checked', false);
             }
-            s.params.selectedChanged.call(s, selected);
+            s.params.selectedChange.call(s, selected);
         }, 50);
     },
     //在选中的数据中找key的值是否等于value
