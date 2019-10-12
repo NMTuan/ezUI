@@ -35,9 +35,12 @@ var list = {
         }
     },
     list: function (els, params) {
+        var arr = [];
         $.each(els, function () {
-            new list.List($(this), params);
+            var rs = new list.List($(this), params);
+            arr.push(rs);
         });
+        return arr;
     },
     List: function (el, params) {
         var s = this;
@@ -66,6 +69,9 @@ var list = {
         };
         s.cancelSelect = function () {
             list.cancelSelect.call(s);
+        };
+        s.setData = function (data) {
+            list.setData.call(s, data);
         };
 
         //如果开启多选, 则会直接跟上全选/反选两个操作按钮
@@ -574,19 +580,22 @@ var list = {
 
         return btn;
     },
-
+    //全选
     allSelect: function () {
         var s = this;
         list.rowSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
     },
+    //反选
     unSelect: function () {
         var s = this;
         list.rowToggleSelected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
     },
+    //取消选择
     cancelSelect: function () {
         var s = this;
         list.rowUnselected.call(s, s.el.find('.ez-table-list-body .ez-table-list-row'));
     },
+    //设置项
     optionTable: function () {
         var s = this;
         var el = $('<div>').addClass('ez-table-list');
@@ -663,6 +672,13 @@ var list = {
                 cfgTable.destory();
             }
         })
+    },
+    //更新数据
+    setData: function (data) {
+        var s = this;
+        s.params.data.body = data;  //写入新数据
+        list.renderTable.call(s);   //渲染表格
+        list.cancelSelect.call(s);  //清空已选内容
     }
 };
 
