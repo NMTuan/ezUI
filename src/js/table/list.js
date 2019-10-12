@@ -21,7 +21,7 @@ var list = {
         clickSelected: true,   //点击选中
         multiple: '<input type="checkbox" class="ez-table-list-head-allChecked" />', //多选: 值是什么, 显示什么; false不开启; 如果为option 则为设定按钮, 同时, 不处理下面的optionsBtn.
         optionsBtn: '<i class="remixicon-settings-line">',   //功能设置按钮, false则不显示 remixicon-table-line
-        cfgTableLocalstorage: true, //本地记录配置
+        cfgTableLocalstorage: true, //本地记录配置, 如果是string, 则为ls_key的一部分, 解决一个url多个table无法独立配置的问题.
         btns: [],   //操作按钮
         btnsClassName: [    //按钮默认样式
             'ez-btn-sm',
@@ -152,17 +152,21 @@ var list = {
     //初始化隐藏列
     initHideFields: function () {
         var s = this;
-        var ls = localStorage.getItem('hideFields_' + path);
-        if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-            s.params.hideFields = JSON.parse(ls);
+        if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
+            var ls = localStorage.getItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_' + path);
+            if(ls){
+                s.params.hideFields = JSON.parse(ls);
+            }
         }
     },
     //初始化排序
     initSort: function () {
         var s = this;
-        var ls = localStorage.getItem('sort_' + path);
-        if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-            s.params.sort = JSON.parse(ls);
+        if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
+            var ls = localStorage.getItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_'  + path);
+            if(ls){
+                s.params.sort = JSON.parse(ls);
+            }
         }
         //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
         $.each(s.params.data.header, function () {
@@ -650,8 +654,8 @@ var list = {
                 s.params.sort = cfgTable.getSort();
                 s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
                 if (window.localStorage && s.params.cfgTableLocalstorage) {
-                    localStorage.setItem('hideFields_' + path, JSON.stringify(s.params.hideFields));
-                    localStorage.setItem('sort_' + path, JSON.stringify(s.params.sort));
+                    localStorage.setItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_'  + path, JSON.stringify(s.params.hideFields));
+                    localStorage.setItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_'  + path, JSON.stringify(s.params.sort));
                 }
                 list.renderTable.call(s);
             },

@@ -6,6 +6,7 @@
 <!--        <div class="box-header">标题部分</div>-->
         <div class="box-body">
             <div id="tableList" class="ez-table-list"></div>
+            <div id="tableList2" class="ez-table-list"></div>
         </div>
     </div>
 </div>
@@ -167,7 +168,6 @@
     var data = ez.getTable('#gridTable', {
         remove: true
     });
-    console.log(data);
     $('#tableList').ez_table_list({
         data: data,
         // data: {
@@ -305,6 +305,57 @@
                 }
             },
         ],
+        selectedChanged: function () {
+            console.log(this);
+        }
+    });
+    $('#tableList2').ez_table_list({
+        data: data,
+        hideFields: ['id'],
+        clickSelected: true,
+        btns: [
+            {
+                id: 'aa',
+                title: '全选按钮',
+                className: ['ez-btn-warning'],
+                available: 'always',
+                click: function (btn, selected) {
+                    this.allSelect();
+                }
+            },
+            {
+                group: true,
+                btns: [
+                    {
+                        id: 'selectAll',
+                        title: '全选11',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.allSelect();
+                        }
+                    }, {
+                        id: 'unSelect',
+                        title: '反选22',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.unSelect();
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'cancelSelect',
+                title: '取消',
+                className: ['ez-btn-success'],
+                click: function (btn, selected) {
+                    console.log('click2');
+                    this.cancelSelect();
+                }
+            },
+        ],
+        cfgTableLocalstorage: 'aaa',
         selectedChanged: function () {
             console.log(this);
         }

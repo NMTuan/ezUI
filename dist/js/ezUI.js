@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_217f48ab.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f467e94f.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16462,7 +16462,7 @@ var _list = {
     optionsBtn: '<i class="remixicon-settings-line">',
     //功能设置按钮, false则不显示 remixicon-table-line
     cfgTableLocalstorage: true,
-    //本地记录配置
+    //本地记录配置, 如果是string, 则为ls_key的一部分, 解决一个url多个table无法独立配置的问题.
     btns: [],
     //操作按钮
     btnsClassName: [//按钮默认样式
@@ -16605,19 +16605,25 @@ var _list = {
   //初始化隐藏列
   initHideFields: function initHideFields() {
     var s = this;
-    var ls = localStorage.getItem('hideFields_' + path);
 
-    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-      s.params.hideFields = JSON.parse(ls);
+    if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
+      var ls = localStorage.getItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_' + path);
+
+      if (ls) {
+        s.params.hideFields = JSON.parse(ls);
+      }
     }
   },
   //初始化排序
   initSort: function initSort() {
     var s = this;
-    var ls = localStorage.getItem('sort_' + path);
 
-    if (window.localStorage && s.params.cfgTableLocalstorage && ls) {
-      s.params.sort = JSON.parse(ls);
+    if (window.localStorage && s.params.cfgTableLocalstorage !== false) {
+      var ls = localStorage.getItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_' + path);
+
+      if (ls) {
+        s.params.sort = JSON.parse(ls);
+      }
     } //循环表头, 补充没有被排序的列, 保证后期新加的列默认呈显示状态.
 
 
@@ -17173,8 +17179,8 @@ var _list = {
         s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
 
         if (window.localStorage && s.params.cfgTableLocalstorage) {
-          localStorage.setItem('hideFields_' + path, JSON.stringify(s.params.hideFields));
-          localStorage.setItem('sort_' + path, JSON.stringify(s.params.sort));
+          localStorage.setItem('hideFields_' + s.params.cfgTableLocalstorage.toString() + '_' + path, JSON.stringify(s.params.hideFields));
+          localStorage.setItem('sort_' + s.params.cfgTableLocalstorage.toString() + '_' + path, JSON.stringify(s.params.sort));
         }
 
         _list.renderTable.call(s);
