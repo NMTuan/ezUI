@@ -214,7 +214,8 @@
         data: data,
         hideFields: ['id'],
         clickSelected: true,
-        children: function(callback){
+        children: function(data, cell, callback){
+            console.log(arguments)
             setTimeout(function () {
                 // callback(false, $('#tableList2').find('.ez-table-list-wrap'));
                 callback(false, 'hello world.!');

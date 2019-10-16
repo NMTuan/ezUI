@@ -34,7 +34,7 @@ var list = {
         selectedChange: function (selected) {  //选中改变后执行
 
         },
-        children: null
+        children: null  //子集的方法, 一个参数callback回调
     },
     list: function (els, params) {
         var arr = [];
@@ -196,7 +196,7 @@ var list = {
             s.params.sort.unshift('checkbox');
         }
         //如果有children, 则在第一位增加图标
-        if (typeof s.params.children === 'function') {
+        if (typeof s.params.children === 'function' && $.inArray('children', s.params.sort) < 0) {
             s.params.sort.unshift('children');
         }
     },
@@ -329,6 +329,9 @@ var list = {
             if (field === 'children') {
                 var btn = $('<i>');
                 btn.addClass('remixicon-add-line');
+                $.each(data, function (key, value) {
+                    btn.data(key, value);
+                });
                 var cell = list.renderCell.call(s, 'children', true);
                 cell.addClass('ez-text-center');
                 cell.html(btn);
@@ -781,7 +784,7 @@ var list = {
             //如果没有, 开启loading, 构建子元素
             icon.attr('class', 'remixicon-loader-2-line fa-spin');
 
-            s.params.children(function (error, res) {
+            s.params.children(icon.data(), cell, function (error, res) {
                 if (error) {
                     //还原, 不执行
                     icon.attr('class', iconClass);
