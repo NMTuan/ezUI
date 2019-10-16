@@ -672,6 +672,7 @@ var list = {
                 }
             });
         });
+        console.log(body);
         var options = {
             data: {
                 header: [
@@ -719,8 +720,10 @@ var list = {
                     selected.push(this.id);
                 });
                 s.params.hideFields = selected;
+                var childrenIndex = $.inArray('children', s.params.sort);   //找到children的位置
                 var checkboxIndex = $.inArray('checkbox', s.params.sort);   //找到checkbox的位置
                 s.params.sort = cfgTable.getSort();
+                s.params.sort.splice(childrenIndex, 0, 'children'); //新排序插入children
                 s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
                 if (window.localStorage && s.params.localStorage) {
                     localStorage.setItem('hideFields_' + s.params.localStorage.toString() + '_' + path, JSON.stringify(s.params.hideFields));

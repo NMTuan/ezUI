@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3f06e237.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_83b87f5b.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -17216,6 +17216,7 @@ var _list = {
         }
       });
     });
+    console.log(body);
     var options = {
       data: {
         header: [{
@@ -17259,9 +17260,13 @@ var _list = {
           selected.push(this.id);
         });
         s.params.hideFields = selected;
+        var childrenIndex = $.inArray('children', s.params.sort); //找到children的位置
+
         var checkboxIndex = $.inArray('checkbox', s.params.sort); //找到checkbox的位置
 
         s.params.sort = cfgTable.getSort();
+        s.params.sort.splice(childrenIndex, 0, 'children'); //新排序插入children
+
         s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
 
         if (window.localStorage && s.params.localStorage) {
