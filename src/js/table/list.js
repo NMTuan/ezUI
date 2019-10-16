@@ -2,6 +2,7 @@ var path = location.pathname;
 var delay;  //延时
 var list = {
     defaults: {
+        type: 'table',    //构建模式, 默认div, 有合并单元格之类的, 需要用table模式.
         data: { //数据集, 必须有id
             header: [], //表头 {field, title}
             body: [],   //主体 {id, field1, field2}
@@ -102,7 +103,7 @@ var list = {
         }
 
         //表格设定
-        if(s.params.optionsBtn !== false && s.params.multiple !== 'option'){
+        if (s.params.optionsBtn !== false && s.params.multiple !== 'option') {
             var btns = {
                 id: 'option',
                 title: s.params.optionsBtn,
@@ -144,7 +145,7 @@ var list = {
         s.el.on('click', '.ez-table-list-head-allChecked', function (e) {
             e.preventDefault();
             var checked = $(this).attr('checked');
-            if(checked){
+            if (checked) {
                 s.cancelSelect();
             } else {
                 s.allSelect();
@@ -152,7 +153,7 @@ var list = {
         });
         //设置
         s.el.on('click', '.ez-table-list-option', function () {
-             list.optionTable.call(s);
+            list.optionTable.call(s);
         });
     },
     //初始化隐藏列
@@ -160,7 +161,7 @@ var list = {
         var s = this;
         if (window.localStorage && s.params.localStorage !== false) {
             var ls = localStorage.getItem('hideFields_' + s.params.localStorage.toString() + '_' + path);
-            if(ls){
+            if (ls) {
                 s.params.hideFields = JSON.parse(ls);
             }
         }
@@ -169,8 +170,8 @@ var list = {
     initSort: function () {
         var s = this;
         if (window.localStorage && s.params.localStorage !== false) {
-            var ls = localStorage.getItem('sort_' + s.params.localStorage.toString() + '_'  + path);
-            if(ls){
+            var ls = localStorage.getItem('sort_' + s.params.localStorage.toString() + '_' + path);
+            if (ls) {
                 s.params.sort = JSON.parse(ls);
             }
         }
@@ -192,7 +193,8 @@ var list = {
     //渲染表格
     renderTable: function () {
         var s = this;
-        var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
+        var table = s.params.type === 'div' ? $('<div>') : $('<table>');
+        table = table.addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
         var header = list.renderHeader.call(s);
         var body = list.renderBody.call(s);
         table.append(header).append(body);
@@ -202,13 +204,15 @@ var list = {
     //渲染表头
     renderHeader: function () {
         var s = this;
-        var html = $('<div>').addClass('ez-table-list-head');
-        var row = $('<div>').addClass('ez-table-list-row');
+        var html = s.params.type === 'div' ? $('<div>') : $('<thead>');
+        html.addClass('ez-table-list-head');
+        var row = s.params.type === 'div' ? $('<div>') : $('<tr>');
+        row.addClass('ez-table-list-row');
 
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
             if (field === 'checkbox') {
-                if(s.params.multiple === false){
+                if (s.params.multiple === false) {
                     return;
                 }
                 var optionBtn = '';
@@ -218,7 +222,7 @@ var list = {
                 } else {
                     optionBtn = s.params.multiple;
                 }
-                var cell = list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
+                var cell = list.renderCell.call(s, s.params.multiple === 'option' ? 'option' : '', true);
                 cell.css('width', '46px');
                 cell.addClass('ez-text-center');
                 cell.html(optionBtn);
@@ -227,7 +231,7 @@ var list = {
             }
             $.each(s.params.data.header, function (i, item) {
                 if (item.field === field) {
-                    var cell = list.renderCell(item.field, true);
+                    var cell = list.renderCell.call(s, item.field, true);
                     if ($.inArray(field, s.params.hideFields) < 0) {
                         cell.html(item.title);
                         if (item.width) {
@@ -253,7 +257,8 @@ var list = {
     //渲染表格主体
     renderBody: function () {
         var s = this;
-        var html = $('<div>').addClass('ez-table-list-body');
+        var html = s.params.type === 'div' ? $('<div>') : $('<tbody>');
+        html.addClass('ez-table-list-body');
         $.each(s.params.data.body, function (i, item) {
             if (typeof item.id === 'undefined') {   //没有id就造一个.
                 item.id = 'id_' + i;
@@ -262,20 +267,20 @@ var list = {
             html.append(row);
         });
         //处理空列表
-        if(s.params.data.body.length === 1){
+        if (s.params.data.body.length === 1) {
             var len = 0;
             var key = '';
             var text = '';
             $.each(s.params.data.body[0], function (i, item) {
-                if(i === 'id'){
+                if (i === 'id') {
                     return;
                 }
                 len++;
                 key = i;
                 text = item;
             });
-            if(len === 1){
-                var cell = list.renderCell(key);
+            if (len === 1) {
+                var cell = list.renderCell.call(s, key);
                 cell.html(text);
                 html.find('.ez-table-list-row').append(cell);
             }
@@ -285,7 +290,8 @@ var list = {
     //渲染行, data单元格数据数组
     renderRow: function (data, _index) {
         var s = this;
-        var html = $('<div>').addClass('ez-table-list-row');
+        var html = s.params.type === 'div' ? $('<div>') : $('<tr>');
+        html.addClass('ez-table-list-row');
         $.each(data, function (key, value) {
             html.data(key, value);
         });
@@ -298,7 +304,7 @@ var list = {
         $.each(s.params.sort, function (i, field) {
             //构建复选框
             if (field === 'checkbox') {
-                if(s.params.multiple === false){
+                if (s.params.multiple === false) {
                     return;
                 }
                 var checkbox = $('<input>').attr({
@@ -313,21 +319,21 @@ var list = {
                 if ($.inArray(data.id, s.params.selected) >= 0) {
                     checkbox.attr('checked', 'checked');
                 }
-                var cell = list.renderCell('checkbox', true);
+                var cell = list.renderCell.call(s, 'checkbox', true);
                 cell.addClass('ez-text-center');
                 cell.append(checkbox);
                 html.append(cell);
             }
             //构建拖拽
             if (field === 'drag') {
-                var cell = list.renderCell('drag', true);
+                var cell = list.renderCell.call(s, 'drag', true);
                 cell.addClass('ez-text-center');
                 cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
                 html.append(cell);
             }
             $.each(data, function (key, value) {
                 if (key === field) {
-                    var cell = list.renderCell(key);
+                    var cell = list.renderCell.call(s, key);
                     if ($.inArray(field, s.params.hideFields) < 0) {
                         cell.html(value);
                         // cell.attr('title', cell.text());
@@ -343,12 +349,15 @@ var list = {
     },
     //渲染单元格, field字段, th是否为th
     renderCell: function (field, th) {
+        var s = this;
         var cls = [];
         cls.push(th ? 'ez-table-list-th' : 'ez-table-list-td');
         if (field) {
             cls.push('ez-table-list-field-' + field);
         }
-        return $('<div>').addClass(cls.join(' '));
+        var html = s.params.type === 'div' ? $('<div>') : $('<td>');
+        html.addClass(cls.join(' '));
+        return html;
     },
 
     //选中当前行
@@ -437,9 +446,9 @@ var list = {
         clearTimeout(delay);
         delay = setTimeout(function () {
             list.renderBtns.call(s);
-            var selected  = s.getSelected();
+            var selected = s.getSelected();
             var allChecked = s.el.find('.ez-table-list-head-allChecked');
-            if(selected.length === s.params.data.body.length){
+            if (selected.length === s.params.data.body.length) {
                 allChecked.attr('checked', 'checked');
                 allChecked.prop('checked', true);
             } else {
@@ -654,7 +663,7 @@ var list = {
             clickSelected: false,
             // hideFields: ['id'],
             optionsBtn: false,
-            sort: ['col', 'id',  'drag', 'checkbox'],
+            sort: ['col', 'id', 'drag', 'checkbox'],
             multiple: '隐藏',
             localStorage: false
         };
@@ -682,8 +691,8 @@ var list = {
                 s.params.sort = cfgTable.getSort();
                 s.params.sort.splice(checkboxIndex, 0, 'checkbox'); //新排序插入checkbox
                 if (window.localStorage && s.params.localStorage) {
-                    localStorage.setItem('hideFields_' + s.params.localStorage.toString() + '_'  + path, JSON.stringify(s.params.hideFields));
-                    localStorage.setItem('sort_' + s.params.localStorage.toString() + '_'  + path, JSON.stringify(s.params.sort));
+                    localStorage.setItem('hideFields_' + s.params.localStorage.toString() + '_' + path, JSON.stringify(s.params.hideFields));
+                    localStorage.setItem('sort_' + s.params.localStorage.toString() + '_' + path, JSON.stringify(s.params.sort));
                 }
                 list.renderTable.call(s);
             },

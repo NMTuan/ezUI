@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2a44a5d2.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9977325.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16440,6 +16440,8 @@ var delay; //延时
 
 var _list = {
   defaults: {
+    type: 'table',
+    //构建模式, 默认div, 有合并单元格之类的, 需要用table模式.
     data: {
       //数据集, 必须有id
       header: [],
@@ -16653,7 +16655,8 @@ var _list = {
   //渲染表格
   renderTable: function renderTable() {
     var s = this;
-    var table = $('<div>').addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
+    var table = s.params.type === 'div' ? $('<div>') : $('<table>');
+    table = table.addClass('ez-table-list-table').addClass(s.params.tableClass.join(' '));
 
     var header = _list.renderHeader.call(s);
 
@@ -16666,8 +16669,10 @@ var _list = {
   //渲染表头
   renderHeader: function renderHeader() {
     var s = this;
-    var html = $('<div>').addClass('ez-table-list-head');
-    var row = $('<div>').addClass('ez-table-list-row'); //按排序构建列
+    var html = s.params.type === 'div' ? $('<div>') : $('<thead>');
+    html.addClass('ez-table-list-head');
+    var row = s.params.type === 'div' ? $('<div>') : $('<tr>');
+    row.addClass('ez-table-list-row'); //按排序构建列
 
     $.each(s.params.sort, function (i, field) {
       if (field === 'checkbox') {
@@ -16684,7 +16689,7 @@ var _list = {
           optionBtn = s.params.multiple;
         }
 
-        var cell = _list.renderCell(s.params.multiple === 'option' ? 'option' : '', true);
+        var cell = _list.renderCell.call(s, s.params.multiple === 'option' ? 'option' : '', true);
 
         cell.css('width', '46px');
         cell.addClass('ez-text-center');
@@ -16695,7 +16700,7 @@ var _list = {
 
       $.each(s.params.data.header, function (i, item) {
         if (item.field === field) {
-          var cell = _list.renderCell(item.field, true);
+          var cell = _list.renderCell.call(s, item.field, true);
 
           if ($.inArray(field, s.params.hideFields) < 0) {
             cell.html(item.title);
@@ -16725,7 +16730,8 @@ var _list = {
   //渲染表格主体
   renderBody: function renderBody() {
     var s = this;
-    var html = $('<div>').addClass('ez-table-list-body');
+    var html = s.params.type === 'div' ? $('<div>') : $('<tbody>');
+    html.addClass('ez-table-list-body');
     $.each(s.params.data.body, function (i, item) {
       if (typeof item.id === 'undefined') {
         //没有id就造一个.
@@ -16752,7 +16758,7 @@ var _list = {
       });
 
       if (len === 1) {
-        var cell = _list.renderCell(key);
+        var cell = _list.renderCell.call(s, key);
 
         cell.html(text);
         html.find('.ez-table-list-row').append(cell);
@@ -16764,7 +16770,8 @@ var _list = {
   //渲染行, data单元格数据数组
   renderRow: function renderRow(data, _index) {
     var s = this;
-    var html = $('<div>').addClass('ez-table-list-row');
+    var html = s.params.type === 'div' ? $('<div>') : $('<tr>');
+    html.addClass('ez-table-list-row');
     $.each(data, function (key, value) {
       html.data(key, value);
     }); //增加选中class
@@ -16794,7 +16801,7 @@ var _list = {
           checkbox.attr('checked', 'checked');
         }
 
-        var cell = _list.renderCell('checkbox', true);
+        var cell = _list.renderCell.call(s, 'checkbox', true);
 
         cell.addClass('ez-text-center');
         cell.append(checkbox);
@@ -16803,7 +16810,7 @@ var _list = {
 
 
       if (field === 'drag') {
-        var cell = _list.renderCell('drag', true);
+        var cell = _list.renderCell.call(s, 'drag', true);
 
         cell.addClass('ez-text-center');
         cell.append('<i class="remixicon-drag-move-fill ez-cursor-drag"></i>');
@@ -16812,7 +16819,7 @@ var _list = {
 
       $.each(data, function (key, value) {
         if (key === field) {
-          var cell = _list.renderCell(key);
+          var cell = _list.renderCell.call(s, key);
 
           if ($.inArray(field, s.params.hideFields) < 0) {
             cell.html(value); // cell.attr('title', cell.text());
@@ -16830,6 +16837,7 @@ var _list = {
   },
   //渲染单元格, field字段, th是否为th
   renderCell: function renderCell(field, th) {
+    var s = this;
     var cls = [];
     cls.push(th ? 'ez-table-list-th' : 'ez-table-list-td');
 
@@ -16837,7 +16845,9 @@ var _list = {
       cls.push('ez-table-list-field-' + field);
     }
 
-    return $('<div>').addClass(cls.join(' '));
+    var html = s.params.type === 'div' ? $('<div>') : $('<td>');
+    html.addClass(cls.join(' '));
+    return html;
   },
   //选中当前行
   rowSelected: function rowSelected(row) {

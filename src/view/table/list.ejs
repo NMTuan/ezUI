@@ -315,6 +315,14 @@
     });
 
 
+
+    //subTable
+    var subTable = $('<tr>');
+    subTable.addClass('ez-table-list-row');
+    subTable.html('<td colspan="11" style="text-align: center;">哈哈哈</td>');
+    $('#tableList').find('.ez-table-list-row').eq(3).css('color', 'red').after(subTable);
+
+
     // $('#tableList').ez_table_list({
     //     data: data,
     //     // data: {
