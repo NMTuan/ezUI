@@ -164,10 +164,24 @@
     </tr>
     </tbody>
 </table>
+<table id="gridTable2" class="table text-nowrap table-border table-hover no-margin"><thead>
+    <tr><th data-field="target_code">任务编号</th><th data-field="company_name">代理机构</th><th data-field="target_name">任务名称</th><th data-field="target_type">考核类型</th><th data-field="target_value">目标值</th><th data-field="target_start">考核开始时间</th><th data-field="target_end">考核结束时间</th><th data-field="target_reach">目标达成值</th><th data-field="target_content">奖惩内容</th><th data-field="result_status">奖惩发放状态</th><th style="text-align:center;" data-field="_btnStatus">操作</th></tr>
+    </thead>
+    <tbody>
+    <tr><td colspan="11"><div style="color:red;font-weight:bold">当前没有内容</div></td></tr>
+    </tbody>
+</table>
 <script>
     var data = ez.getTable('#gridTable', {
         remove: true
     });
+    console.log(data);
+
+    var data2 = ez.getTable('#gridTable2', {
+        // remove: true
+    });
+    console.log(data2);
+
     var newData = [
         {
             "_btnStatus": "selectAll",
@@ -249,7 +263,7 @@
     });
 
     var cdrTable = ez.tableList($('#tableList2'), {
-        data: data,
+        data: data2,
         hideFields: ['id'],
         clickSelected: true,
         btns: [

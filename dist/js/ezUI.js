@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d63733d9.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2a44a5d2.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16735,7 +16735,30 @@ var _list = {
       var row = _list.renderRow.call(s, item, i);
 
       html.append(row);
-    });
+    }); //处理空列表
+
+    if (s.params.data.body.length === 1) {
+      var len = 0;
+      var key = '';
+      var text = '';
+      $.each(s.params.data.body[0], function (i, item) {
+        if (i === 'id') {
+          return;
+        }
+
+        len++;
+        key = i;
+        text = item;
+      });
+
+      if (len === 1) {
+        var cell = _list.renderCell(key);
+
+        cell.html(text);
+        html.find('.ez-table-list-row').append(cell);
+      }
+    }
+
     return html;
   },
   //渲染行, data单元格数据数组

@@ -261,6 +261,25 @@ var list = {
             var row = list.renderRow.call(s, item, i);
             html.append(row);
         });
+        //处理空列表
+        if(s.params.data.body.length === 1){
+            var len = 0;
+            var key = '';
+            var text = '';
+            $.each(s.params.data.body[0], function (i, item) {
+                if(i === 'id'){
+                    return;
+                }
+                len++;
+                key = i;
+                text = item;
+            });
+            if(len === 1){
+                var cell = list.renderCell(key);
+                cell.html(text);
+                html.find('.ez-table-list-row').append(cell);
+            }
+        }
         return html;
     },
     //渲染行, data单元格数据数组
