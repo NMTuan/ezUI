@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9977325.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d27089eb.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16664,7 +16664,12 @@ var _list = {
 
     table.append(header).append(body);
     s.el.find('.ez-table-list-table').remove();
-    s.el.append($('<div class="ez-table-list-wrap"/>').append(table));
+
+    if (s.el.find('.ez-table-list-wrap').length === 0) {
+      s.el.append($('<div class="ez-table-list-wrap"/>'));
+    }
+
+    s.el.find('.ez-table-list-wrap').append(table);
   },
   //渲染表头
   renderHeader: function renderHeader() {
@@ -16761,7 +16766,8 @@ var _list = {
         var cell = _list.renderCell.call(s, key);
 
         cell.html(text);
-        html.find('.ez-table-list-row').append(cell);
+        cell.attr('colspan', s.params.sort.length);
+        html.find('.ez-table-list-row').html(cell);
       }
     }
 
@@ -17000,7 +17006,7 @@ var _list = {
   getSort: function getSort() {
     var s = this;
     var sort = [];
-    $.each(s.el.find(':checkbox'), function (i, item) {
+    $.each(s.el.find(':checkbox').not('.ez-table-list-head-allChecked'), function (i, item) {
       var val = $.trim($(item).val());
 
       if (val) {
@@ -17239,10 +17245,10 @@ var _list = {
     var s = this;
     s.params.data.body = data; //写入新数据
 
-    _list.renderTable.call(s); //渲染表格
-
-
     _list.cancelSelect.call(s); //清空已选内容
+
+
+    _list.renderTable.call(s); //渲染表格
 
   }
 };

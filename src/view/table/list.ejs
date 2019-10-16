@@ -257,13 +257,12 @@
             },
         ],
         selectedChange: function () {
-            console.log(this);
             cdrTable[0].setData(newData);
         }
     });
 
     var cdrTable = ez.tableList($('#tableList2'), {
-        data: data2,
+        data: data,
         hideFields: ['id'],
         clickSelected: true,
         btns: [
@@ -310,7 +309,7 @@
         ],
         localStorage: 'aaa',
         selectedChange: function () {
-            console.log(this);
+            // console.log(this);
         }
     });
 

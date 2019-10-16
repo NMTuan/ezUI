@@ -199,7 +199,10 @@ var list = {
         var body = list.renderBody.call(s);
         table.append(header).append(body);
         s.el.find('.ez-table-list-table').remove();
-        s.el.append($('<div class="ez-table-list-wrap"/>').append(table));
+        if(s.el.find('.ez-table-list-wrap').length === 0){
+            s.el.append($('<div class="ez-table-list-wrap"/>'));
+        }
+        s.el.find('.ez-table-list-wrap').append(table);
     },
     //渲染表头
     renderHeader: function () {
@@ -282,7 +285,8 @@ var list = {
             if (len === 1) {
                 var cell = list.renderCell.call(s, key);
                 cell.html(text);
-                html.find('.ez-table-list-row').append(cell);
+                cell.attr('colspan', s.params.sort.length);
+                html.find('.ez-table-list-row').html(cell);
             }
         }
         return html;
@@ -492,7 +496,7 @@ var list = {
     getSort: function () {
         var s = this;
         var sort = [];
-        $.each(s.el.find(':checkbox'), function (i, item) {
+        $.each(s.el.find(':checkbox').not('.ez-table-list-head-allChecked'), function (i, item) {
             var val = $.trim($(item).val());
             if (val) {
                 sort.push(val);
@@ -705,8 +709,8 @@ var list = {
     setData: function (data) {
         var s = this;
         s.params.data.body = data;  //写入新数据
-        list.renderTable.call(s);   //渲染表格
         list.cancelSelect.call(s);  //清空已选内容
+        list.renderTable.call(s);   //渲染表格
     }
 };
 
