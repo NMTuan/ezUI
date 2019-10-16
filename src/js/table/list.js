@@ -33,7 +33,8 @@ var list = {
         ],
         selectedChange: function (selected) {  //选中改变后执行
 
-        }
+        },
+        children: null
     },
     list: function (els, params) {
         var arr = [];
@@ -155,6 +156,11 @@ var list = {
         s.el.on('click', '.ez-table-list-option', function () {
             list.optionTable.call(s);
         });
+        //子集
+        s.el.on('click', '.ez-table-list-field-children', function (e) {
+            e.stopPropagation();
+            list.childrenCallback.call(s, $(this));
+        });
     },
     //初始化隐藏列
     initHideFields: function () {
@@ -189,6 +195,10 @@ var list = {
         if (s.params.multiple !== false && $.inArray('checkbox', s.params.sort) < 0) {
             s.params.sort.unshift('checkbox');
         }
+        //如果有children, 则在第一位增加图标
+        if (typeof s.params.children === 'function') {
+            s.params.sort.unshift('children');
+        }
     },
     //渲染表格
     renderTable: function () {
@@ -199,7 +209,7 @@ var list = {
         var body = list.renderBody.call(s);
         table.append(header).append(body);
         s.el.find('.ez-table-list-table').remove();
-        if(s.el.find('.ez-table-list-wrap').length === 0){
+        if (s.el.find('.ez-table-list-wrap').length === 0) {
             s.el.append($('<div class="ez-table-list-wrap"/>'));
         }
         s.el.find('.ez-table-list-wrap').append(table);
@@ -214,6 +224,15 @@ var list = {
 
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
+            if (field === 'children') {
+                var btn = '';
+                var cell = list.renderCell.call(s, 'children', true);
+                cell.css('width', '46px');
+                cell.addClass('ez-text-center');
+                cell.html(btn);
+                row.append(cell);
+                return;
+            }
             if (field === 'checkbox') {
                 if (s.params.multiple === false) {
                     return;
@@ -306,6 +325,15 @@ var list = {
 
         //按排序构建列
         $.each(s.params.sort, function (i, field) {
+            //构建子集按钮
+            if (field === 'children') {
+                var btn = $('<i>');
+                btn.addClass('remixicon-add-line');
+                var cell = list.renderCell.call(s, 'children', true);
+                cell.addClass('ez-text-center');
+                cell.html(btn);
+                html.append(cell);
+            }
             //构建复选框
             if (field === 'checkbox') {
                 if (s.params.multiple === false) {
@@ -711,6 +739,66 @@ var list = {
         s.params.data.body = data;  //写入新数据
         list.cancelSelect.call(s);  //清空已选内容
         list.renderTable.call(s);   //渲染表格
+    },
+
+    //自定义子集, 回调, error是否执行, cell展开收起的td, res要插入子集的内容.
+    childrenCallback: function (cell) {
+        var s = this;
+        var icon = cell.find('i');
+        var iconClass = cell.attr('class');
+        var row = cell.parent('tr');
+        var isOpen = cell.hasClass('ez-table-list-field-children-active');
+
+        var open = function () {
+            //关闭其它
+            s.el.find('.ez-table-list-field-children-active').click();
+
+            cell.attr('rowspan', 2);
+            cell.addClass('ez-table-list-field-children-active');
+            icon.attr('class', 'remixicon-subtract-line');
+            row.next('.ez-table-list-row-children').show();
+        };
+        var close = function () {
+            cell.removeAttr('rowspan');
+            cell.removeClass('ez-table-list-field-children-active');
+            icon.attr('class', 'remixicon-add-line');
+            row.next('.ez-table-list-row-children').hide();
+        };
+
+        if (isOpen) {    //已经展开, 要收起来了
+            close();
+        } else {
+
+            //如果存在子元素, 显示即可.
+            if (row.next('.ez-table-list-row-children').length > 0) {
+                open();
+                return;
+            }
+
+            //如果没有, 开启loading, 构建子元素
+            icon.attr('class', 'remixicon-loader-2-line fa-spin');
+
+            s.params.children(function (error, res) {
+                if (error) {
+                    //还原, 不执行
+                    icon.attr('class', iconClass);
+                    return;
+                }
+                row.after(list.renderRowChildren.call(s, res));
+                open();
+            });
+        }
+    },
+    renderRowChildren: function (res) {
+        var s = this;
+        var row = $('<tr>');
+        row.addClass('ez-table-list-row-children');
+        var cell = $('<td>');
+        cell.addClass('ez-table-list-cell');
+        cell.attr('colspan', s.params.sort.length - 1);
+        cell.html(res);
+        row.append(cell);
+        return row;
     }
 };
 

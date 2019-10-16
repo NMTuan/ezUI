@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d27089eb.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3f06e237.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16472,7 +16472,8 @@ var _list = {
     groupClassName: [//组默认样式
     'ez-btn-group-radius'],
     selectedChange: function selectedChange(selected) {//选中改变后执行
-    }
+    },
+    children: null
   },
   list: function list(els, params) {
     var arr = [];
@@ -16609,6 +16610,12 @@ var _list = {
 
     s.el.on('click', '.ez-table-list-option', function () {
       _list.optionTable.call(s);
+    }); //子集
+
+    s.el.on('click', '.ez-table-list-field-children', function (e) {
+      e.stopPropagation();
+
+      _list.childrenCallback.call(s, $(this));
     });
   },
   //初始化隐藏列
@@ -16650,6 +16657,11 @@ var _list = {
 
     if (s.params.multiple !== false && $.inArray('checkbox', s.params.sort) < 0) {
       s.params.sort.unshift('checkbox');
+    } //如果有children, 则在第一位增加图标
+
+
+    if (typeof s.params.children === 'function') {
+      s.params.sort.unshift('children');
     }
   },
   //渲染表格
@@ -16680,6 +16692,18 @@ var _list = {
     row.addClass('ez-table-list-row'); //按排序构建列
 
     $.each(s.params.sort, function (i, field) {
+      if (field === 'children') {
+        var btn = '';
+
+        var cell = _list.renderCell.call(s, 'children', true);
+
+        cell.css('width', '46px');
+        cell.addClass('ez-text-center');
+        cell.html(btn);
+        row.append(cell);
+        return;
+      }
+
       if (field === 'checkbox') {
         if (s.params.multiple === false) {
           return;
@@ -16788,7 +16812,19 @@ var _list = {
 
 
     $.each(s.params.sort, function (i, field) {
-      //构建复选框
+      //构建子集按钮
+      if (field === 'children') {
+        var btn = $('<i>');
+        btn.addClass('remixicon-add-line');
+
+        var cell = _list.renderCell.call(s, 'children', true);
+
+        cell.addClass('ez-text-center');
+        cell.html(btn);
+        html.append(cell);
+      } //构建复选框
+
+
       if (field === 'checkbox') {
         if (s.params.multiple === false) {
           return;
@@ -17250,6 +17286,65 @@ var _list = {
 
     _list.renderTable.call(s); //渲染表格
 
+  },
+  //自定义子集, 回调, error是否执行, cell展开收起的td, res要插入子集的内容.
+  childrenCallback: function childrenCallback(cell) {
+    var s = this;
+    var icon = cell.find('i');
+    var iconClass = cell.attr('class');
+    var row = cell.parent('tr');
+    var isOpen = cell.hasClass('ez-table-list-field-children-active');
+
+    var open = function open() {
+      //关闭其它
+      s.el.find('.ez-table-list-field-children-active').click();
+      cell.attr('rowspan', 2);
+      cell.addClass('ez-table-list-field-children-active');
+      icon.attr('class', 'remixicon-subtract-line');
+      row.next('.ez-table-list-row-children').show();
+    };
+
+    var close = function close() {
+      cell.removeAttr('rowspan');
+      cell.removeClass('ez-table-list-field-children-active');
+      icon.attr('class', 'remixicon-add-line');
+      row.next('.ez-table-list-row-children').hide();
+    };
+
+    if (isOpen) {
+      //已经展开, 要收起来了
+      close();
+    } else {
+      //如果存在子元素, 显示即可.
+      if (row.next('.ez-table-list-row-children').length > 0) {
+        open();
+        return;
+      } //如果没有, 开启loading, 构建子元素
+
+
+      icon.attr('class', 'remixicon-loader-2-line fa-spin');
+      s.params.children(function (error, res) {
+        if (error) {
+          //还原, 不执行
+          icon.attr('class', iconClass);
+          return;
+        }
+
+        row.after(_list.renderRowChildren.call(s, res));
+        open();
+      });
+    }
+  },
+  renderRowChildren: function renderRowChildren(res) {
+    var s = this;
+    var row = $('<tr>');
+    row.addClass('ez-table-list-row-children');
+    var cell = $('<td>');
+    cell.addClass('ez-table-list-cell');
+    cell.attr('colspan', s.params.sort.length - 1);
+    cell.html(res);
+    row.append(cell);
+    return row;
   }
 };
 $.fn.extend({
