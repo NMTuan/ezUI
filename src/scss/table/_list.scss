@@ -182,4 +182,29 @@
 
     }
 
+    //子集
+    &-field-children {
+        cursor: pointer;
+        font-size: 16px;
+        vertical-align: top;
+        border-left: 2px solid color('grey', 'l4');
+        i {
+            display: inline-block;
+        }
+        &:hover {
+            color: color('current', 'base');
+        }
+        &-active {
+            border-left: 2px solid color('grey', 'l1');
+        }
+    }
+    &-row-children {
+        #{$table-list} {
+            &-cell {
+                padding: 12px;
+            }
+        }
+
+    }
+
 }

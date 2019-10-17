@@ -6,6 +6,7 @@
 <!--        <div class="box-header">标题部分</div>-->
         <div class="box-body">
             <div id="tableList" class="ez-table-list"></div>
+            <div id="tableList2" class="ez-table-list"></div>
         </div>
     </div>
 </div>
@@ -163,72 +164,63 @@
     </tr>
     </tbody>
 </table>
+<table id="gridTable2" class="table text-nowrap table-border table-hover no-margin"><thead>
+    <tr><th data-field="target_code">任务编号</th><th data-field="company_name">代理机构</th><th data-field="target_name">任务名称</th><th data-field="target_type">考核类型</th><th data-field="target_value">目标值</th><th data-field="target_start">考核开始时间</th><th data-field="target_end">考核结束时间</th><th data-field="target_reach">目标达成值</th><th data-field="target_content">奖惩内容</th><th data-field="result_status">奖惩发放状态</th><th style="text-align:center;" data-field="_btnStatus">操作</th></tr>
+    </thead>
+    <tbody>
+    <tr><td colspan="11"><div style="color:red;font-weight:bold">当前没有内容</div></td></tr>
+    </tbody>
+</table>
 <script>
     var data = ez.getTable('#gridTable', {
         remove: true
     });
     console.log(data);
-    $('#tableList').ez_table_list({
+
+    var data2 = ez.getTable('#gridTable2', {
+        // remove: true
+    });
+    console.log(data2);
+
+    var newData = [
+        {
+            "_btnStatus": "selectAll",
+            "field1": "这是异步更新的数据鸭11",
+            "field2": "这是异步更新的数据鸭22",
+            "field3": "这是异步更新的数据鸭33",
+            "field4": "这是异步更新的数据鸭44",
+            "field5": "这是异步更新的数据鸭55",
+            "field6": "这是异步更新的数据鸭66",
+            "field7": "这是异步更新的数据鸭77",
+            "field8": "这是异步更新的数据鸭88",
+            "field9": "这是异步更新的数据鸭99",
+            "field10": "这是异步更新的数据鸭00"
+        },
+        {
+            "_btnStatus": "selectAll",
+            "field1": "这是异步更新的数据鸭11",
+            "field2": "这是异步更新的数据鸭22",
+            "field3": "这是异步更新的数据鸭33",
+            "field4": "这是异步更新的数据鸭44",
+            "field5": "这是异步更新的数据鸭55",
+            "field6": "这是异步更新的数据鸭66",
+            "field7": "这是异步更新的数据鸭77",
+            "field8": "这是异步更新的数据鸭88",
+            "field9": "这是异步更新的数据鸭99",
+            "field10": "这是异步更新的数据鸭00"
+        },
+    ];
+    var numberTable = ez.tableList($('#tableList'), {
         data: data,
-        // data: {
-        //     header: [
-        //         {field: 'address', title: '服务器地址'},
-        //         {field: 'id', title: '编号'},
-        //         {field: 'code', title: '服务号'},
-        //         {field: 'company', title: '所属企业'},
-        //         {field: 'agent', title: '所属机构'},
-        //         {field: 'site', title: '归属落地', width: 100},
-        //         {field: '_category', title: 'category'},
-        //         {field: '_type', title: 'type'},
-        //     ],
-        //     body: [
-        //         {
-        //             id: 'BC1909090542555642',
-        //             code: '111111',
-        //             company: '北京几克餐饮管理有限公司【beijingjike】',
-        //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
-        //             site: '杭州电信',
-        //             address: '杭州新增服务器',
-        //             _category: 'A',
-        //             _type: '1',
-        //         },
-        //         {
-        //             id: 'BC1909071014379811',
-        //             code: '4000661975',
-        //             company: '山东省菏泽信息工程学校【4000661975】',
-        //             agent: '山东咕果信息技术有限公司【guguo】',
-        //             site: '盘锦联通',
-        //             address: '',
-        //             _category: 'B',
-        //             _type: '2',
-        //         },
-        //         {
-        //             id: 'BC1909060324338145',
-        //             code: '4009915525',
-        //             company: '黑龙江厚东科技有限公司【houdongkeji】',
-        //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
-        //             site: '杭州电信',
-        //             address: '杭州新增服务器',
-        //             _category: 'C',
-        //             _type: '3',
-        //         },
-        //         {
-        //             id: 'BC1909060107381625',
-        //             code: '4006662087',
-        //             company: '上海克骏文化传播有限公司【kejun】',
-        //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
-        //             site: '盘锦联通',
-        //             address: '盘锦新增服务器',
-        //             _category: 'D',
-        //             _type: '4',
-        //         },
-        //     ]
-        // },
-        // selected: ['BC1909071014379811', 'BC1909060107381625'],
-        // sort: ['code', 'company'],
         hideFields: ['id'],
         clickSelected: true,
-        multiple: 'option',
+        children: function(data, cell, callback){
+            console.log(arguments)
+            setTimeout(function () {
+                // callback(false, $('#tableList2').find('.ez-table-list-wrap'));
+                callback(false, 'hello world.!');
+            }, 1000);
+        },
         btns: [
             {
                 id: 'aa',
@@ -261,41 +253,6 @@
                     }
                 ]
             },
-            // [{
-            //     id: 'selectAll',
-            //     title: '全选11',
-            //     className: ['ez-btn-primary'],
-            //     click: function (btn, selected) {
-            //         console.log('click2');
-            //         this.allSelect();
-            //     }
-            // }, {
-            //     id: 'unSelect',
-            //     title: '反选22',
-            //     className: ['ez-btn-secondary'],
-            //     click: function (btn, selected) {
-            //         console.log('click2');
-            //         this.unSelect();
-            //     }
-            // }],
-            // {
-            //     id: 'selectAll',
-            //     title: '全选',
-            //     className: ['ez-btn-primary'],
-            //     click: function (btn, selected) {
-            //         console.log('click2');
-            //         this.allSelect();
-            //     }
-            // },
-            // {
-            //     id: 'unSelect',
-            //     title: '反选',
-            //     className: ['ez-btn-secondary'],
-            //     click: function (btn, selected) {
-            //         console.log('click2');
-            //         this.unSelect();
-            //     }
-            // },
             {
                 id: 'cancelSelect',
                 title: '取消',
@@ -305,8 +262,259 @@
                     this.cancelSelect();
                 }
             },
-        ]
+        ],
+        selectedChange: function () {
+            cdrTable[0].setData(newData);
+        }
     });
+
+    var cdrTable = ez.tableList($('#tableList2'), {
+        data: data,
+        hideFields: ['id'],
+        clickSelected: true,
+        btns: [
+            {
+                id: 'aa',
+                title: '全选按钮',
+                className: ['ez-btn-warning'],
+                available: 'always',
+                click: function (btn, selected) {
+                    this.allSelect();
+                }
+            },
+            {
+                group: true,
+                btns: [
+                    {
+                        id: 'selectAll',
+                        title: '全选11',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.allSelect();
+                        }
+                    }, {
+                        id: 'unSelect',
+                        title: '反选22',
+                        className: ['ez-btn-primary'],
+                        click: function (btn, selected) {
+                            console.log('click2');
+                            this.unSelect();
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'cancelSelect',
+                title: '取消',
+                className: ['ez-btn-success'],
+                click: function (btn, selected) {
+                    console.log('click2');
+                    this.cancelSelect();
+                }
+            },
+        ],
+        localStorage: 'aaa',
+        selectedChange: function () {
+            // console.log(this);
+        }
+    });
+
+
+    console.log(numberTable)
+
+    // $('#tableList').ez_table_list({
+    //     data: data,
+    //     // data: {
+    //     //     header: [
+    //     //         {field: 'address', title: '服务器地址'},
+    //     //         {field: 'id', title: '编号'},
+    //     //         {field: 'code', title: '服务号'},
+    //     //         {field: 'company', title: '所属企业'},
+    //     //         {field: 'agent', title: '所属机构'},
+    //     //         {field: 'site', title: '归属落地', width: 100},
+    //     //         {field: '_category', title: 'category'},
+    //     //         {field: '_type', title: 'type'},
+    //     //     ],
+    //     //     body: [
+    //     //         {
+    //     //             id: 'BC1909090542555642',
+    //     //             code: '111111',
+    //     //             company: '北京几克餐饮管理有限公司【beijingjike】',
+    //     //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
+    //     //             site: '杭州电信',
+    //     //             address: '杭州新增服务器',
+    //     //             _category: 'A',
+    //     //             _type: '1',
+    //     //         },
+    //     //         {
+    //     //             id: 'BC1909071014379811',
+    //     //             code: '4000661975',
+    //     //             company: '山东省菏泽信息工程学校【4000661975】',
+    //     //             agent: '山东咕果信息技术有限公司【guguo】',
+    //     //             site: '盘锦联通',
+    //     //             address: '',
+    //     //             _category: 'B',
+    //     //             _type: '2',
+    //     //         },
+    //     //         {
+    //     //             id: 'BC1909060324338145',
+    //     //             code: '4009915525',
+    //     //             company: '黑龙江厚东科技有限公司【houdongkeji】',
+    //     //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
+    //     //             site: '杭州电信',
+    //     //             address: '杭州新增服务器',
+    //     //             _category: 'C',
+    //     //             _type: '3',
+    //     //         },
+    //     //         {
+    //     //             id: 'BC1909060107381625',
+    //     //             code: '4006662087',
+    //     //             company: '上海克骏文化传播有限公司【kejun】',
+    //     //             agent: '山东中呼信息科技有限公司【sdzhonghu】',
+    //     //             site: '盘锦联通',
+    //     //             address: '盘锦新增服务器',
+    //     //             _category: 'D',
+    //     //             _type: '4',
+    //     //         },
+    //     //     ]
+    //     // },
+    //     // selected: ['BC1909071014379811', 'BC1909060107381625'],
+    //     // sort: ['code', 'company'],
+    //     hideFields: ['id'],
+    //     clickSelected: true,
+    //     btns: [
+    //         {
+    //             id: 'aa',
+    //             title: '全选按钮',
+    //             className: ['ez-btn-warning'],
+    //             available: 'always',
+    //             click: function (btn, selected) {
+    //                 this.allSelect();
+    //             }
+    //         },
+    //         {
+    //             group: true,
+    //             btns: [
+    //                 {
+    //                     id: 'selectAll',
+    //                     title: '全选11',
+    //                     className: ['ez-btn-primary'],
+    //                     click: function (btn, selected) {
+    //                         console.log('click2');
+    //                         this.allSelect();
+    //                     }
+    //                 }, {
+    //                     id: 'unSelect',
+    //                     title: '反选22',
+    //                     className: ['ez-btn-primary'],
+    //                     click: function (btn, selected) {
+    //                         console.log('click2');
+    //                         this.unSelect();
+    //                     }
+    //                 }
+    //             ]
+    //         },
+    //         // [{
+    //         //     id: 'selectAll',
+    //         //     title: '全选11',
+    //         //     className: ['ez-btn-primary'],
+    //         //     click: function (btn, selected) {
+    //         //         console.log('click2');
+    //         //         this.allSelect();
+    //         //     }
+    //         // }, {
+    //         //     id: 'unSelect',
+    //         //     title: '反选22',
+    //         //     className: ['ez-btn-secondary'],
+    //         //     click: function (btn, selected) {
+    //         //         console.log('click2');
+    //         //         this.unSelect();
+    //         //     }
+    //         // }],
+    //         // {
+    //         //     id: 'selectAll',
+    //         //     title: '全选',
+    //         //     className: ['ez-btn-primary'],
+    //         //     click: function (btn, selected) {
+    //         //         console.log('click2');
+    //         //         this.allSelect();
+    //         //     }
+    //         // },
+    //         // {
+    //         //     id: 'unSelect',
+    //         //     title: '反选',
+    //         //     className: ['ez-btn-secondary'],
+    //         //     click: function (btn, selected) {
+    //         //         console.log('click2');
+    //         //         this.unSelect();
+    //         //     }
+    //         // },
+    //         {
+    //             id: 'cancelSelect',
+    //             title: '取消',
+    //             className: ['ez-btn-success'],
+    //             click: function (btn, selected) {
+    //                 console.log('click2');
+    //                 this.cancelSelect();
+    //             }
+    //         },
+    //     ],
+    //     selectedChanged: function () {
+    //         console.log(this);
+    //     }
+    // });
+    // $('#tableList2').ez_table_list({
+    //     data: data,
+    //     hideFields: ['id'],
+    //     clickSelected: true,
+    //     btns: [
+    //         {
+    //             id: 'aa',
+    //             title: '全选按钮',
+    //             className: ['ez-btn-warning'],
+    //             available: 'always',
+    //             click: function (btn, selected) {
+    //                 this.allSelect();
+    //             }
+    //         },
+    //         {
+    //             group: true,
+    //             btns: [
+    //                 {
+    //                     id: 'selectAll',
+    //                     title: '全选11',
+    //                     className: ['ez-btn-primary'],
+    //                     click: function (btn, selected) {
+    //                         console.log('click2');
+    //                         this.allSelect();
+    //                     }
+    //                 }, {
+    //                     id: 'unSelect',
+    //                     title: '反选22',
+    //                     className: ['ez-btn-primary'],
+    //                     click: function (btn, selected) {
+    //                         console.log('click2');
+    //                         this.unSelect();
+    //                     }
+    //                 }
+    //             ]
+    //         },
+    //         {
+    //             id: 'cancelSelect',
+    //             title: '取消',
+    //             className: ['ez-btn-success'],
+    //             click: function (btn, selected) {
+    //                 console.log('click2');
+    //                 this.cancelSelect();
+    //             }
+    //         },
+    //     ],
+    //     localStorage: 'aaa',
+    //     selectedChanged: function () {
+    //         console.log(this);
+    //     }
+    // });
 </script>
 
 <%- include('../compoents/default/_footer.ejs'); %>
