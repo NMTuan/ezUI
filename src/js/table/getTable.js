@@ -9,7 +9,7 @@ var getTable = {
         el = $(el);
 
         //header
-        el.find('thead th, thead td').each(function (i, item) {
+        el.children('thead').children('tr').children('th, td').each(function (i, item) {
             data.header.push({
                 field: $(item).data('field') || 'field' + i,
                 title: $.trim($(item).html())
@@ -17,9 +17,9 @@ var getTable = {
         });
 
         //body
-        el.find('tbody tr').each(function (i, tr) {
+        el.children('tbody').children('tr').each(function (i, tr) {
             var item = {};
-            $(tr).find('th, td').each(function (i, cell) {
+            $(tr).children('th, td').each(function (i, cell) {
                 var field = $(cell).data('field') ||  'field' + i;
                 var title = $.trim($(cell).html());
                 item[field] = title;
