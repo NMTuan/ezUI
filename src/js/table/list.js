@@ -158,7 +158,7 @@ var list = {
             list.optionTable.call(s);
         });
         //子集
-        s.el.on('click', '.ez-table-list-field-children[uid="' + s.uid + '"]', function (e) {
+        s.el.on('click', '.ez-table-list-body .ez-table-list-field-children[uid="' + s.uid + '"]', function (e) {
             e.stopPropagation();
             list.childrenCallback.call(s, $(this));
         });
