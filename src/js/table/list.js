@@ -244,15 +244,17 @@ var list = {
                 if (s.params.multiple === false) {
                     return;
                 }
-                var optionBtn = '';
+                var optionBtn;
                 if (s.params.multiple === 'option') {
-                    optionBtn = $('<i>').addClass('remixicon-settings-line ez-table-list-option').attr('uid', s.uid);
+                    var icon = $('<i>').addClass('remixicon-settings-line ez-table-list-option').attr('uid', s.uid);
                     optionBtn = $('<a>').attr({
                         href: 'javascript:;',
                         uid: s.uid
-                    }).append(optionBtn);
+                    }).append(icon);
                 } else {
-                    optionBtn = s.params.multiple;
+                    optionBtn = $('<div>');
+                    optionBtn.html(s.params.multiple);
+                    optionBtn.find('input').attr('uid', s.uid);
                 }
                 var cell = list.renderCell.call(s, s.params.multiple === 'option' ? 'option' : '', true);
                 cell.css('width', '46px');
