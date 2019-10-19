@@ -259,14 +259,18 @@ var tree = {
         tree.appendTree.call(s);
     },
     //取数据
-    getJson: function (url, success) {
+    getJson: function (url, data, success) {
+        if(typeof data === 'function'){
+            success = data;
+            data = {};
+        }
         var s = this;
         if (!url && typeof success === 'function') {
             success({});
             return;
         }
         var loading = tree.tips.call(s, '努力加载中');
-        $.getJSON(url)
+        $.getJSON(url, data)
             .done(function (res) { //success
                 if (res.code !== '40000') {
                     tree.tips.call(s, '数据加载失败, 请刷新后重试!');
@@ -338,7 +342,7 @@ var tree = {
             return;
         }
         if (params.searchUrl) {   //异步查询模式
-            tree.getJson.call(s, params.searchUrl, function (res) {
+            tree.getJson.call(s, params.searchUrl, {q: value}, function (res) {
                 s.params.searchData = res.result;
                 s.params.data = res.result;
                 tree.concat.call(s, s.params.selected, res.result, {push_existence: false});

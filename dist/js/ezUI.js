@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b46d8ea7.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_86c98907.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -17781,7 +17781,12 @@ var tree = {
     tree.appendTree.call(s);
   },
   //取数据
-  getJson: function getJson(url, success) {
+  getJson: function getJson(url, data, success) {
+    if (typeof data === 'function') {
+      success = data;
+      data = {};
+    }
+
     var s = this;
 
     if (!url && typeof success === 'function') {
@@ -17790,7 +17795,7 @@ var tree = {
     }
 
     var loading = tree.tips.call(s, '努力加载中');
-    $.getJSON(url).done(function (res) {
+    $.getJSON(url, data).done(function (res) {
       //success
       if (res.code !== '40000') {
         tree.tips.call(s, '数据加载失败, 请刷新后重试!');
@@ -17864,7 +17869,9 @@ var tree = {
 
     if (params.searchUrl) {
       //异步查询模式
-      tree.getJson.call(s, params.searchUrl, function (res) {
+      tree.getJson.call(s, params.searchUrl, {
+        q: value
+      }, function (res) {
         s.params.searchData = res.result;
         s.params.data = res.result;
         tree.concat.call(s, s.params.selected, res.result, {
