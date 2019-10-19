@@ -201,6 +201,10 @@
         &-horizontal {
             #{$form}-row {
                 display: inline-block;
+                &-block {
+                    display: block;
+                    width: 100%;
+                }
             }
             #{$form}-control {
                 width: auto;

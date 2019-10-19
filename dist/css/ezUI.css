@@ -840,6 +840,11 @@ body {
   display: inline-block;
 }
 
+.ez-form-inline-horizontal .ez-form-row-block {
+  display: block;
+  width: 100%;
+}
+
 .ez-form-inline-horizontal .ez-form-control {
   width: auto;
 }
