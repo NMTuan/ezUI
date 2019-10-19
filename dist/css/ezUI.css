@@ -694,6 +694,7 @@ body {
   min-height: 34px;
   line-height: 34px;
   white-space: normal;
+  width: 1px;
 }
 
 .ez-form-control:last-child {
@@ -837,6 +838,10 @@ body {
 
 .ez-form-inline-horizontal .ez-form-row {
   display: inline-block;
+}
+
+.ez-form-inline-horizontal .ez-form-control {
+  width: auto;
 }
 
 .ez-form-full {

@@ -53,6 +53,7 @@
         min-height: 34px;
         line-height: 34px;
         white-space: normal;
+        width: 1px;
 
         &:last-child {
             margin: 0;
@@ -200,6 +201,9 @@
         &-horizontal {
             #{$form}-row {
                 display: inline-block;
+            }
+            #{$form}-control {
+                width: auto;
             }
         }
     }
