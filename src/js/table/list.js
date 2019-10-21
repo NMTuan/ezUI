@@ -48,7 +48,7 @@ var list = {
         var s = this;
         s.el = el;
         s.uid = $.now();  //唯一id
-        s.params = $.extend(true, {}, list.defaults, params);
+        s.params = $.extend({}, list.defaults, params);
         s.destory = function () {
             list.destory.call(s);
         };

@@ -271,6 +271,16 @@
     var cdrTable = ez.tableList($('#tableList2'), {
         data: data,
         hideFields: ['id'],
+        tableClass: [     //table要增加的class
+            // 'ez-table-list-border',
+            // 'ez-table-list-line',
+            'ez-table-list-vline',
+            // 'ez-table-list-hover',
+            'ez-table-list-full',
+            // 'ez-table-list-stripe',
+            // 'ez-table-list-sm'
+        ],
+
         clickSelected: true,
         multiple: false,
         btns: [

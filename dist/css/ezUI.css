@@ -723,6 +723,18 @@ body {
   font-size: 12px;
 }
 
+.ez-form-control[readonly] {
+  background-color: #fafafa;
+  color: #9e9e9e;
+  cursor: default;
+}
+
+.ez-form-control[disabled] {
+  background-color: #fafafa;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}
+
 .ez-form select.ez-form-control {
   width: 120px;
   white-space: nowrap;
@@ -1425,7 +1437,7 @@ body {
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-cell,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
 .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
-  font-weight: bold;
+  background-color: #fff8e1;
 }
 
 .ez-table-list-selected-disabled .ez-table-list-body .ez-table-list-active {

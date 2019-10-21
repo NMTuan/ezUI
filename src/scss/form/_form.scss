@@ -80,6 +80,17 @@
             line-height: 26px;
             font-size: 12px;
         }
+
+        &[readonly] {
+            background-color: color('grey', 'l5');
+            color: color('grey', 'base');
+            cursor: default;
+        }
+        &[disabled] {
+            background-color: color('grey', 'l5');
+            color: color('grey', 'base');
+            cursor: not-allowed;
+        }
     }
     select#{$form}-control {
         width: 120px;
