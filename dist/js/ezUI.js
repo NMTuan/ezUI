@@ -14014,7 +14014,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_cc5422f0.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_26eeb31d.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -16553,15 +16553,26 @@ var _list = {
 
 
     if (s.params.optionsBtn !== false && s.params.multiple !== 'option') {
-      var btns = {
-        id: 'option',
-        title: s.params.optionsBtn,
-        available: 'always',
-        click: function click(btn, selected) {
-          _list.optionTable.call(s);
+      var hasOptionsBtn = false;
+      $.each(s.params.btns, function (i, item) {
+        //todo: 循环去重, 临时解决子表格中多设置按钮的问题.
+        if (item && item.id === 'option') {
+          hasOptionsBtn = true;
+          return false;
         }
-      };
-      s.params.btns.unshift(btns);
+      });
+
+      if (!hasOptionsBtn) {
+        var btns = {
+          id: 'option',
+          title: s.params.optionsBtn,
+          available: 'always',
+          click: function click(btn, selected) {
+            _list.optionTable.call(s);
+          }
+        };
+        s.params.btns.unshift(btns);
+      }
     }
 
     _list.initHideFields.call(s);
@@ -16705,7 +16716,7 @@ var _list = {
 
         var btn = '';
 
-        var cell = _list.renderCell.call(s, 'children', true);
+        var cell = _list.renderCell.call(s, '', true);
 
         cell.css('width', '46px');
         cell.addClass('ez-text-center');
@@ -16836,12 +16847,19 @@ var _list = {
         }
 
         var btn = $('<i>');
-        btn.addClass('remixicon-add-line');
+        var className;
+        var hasChildren = typeof data._children === 'undefined' || data._children ? true : false;
+
+        if (hasChildren) {
+          className = 'remixicon-add-line';
+        }
+
+        btn.addClass(className);
         $.each(data, function (key, value) {
           btn.data(key, value);
         });
 
-        var cell = _list.renderCell.call(s, 'children', true);
+        var cell = _list.renderCell.call(s, hasChildren ? 'children' : '', true);
 
         cell.addClass('ez-text-center');
         cell.html(btn);
@@ -17341,6 +17359,10 @@ var _list = {
       cell.addClass('ez-table-list-field-children-active');
       icon.attr('class', 'remixicon-subtract-line');
       row.next('.ez-table-list-row-children').show();
+
+      _list.rowSelected.call(s, row);
+
+      _list.rowUnselected.call(s, row.siblings('.ez-table-list-active'));
     };
 
     var close = function close() {

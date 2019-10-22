@@ -1430,13 +1430,13 @@ body {
   background-color: #f5f5f5;
 }
 
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active .ez-table-list-cell,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active .ez-table-list-th,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active .ez-table-list-cell,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active .ez-table-list-th,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-cell,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-th,
-.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover .ez-table-list-td {
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active > .ez-table-list-cell,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active > .ez-table-list-th,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row .ez-table-list-active > .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active > .ez-table-list-cell,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active > .ez-table-list-th,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active > .ez-table-list-td, .ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover > .ez-table-list-cell,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover > .ez-table-list-th,
+.ez-table-list-hover .ez-table-list-body .ez-table-list-row.ez-table-list-active:hover > .ez-table-list-td {
   background-color: #fff8e1;
 }
 
@@ -1500,7 +1500,7 @@ body {
   border-left: 2px solid #bdbdbd;
 }
 
-.ez-table-list-row-children .ez-table-list-cell {
+.ez-table-list-row-children > .ez-table-list-cell {
   padding: 12px;
 }
 

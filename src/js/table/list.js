@@ -106,15 +106,24 @@ var list = {
 
         //表格设定
         if (s.params.optionsBtn !== false && s.params.multiple !== 'option') {
-            var btns = {
-                id: 'option',
-                title: s.params.optionsBtn,
-                available: 'always',
-                click: function (btn, selected) {
-                    list.optionTable.call(s);
+            var hasOptionsBtn = false;
+            $.each(s.params.btns, function (i, item) {  //todo: 循环去重, 临时解决子表格中多设置按钮的问题.
+                if(item && item.id === 'option'){
+                    hasOptionsBtn = true;
+                    return false;
                 }
-            };
-            s.params.btns.unshift(btns);
+            });
+            if(!hasOptionsBtn){
+                var btns = {
+                    id: 'option',
+                    title: s.params.optionsBtn,
+                    available: 'always',
+                    click: function (btn, selected) {
+                        list.optionTable.call(s);
+                    }
+                };
+                s.params.btns.unshift(btns);
+            }
         }
 
         list.initHideFields.call(s);
@@ -233,7 +242,7 @@ var list = {
                     return;
                 }
                 var btn = '';
-                var cell = list.renderCell.call(s, 'children', true);
+                var cell = list.renderCell.call(s, '', true);
                 cell.css('width', '46px');
                 cell.addClass('ez-text-center');
                 cell.html(btn);
@@ -345,11 +354,16 @@ var list = {
                     return;
                 }
                 var btn = $('<i>');
-                btn.addClass('remixicon-add-line');
+                var className;
+                var hasChildren = typeof data._children === 'undefined' || data._children ? true : false;
+                if(hasChildren){
+                    className = 'remixicon-add-line';
+                }
+                btn.addClass(className);
                 $.each(data, function (key, value) {
                     btn.data(key, value);
                 });
-                var cell = list.renderCell.call(s, 'children', true);
+                var cell = list.renderCell.call(s, hasChildren ? 'children' : '', true);
                 cell.addClass('ez-text-center');
                 cell.html(btn);
                 html.append(cell);
@@ -790,6 +804,9 @@ var list = {
             cell.addClass('ez-table-list-field-children-active');
             icon.attr('class', 'remixicon-subtract-line');
             row.next('.ez-table-list-row-children').show();
+
+            list.rowSelected.call(s, row);
+            list.rowUnselected.call(s, row.siblings('.ez-table-list-active'));
         };
         var close = function () {
             cell.removeAttr('rowspan');
