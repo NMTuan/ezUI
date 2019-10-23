@@ -32,7 +32,7 @@ var audioPlayer = {
             '</div>' +
             // '<div id="audio_volume" class="ez audio-player-volume"><i class="fa fa-volume-up"></i></div>' +
             // '<div id="audio_volume-bar" class="ez audio-player-volume-bar demo-slider"></div>' +
-            '<div class="ez-audio-player-time">' +
+                '<div class="ez-audio-player-time">' +
             '<span id="audio_time_current" class="ez-audio-player-time_current">00:00</span>/ <span id="audio_time_duration" class="ez-audio-player-time_duration">00:00</span>' +
             '</div>' +
             '</div>' +
@@ -77,13 +77,25 @@ var audioPlayer = {
                 containment: 'html'
             });
             //初始位置
-            audioPlayer.player.draggabilly('setPosition', 100, 100);
+            var left = ($(window).width() - audioPlayer.player.width())/2;
+            var top = ($(window).height() - audioPlayer.player.height())/2;
+            if(window.localStorage && localStorage.getItem('audioPlayerOffset')){
+                var lsOffset = JSON.parse(localStorage.getItem('audioPlayerOffset'));
+                left = lsOffset.left;
+                top = lsOffset.top;
+            }
+            audioPlayer.player.draggabilly('setPosition', left, top);
             var fixed = audioPlayer.fixedIframe();
             audioPlayer.player.on('dragStart', function () {
                 fixed.appendTo('body');
             });
             audioPlayer.player.on('dragEnd', function () {
                 fixed.remove();
+                var offset = $(this).offset();
+                if(window.localStorage){
+                    localStorage.setItem('audioPlayerOffset', JSON.stringify(offset));
+                }
+                console.log(offset)
             });
             //播放器
             audioPlayer.waveInit();
