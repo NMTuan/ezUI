@@ -736,8 +736,9 @@ body {
 }
 
 .ez-form select.ez-form-control {
-  width: 120px;
   white-space: nowrap;
+  -webkit-appearance: button;
+  -moz-appearance: button;
 }
 
 .ez-form-wave {

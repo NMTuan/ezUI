@@ -93,8 +93,10 @@
         }
     }
     select#{$form}-control {
-        width: 120px;
+        //width: 120px; //不设宽度, 否则过小的空间会使外框cell容器超宽.
         white-space: nowrap;
+        -webkit-appearance: button;
+        -moz-appearance: button;
     }
 
     &-wave {
