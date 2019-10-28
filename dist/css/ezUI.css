@@ -688,7 +688,7 @@ body {
 .ez-form-control {
   flex: 1;
   background-color: transparent;
-  margin: 0 2px 0 0;
+  outline: 0;
   padding: 0 12px;
   border: 0;
   min-height: 34px;
@@ -737,8 +737,12 @@ body {
 
 .ez-form select.ez-form-control {
   white-space: nowrap;
-  -webkit-appearance: button;
-  -moz-appearance: button;
+  height: 34px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.ez-form select.ez-form-control:last-child {
+  border-right: 0;
 }
 
 .ez-form-wave {
@@ -920,6 +924,10 @@ body {
 .ez-form-sm .ez-form-label {
   font-size: 12px;
   padding: 1px;
+}
+
+.ez-form-sm select.ez-form-control {
+  height: 24px;
 }
 
 .ez-form-upload {

@@ -47,7 +47,8 @@
     &-control { //自适应容器
         flex: 1;
         background-color: transparent;
-        margin: 0 2px 0 0; //为了focus时显示完整的outline
+        //margin: 0 2px 0 0; //为了focus时显示完整的outline
+        outline: 0;
         padding: 0 12px;
         border: 0;
         min-height: 34px;
@@ -95,8 +96,13 @@
     select#{$form}-control {
         //width: 120px; //不设宽度, 否则过小的空间会使外框cell容器超宽.
         white-space: nowrap;
-        -webkit-appearance: button;
-        -moz-appearance: button;
+        height: 34px;
+        border-right: 1px solid color('grey', 'l2');
+        &:last-child {
+            border-right: 0;
+        }
+        //-webkit-appearance: button;
+        //-moz-appearance: button;
     }
 
     &-wave {
@@ -292,6 +298,9 @@
                 font-size: 12px;
                 padding: 1px;
             }
+        }
+        select#{$form}-control {
+            height: 24px;
         }
     }
 }
