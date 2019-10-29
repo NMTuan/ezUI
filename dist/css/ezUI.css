@@ -420,6 +420,71 @@ body {
   user-select: none;
 }
 
+.ez-alert {
+  border: 1px solid #eeeeee;
+  color: #757575;
+  background-color: #fff;
+  padding: 12px;
+  line-height: 1.6;
+}
+
+.ez-alert-title {
+  font-weight: bold;
+}
+
+.ez-alert-bg {
+  background-color: #fafafa;
+}
+
+.ez-alert-primary {
+  color: #357ba5;
+  border: 1px solid #c5ddeb;
+}
+
+.ez-alert-primary-bg {
+  background-color: #ecf4f8;
+}
+
+.ez-alert-secondary {
+  color: #039be5;
+  border: 1px solid #b3e5fc;
+}
+
+.ez-alert-secondary-bg {
+  background-color: #e1f5fe;
+}
+
+.ez-alert-success {
+  color: #43A047;
+  border: 1px solid #C8E6C9;
+}
+
+.ez-alert-success-bg {
+  background-color: #E8F5E9;
+}
+
+.ez-alert-warning {
+  color: #f57c00;
+  border: 1px solid #ffe0b2;
+}
+
+.ez-alert-warning-bg {
+  background-color: #fff3e0;
+}
+
+.ez-alert-danger {
+  color: #E53935;
+  border: 1px solid #FFCDD2;
+}
+
+.ez-alert-danger-bg {
+  background-color: #FFEBEE;
+}
+
+.ez-alert-top {
+  border-width: 0 0 1px 0;
+}
+
 .ez-row-span1 {
   margin: -1px;
 }
