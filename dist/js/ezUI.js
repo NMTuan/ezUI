@@ -14030,7 +14030,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ccac9fa.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_56ca2882.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -17311,12 +17311,18 @@ var _list = {
     };
     $('body').append(el);
     var cfgTable = new _list.List(el, options);
+    var btn = ['保存'];
+
+    if (window.localStorage && s.params.localStorage !== false && localStorage.getItem('hideFields_' + s.params.localStorage.toString() + '_' + path)) {
+      btn.push('清除本地配置');
+    }
+
     layer.open({
       type: 1,
       title: '表格配置',
       content: el,
       area: ['640px', '480px'],
-      btn: ['保存'],
+      btn: btn,
       zIndex: 10,
       success: function success() {
         _list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
@@ -17344,6 +17350,21 @@ var _list = {
         }
 
         _list.renderTable.call(s);
+      },
+      btn2: function btn2() {
+        layer.confirm('确定要清除本地配置么?', function () {
+          localStorage.removeItem('hideFields_' + s.params.localStorage.toString() + '_' + path);
+          localStorage.removeItem('sort_' + s.params.localStorage.toString() + '_' + path);
+          layer.msg('清除成功!');
+          s.params.hideFields = [];
+          s.params.sort = [];
+
+          _list.initHideFields.call(s);
+
+          _list.initSort.call(s);
+
+          _list.renderTable.call(s);
+        });
       },
       end: function end() {
         cfgTable.destory();
