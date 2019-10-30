@@ -57,6 +57,7 @@ var select = {
             dataUrl: params.dataUrl,
             selected: params.selected,
             type: params.selected_max === 1 ? 'radio' : 'checkbox',
+            selectAllItem: params.selected_max === 1 ? false : true,
             searchKeys: params.searchKeys,
             searchUrl: params.searchUrl,
             dataChange: function () {

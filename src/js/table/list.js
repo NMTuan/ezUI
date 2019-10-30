@@ -746,12 +746,16 @@ var list = {
         };
         $('body').append(el);
         var cfgTable = new list.List(el, options);
+        var btn = ['保存'];
+        if(window.localStorage && s.params.localStorage !== false && localStorage.getItem('hideFields_' + s.params.localStorage.toString() + '_' + path)){
+            btn.push('清除本地配置');
+        }
         layer.open({
             type: 1,
             title: '表格配置',
             content: el,
             area: ['640px', '480px'],
-            btn: ['保存'],
+            btn: btn,
             zIndex: 10,
             success: function () {
                 list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
@@ -774,6 +778,18 @@ var list = {
                     localStorage.setItem('sort_' + s.params.localStorage.toString() + '_' + path, JSON.stringify(s.params.sort));
                 }
                 list.renderTable.call(s);
+            },
+            btn2: function(){
+                layer.confirm('确定要清除本地配置么?', function () {
+                    localStorage.removeItem('hideFields_' + s.params.localStorage.toString() + '_' + path);
+                    localStorage.removeItem('sort_' + s.params.localStorage.toString() + '_' + path);
+                    layer.msg('清除成功!');
+                    s.params.hideFields = [];
+                    s.params.sort = [];
+                    list.initHideFields.call(s);
+                    list.initSort.call(s);
+                    list.renderTable.call(s);
+                });
             },
             end: function () {
                 cfgTable.destory();

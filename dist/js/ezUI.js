@@ -14030,7 +14030,7 @@ ez.addForm = require('./form/addForm'); //表单中, 添加表单
 ez.tableList = require('./table/list'); //表格列表
 
 ez.getTable = require('./table/getTable'); //抓取表格数据
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_87d949f.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_56ca2882.js","/")
 },{"./audioPlayer/audioPlay":14,"./fixedContainer/fixedContainer":16,"./form/addForm":17,"./form/player":18,"./form/select":19,"./form/textarea":20,"./form/upload":21,"./headlines/headlines":22,"./iframeTabs/iframeTabs":23,"./imageView/imageView":24,"./log/log":25,"./menuTree/menuTree":26,"./msg/msg":27,"./renderHeight/renderHeight":29,"./role/role":30,"./scrollWheel/scrollWheel":31,"./subNav/subNav":32,"./table/getTable":33,"./table/list":34,"./tabs/tabs":35,"./tree/tree":36,"./watermark/watermark":37,"XJF/FV":7,"buffer":6}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -14582,6 +14582,7 @@ var select = {
       dataUrl: params.dataUrl,
       selected: params.selected,
       type: params.selected_max === 1 ? 'radio' : 'checkbox',
+      selectAllItem: params.selected_max === 1 ? false : true,
       searchKeys: params.searchKeys,
       searchUrl: params.searchUrl,
       dataChange: function dataChange() {
@@ -17310,12 +17311,18 @@ var _list = {
     };
     $('body').append(el);
     var cfgTable = new _list.List(el, options);
+    var btn = ['保存'];
+
+    if (window.localStorage && s.params.localStorage !== false && localStorage.getItem('hideFields_' + s.params.localStorage.toString() + '_' + path)) {
+      btn.push('清除本地配置');
+    }
+
     layer.open({
       type: 1,
       title: '表格配置',
       content: el,
       area: ['640px', '480px'],
-      btn: ['保存'],
+      btn: btn,
       zIndex: 10,
       success: function success() {
         _list.dragula(cfgTable.el.find('.ez-table-list-body')[0]);
@@ -17343,6 +17350,21 @@ var _list = {
         }
 
         _list.renderTable.call(s);
+      },
+      btn2: function btn2() {
+        layer.confirm('确定要清除本地配置么?', function () {
+          localStorage.removeItem('hideFields_' + s.params.localStorage.toString() + '_' + path);
+          localStorage.removeItem('sort_' + s.params.localStorage.toString() + '_' + path);
+          layer.msg('清除成功!');
+          s.params.hideFields = [];
+          s.params.sort = [];
+
+          _list.initHideFields.call(s);
+
+          _list.initSort.call(s);
+
+          _list.renderTable.call(s);
+        });
       },
       end: function end() {
         cfgTable.destory();
@@ -17508,8 +17530,10 @@ module.exports = _tabs.tabs;
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
-var random = require('../random/random');
+var random = require('../random/random'); //防抖
 
+
+var dataChangeDt, appendTreeDt;
 var tree = {
   defaults: {
     ul: 'ez-tree-ul',
@@ -17520,6 +17544,8 @@ var tree = {
     //input的name, 不指定则随机
     type: '',
     //前置input框, radio, checkbox, 留空则没前置
+    selectAllItem: false,
+    //是否有全选这个项目
     data: [],
     //数据
     dataUrl: '',
@@ -17536,7 +17562,7 @@ var tree = {
     //异步搜索
     beforeChoose: function beforeChoose(input, el) {//选中事件前执行, 返回false则不改变input值
     },
-    choose: function choose(input, el) {//选中后执行
+    choose: function choose(input, el) {//选择后执行
       // $.log('choose');
     },
     dataChange: function dataChange() {//selected数据改变时执行
@@ -17663,15 +17689,16 @@ var tree = {
     var el = s.el;
     var params = s.params;
     el.on('click', 'input', function () {
-      //插入事件, 若返回false, 则返回
-      var before = params.beforeChoose($(this), el);
+      var that = $(this); //插入事件, 若返回false, 则返回
+
+      var before = params.beforeChoose(that, el);
 
       if (before === false) {
         return false;
       }
 
-      var status = $(this).prop('checked');
-      var id = $(this).data('id'); //单选模式, 选择已选数据, 不处理.
+      var status = that.prop('checked');
+      var id = that.data('id'); //单选模式, 选择已选数据, 不处理.
       // if (s.params.type === 'radio' && s.params.selected.length === 1 && s.params.selected[0].id === id) {
       //     return;
       // }
@@ -17683,7 +17710,18 @@ var tree = {
           }
         });
         params.selected = tree.getData.call(s, id);
-        params.dataChange.call(s);
+        tree.dataChange.call(s);
+      } //全选操作
+
+
+      if (that.data('id') === 'selectAll') {
+        if (status) {
+          tree.selectedAll.call(s);
+        } else {
+          tree.unSelectedAll.call(s);
+        }
+
+        return;
       }
 
       if (s.params.type === 'checkbox') {
@@ -17697,7 +17735,7 @@ var tree = {
       } //插入事件
 
 
-      params.choose.call(s, $(this), el);
+      params.choose.call(s, that, el);
     });
   },
   //渲染
@@ -17707,11 +17745,18 @@ var tree = {
   },
   //li的dom构建 todo:需要优化
   li: function li(data) {
+    var s = this;
     var params = this.params;
     var li = $('<li>').addClass(params.li).attr('id', params.name + '_' + data.id);
     var item = $('<div>').addClass(params.item);
     var html = data.title;
     var checked = data.selected ? 'checked="checked"' : '';
+
+    if (s.params.selectAllItem && data.id === 'selectAll') {
+      //全选操作, 默认是否选中
+      var d = s.params.searchData.length === 0 ? s.params.data : s.params.searchData;
+      checked = d.length === s.params.selected.length ? 'checked="checked"' : '';
+    }
 
     if (params.type === 'radio') {
       html = '<label><input type="radio" ' + checked + ' name="' + params.name + '" data-id="' + data.id + '" data-pid="' + data.pid + '" data-title="' + data.title + '" /> ' + data.title + '</label>';
@@ -17736,21 +17781,24 @@ var tree = {
   },
   appendTree: function appendTree() {
     var s = this;
-    var html = tree.render.call(s);
+    setTimeout(appendTreeDt);
+    appendTreeDt = setTimeout(function () {
+      var html = tree.render.call(s);
 
-    if (html.html() === '') {
-      var tips = '暂无内容';
+      if (html.html() === '') {
+        var tips = '暂无内容';
 
-      if (s.params.searchUrl) {
-        tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
+        if (s.params.searchUrl) {
+          tips = s.params.searchValue ? '没找到任何内容' : '请输入查询条件';
+        }
+
+        tree.tips.call(s, tips);
+      } else {
+        s.el.html(html);
       }
 
-      tree.tips.call(s, tips);
-    } else {
-      s.el.html(html);
-    }
-
-    s.params.dataChange.call(s);
+      tree.dataChange.call(s);
+    }, 30);
   },
   //把pid==pid的数据构建为dom结构, 包括子集.
   render: function render(pid) {
@@ -17779,6 +17827,17 @@ var tree = {
     };
 
     get(child, dom);
+
+    if (dom.html() !== '' && s.params.selectAllItem) {
+      //如果有全选配置
+      var li = tree.li.call(s, {
+        title: '(全选)',
+        id: 'selectAll',
+        pid: 'selectAll'
+      });
+      dom.prepend(li);
+    }
+
     return dom;
   },
   //从所有数据中找pid==id的数据
@@ -17856,38 +17915,69 @@ var tree = {
   selected: function selected(id) {
     var s = this;
     var params = s.params;
-    var currentData = tree.getData.call(s, id);
-    tree.concat(params.selected, currentData);
+    var currentData = tree.getData.call(s, id); //找到当前数据
+
+    tree.concat(params.selected, currentData); //合并到已选数据中
+
     $.each(currentData, function () {
+      //处理当前数据的选中状态
       if (this.selected !== true) {
         this.selected = true;
       }
     });
-    params.dataChange.call(s);
+    tree.appendTree.call(s);
   },
   //取消选择
   unSelected: function unSelected(id) {
     var s = this;
     var params = s.params;
-    var selectedData = tree.getData.call(s, id, params.selected);
-    var currentData = tree.getData.call(s, id);
-    tree.delete(params.selected, selectedData);
+    var selectedData = tree.getData.call(s, id, params.selected); //从选中数据中找到当前数据
+
+    var currentData = tree.getData.call(s, id); //从所有数据中找到当前数据
+
+    tree.delete(params.selected, selectedData); //从选中数据中移除当前数据.
+
     $.each(currentData, function () {
       if (this.selected === true) {
-        this.selected = false;
-        var li = tree.li.call(s, this);
-        var child = tree.render.call(s, id);
-        var current = $('#' + params.name + '_' + id);
-        current.html('');
-        current.append(li);
-
-        if (!params.searchValue) {
-          current.append(child);
-        }
+        this.selected = false; //以下逻辑忘记干啥的了, 注释掉发现没异常, 暂时注释掉..2019.10.30
+        // var li = tree.li.call(s, this);
+        // var child = tree.render.call(s, id);
+        // var current = $('#' + params.name + '_' + id);
+        // current.html('');
+        // current.append(li);
+        // if (!params.searchValue) {
+        //     current.append(child);
+        // }
       }
     });
     tree.appendTree.call(s);
-    console.log(s);
+  },
+  //数据发生变化, 执行.
+  dataChange: function dataChange() {
+    var s = this;
+    clearTimeout(dataChangeDt);
+    dataChangeDt = setTimeout(function () {
+      console.table(s.params.searchData);
+      s.params.dataChange.call(s);
+    }, 30);
+  },
+  selectedAll: function selectedAll() {
+    var s = this;
+    var data = s.params.searchData.length === 0 ? s.params.data : s.params.searchData;
+    $.each(data, function (i, item) {
+      if (item.id) {
+        tree.selected.call(s, item.id);
+      }
+    });
+    tree.appendTree.call(s);
+  },
+  unSelectedAll: function unSelectedAll() {
+    var s = this;
+    $.each(s.params.data, function (i, item) {
+      if (item.selected) {
+        tree.unSelected.call(s, item.id);
+      }
+    });
   },
   //取所有选中数据
   getSelected: function getSelected() {
