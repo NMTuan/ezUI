@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "@unocss/nuxt": "^0.50.6",
-    "nuxt": "^3.3.3"
+    "nuxt": "^3.3.3",
+    "sass": "^1.60.0"
   },
   "dependencies": {
     "@iconify-json/ri": "^1.1.6"
