@@ -1,0 +1,48 @@
+// 所有类型
+$types: (
+    'default',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'danger',
+    'info'
+);
+// 所有尺寸
+$sizes: ('xs', 'sm', 'base', 'lg');
+
+// 默认动效
+@mixin transition($time: 500ms) {
+    @apply transition-all;
+    transition-duration: $time;
+}
+
+// 循环所有颜色，包括 is_light
+@mixin color-type($type: 'default', $is_light: false) {
+    @include transition();
+
+    @if $is_light and $type != 'default' {
+        @apply bg-#{$type}/10;
+        @apply border-#{$type}/40;
+        @apply text-#{$type};
+        &:hover {
+            @apply bg-#{$type}/20;
+            @apply border-#{$type};
+        }
+    } @else if $type != 'default' {
+        @apply bg-#{$type};
+        @apply border-#{$type};
+        @apply text-white;
+        &:hover {
+            @apply bg-#{$type}/80;
+            @apply border-#{$type};
+        }
+    } @else {
+        @apply bg-#FCFAF2;
+        @apply text-#656765;
+        @apply border-#BDC0BA/50;
+        &:hover {
+            @apply border-#BDC0BA;
+        }
+    }
+}
