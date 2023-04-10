@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 16:01:43
- * @LastEditTime: 2023-04-07 11:31:06
+ * @LastEditTime: 2023-04-10 15:09:50
  * @LastEditors: NMTuan
  * @Description: 
  * @FilePath: \ezUI\components\ez\button.vue
@@ -17,17 +17,20 @@
                 <span class="ez-button__icon ez-button__icon--prefix" :class="icon"></span>
             </slot>
             <slot name="loading" v-if="loading && !behindLoading">
-                <span class="ez-button__loading" :class="loadingIcon"></span>
+                <span class="ez-button__loading ez-button__loading--prefix" :class="loadingIcon"></span>
             </slot>
-            <slot v-if="!loading || !loadingHideContent"></slot>
+            <!-- 这里由于二次传递，导致default一定存在，所以需要判断是否有内容 -->
+            <!-- 保证在只有图标的时候，content不渲染 -->
+            <div class="ez-button__content" v-if="(!loading || !loadingHideContent)">
+                <slot></slot>
+            </div>
             <slot name="suffix-icon" v-if="suffixIcon && !loading">
                 <span class="ez-button__icon ez-button__icon--suffix" :class="suffixIcon"></span>
             </slot>
             <slot name="loading" v-if="loading && behindLoading">
-                <span class="ez-button__loading" :class="loadingIcon"></span>
+                <span class="ez-button__loading ez-button__loading--sufix" :class="loadingIcon"></span>
             </slot>
         </div>
-
     </button>
 </template>
 <script setup>
@@ -64,7 +67,7 @@ const props = defineProps({
 </script>
 <style lang="scss" scoped>
 .ez-button {
-    @apply cursor-pointer;
+    @apply cursor-pointer align-middle;
 
     &--disabled {
         @apply cursor-not-allowed;
@@ -84,6 +87,11 @@ const props = defineProps({
 
     &__loading {
         @apply animate-spin;
+
+        &--prefix {}
+
+        &--suffix {}
+
     }
 
 }

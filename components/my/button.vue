@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 17:13:38
- * @LastEditTime: 2023-04-07 17:22:48
+ * @LastEditTime: 2023-04-10 15:08:52
  * @LastEditors: NMTuan
  * @Description: 
  * @FilePath: \ezUI\components\my\button.vue
@@ -34,45 +34,6 @@ const props = defineProps({
 
 const slots = useSlots()
 
-// const classNames = computed(() => {
-//     const cls = []
-//     switch (props.type) {
-//         case 'primary':
-//             cls.push('bg-primary')
-//             cls.push('border-primary')
-//             break
-//         case 'secondary':
-//             cls.push('bg-secondary')
-//             cls.push('border-secondary')
-//             break
-//         case 'success':
-//             cls.push('bg-success')
-//             cls.push('border-success')
-//             break
-//         case 'warning':
-//             cls.push('bg-warning')
-//             cls.push('border-warning')
-//             break
-//         case 'danger':
-//             cls.push('bg-danger')
-//             cls.push('border-danger')
-//             break
-//         case 'info':
-//             cls.push('bg-info')
-//             cls.push('border-info')
-//             break
-//         case 'default':
-//         default:
-//             cls.push('')
-//             cls.push('')
-//             cls.push('')
-//     }
-//     // if (props.type !== 'default') {
-//     cls.push('text-white')
-//     // cls.push('border-none')
-//     // }
-//     return cls
-// })
 </script>
 <style lang="scss" scoped>
 @import '~/style/common.scss';
@@ -101,15 +62,39 @@ const slots = useSlots()
                 @apply p-#{$size};
                 @apply h-#{$size};
 
-                .ez-button__icon {
-                    @apply bg-red-400;
+                .ez-button__content {
+
+                    @if $size =='xs' {
+                        @apply mx-0.5;
+                    }
+
+                    @if $size =='sm' {
+                        @apply mx-0.75;
+                    }
+
+                    @if $size =='base' {
+                        @apply mx-1;
+                    }
+
+                    @if $size =='lg' {
+                        @apply mx-1.25;
+                    }
+
+                    &:empty {
+                        @apply mx-none;
+                    }
+
                 }
             }
         }
 
-
+        &--loading,
         &--disabled {
             @apply opacity-50;
+        }
+
+        &--loading {
+            @apply cursor-default;
         }
     }
 }

@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 11:35:00
- * @LastEditTime: 2023-04-07 17:11:03
+ * @LastEditTime: 2023-04-10 11:45:35
  * @LastEditors: NMTuan
  * @Description:
  * @FilePath: \ezUI\uno.config.ts
