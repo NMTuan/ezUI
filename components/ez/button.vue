@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 16:01:43
- * @LastEditTime: 2023-04-10 15:09:50
+ * @LastEditTime: 2023-04-10 17:22:08
  * @LastEditors: NMTuan
  * @Description: 
  * @FilePath: \ezUI\components\ez\button.vue
@@ -28,7 +28,7 @@
                 <span class="ez-button__icon ez-button__icon--suffix" :class="suffixIcon"></span>
             </slot>
             <slot name="loading" v-if="loading && behindLoading">
-                <span class="ez-button__loading ez-button__loading--sufix" :class="loadingIcon"></span>
+                <span class="ez-button__loading ez-button__loading--suffix" :class="loadingIcon"></span>
             </slot>
         </div>
     </button>
