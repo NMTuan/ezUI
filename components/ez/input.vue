@@ -9,12 +9,18 @@
         </slot>
         <div class="ez-input__container">
             <slot name="prefix">
-                <div class="ez-input__icon ez-input__icon--prefix" :class="prefixIcon" />
+                <div v-if="prefixIcon" class="ez-input__icon ez-input__icon--prefix" @click="focus" :class="prefixIcon" />
             </slot>
-            <input class="ez-input__input" v-model="val" :type="type" :placeholder="placeholder" :disabled="disabled"
-                size="1" :readonly="readonly" />
-            <slot name="suffix">
-                <div class="ez-input__icon ez-input__icon--suffix" :class="suffixIcon" />
+            <input ref="input" class="ez-input__input" v-model="val"
+                :type="(type === 'password' && showPassword) ? (passwordVisible ? 'text' : 'password') : type"
+                :placeholder="placeholder" :disabled="disabled" size="1" :readonly="readonly" />
+            <slot name="suffix" :passwordVisible="passwordVisible" :togglePassword="togglePassword">
+                <div v-if="showPassword && type === 'password'" :class="{
+                    'i-ri-eye-off-line': !passwordVisible,
+                    'i-ri-eye-line': passwordVisible
+                }" class="cursor-pointer" @click="togglePassword"></div>
+                <div v-else-if="suffixIcon" class="ez-input__icon ez-input__icon--suffix" @click="focus"
+                    :class="suffixIcon" />
             </slot>
         </div>
         <slot name="append">
@@ -67,9 +73,16 @@ const props = defineProps({
     suffixIcon: {
         type: String,
         default: ''
+    },
+    showPassword: {
+        type: Boolean,
+        default: true
     }
 })
 const emits = defineEmits(['update:modelValue'])
+const input = ref()
+const passwordVisible = ref(false)
+
 const val = computed({
     get() {
         return props.modelValue || props.value
@@ -78,6 +91,14 @@ const val = computed({
         emits('update:modelValue', value)
     }
 })
+
+const focus = () => {
+    input.value.focus()
+}
+
+const togglePassword = () => {
+    passwordVisible.value = !passwordVisible.value
+}
 
 </script>
 <style lang="scss" scoped>
@@ -126,7 +147,6 @@ const val = computed({
     &__input {
         @apply flex-1 w-full;
         @apply border-none outline-none;
-        @apply bg-red-400
     }
 }
 </style>
