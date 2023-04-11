@@ -14,8 +14,11 @@
             <input ref="input" class="ez-input__input" v-model="val"
                 :type="(type === 'password' && showPassword) ? (passwordVisible ? 'text' : 'password') : type"
                 :placeholder="placeholder" :disabled="disabled" size="1" :readonly="readonly" />
-            <slot name="suffix" :passwordVisible="passwordVisible" :togglePassword="togglePassword">
-                <div v-if="showPassword && type === 'password'" :class="{
+            <slot name="suffix" :passwordVisible="passwordVisible" :togglePassword="togglePassword"
+                :clearContent="clearContent">
+                <div v-if="showClear && val !== ''" class="i-ri-close-line cursor-pointer" @click="clearContent">
+                </div>
+                <div v-else-if="showPassword && type === 'password'" :class="{
                     'i-ri-eye-off-line': !passwordVisible,
                     'i-ri-eye-line': passwordVisible
                 }" class="cursor-pointer" @click="togglePassword"></div>
@@ -77,6 +80,10 @@ const props = defineProps({
     showPassword: {
         type: Boolean,
         default: true
+    },
+    showClear: {
+        type: Boolean,
+        default: false
     }
 })
 const emits = defineEmits(['update:modelValue'])
@@ -98,6 +105,10 @@ const focus = () => {
 
 const togglePassword = () => {
     passwordVisible.value = !passwordVisible.value
+}
+
+const clearContent = () => {
+    val.value = ''
 }
 
 </script>

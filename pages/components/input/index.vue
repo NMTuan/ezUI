@@ -22,6 +22,7 @@
         <ez-input v-model="value" append-icon="i-ri-star-fill"></ez-input>
         <ez-input v-model="value" prefix-icon="i-ri-search-line"></ez-input>
         <ez-input v-model="value" suffix-icon="i-ri-calendar-line"></ez-input>
+        <ez-input v-model="value" show-clear placeholder="清空按钮"></ez-input>
         {{ value }}
         {{ date }}
         {{ time }}
@@ -29,7 +30,7 @@
     </div>
 </template>
 <script setup>
-const value = ref('123')
+const value = ref('')
 const date = ref('2023-04-05')
 const time = ref('12:12')
 const file = ref()
