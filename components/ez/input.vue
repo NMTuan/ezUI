@@ -1,5 +1,5 @@
 <template>
-    <div class="ez-input" :class="{
+    <div class="ez-input overflow-hidden" :class="{
         'ez-input--disabled': disabled,
         'ez-input--readonly': readonly,
         'ez-input--loading': loading,
@@ -29,6 +29,7 @@
         <slot name="append">
             <div class="ez-input__icon ez-input__icon--append" :class="appendIcon" />
         </slot>
+        <!-- <slot></slot> -->
     </div>
 </template>
 <script setup>
@@ -158,6 +159,7 @@ const clearContent = () => {
     &__input {
         @apply flex-1 w-full;
         @apply border-none outline-none;
+        @apply bg-transparent;
     }
 }
 </style>
