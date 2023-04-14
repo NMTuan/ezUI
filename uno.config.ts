@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 11:35:00
- * @LastEditTime: 2023-04-10 11:45:35
+ * @LastEditTime: 2023-04-14 14:43:44
  * @LastEditors: NMTuan
  * @Description:
  * @FilePath: \ezUI\uno.config.ts
@@ -38,19 +38,19 @@ export default defineConfig({
                 DEFAULT: '#58B2DC' // https://nipponcolors.com/#sora
             },
             secondary: {
-                DEFAULT: '#78C2C4' // https://nipponcolors.com/#byakugun
+                DEFAULT: '#66BAB7' // https://nipponcolors.com/#mizuasagi
             },
             success: {
-                DEFAULT: '#91B493' // https://nipponcolors.com/#usuao
+                DEFAULT: '#86C166' // https://nipponcolors.com/#nae
             },
             warning: {
-                DEFAULT: '#E9CD4C' // https://nipponcolors.com/#kariyasu
+                DEFAULT: '#E98B2A' // https://nipponcolors.com/#beniukon
             },
             danger: {
                 DEFAULT: '#D05A6E' // https://nipponcolors.com/#imayoh
             },
             info: {
-                DEFAULT: '#BC9F77' // https://nipponcolors.com/#shiracha
+                DEFAULT: '#828282' // https://nipponcolors.com/#hai
             }
         }
     }
