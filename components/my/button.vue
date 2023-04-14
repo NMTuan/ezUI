@@ -2,7 +2,7 @@
  * @Author: NMTuan
  * @Email: NMTuan@qq.com
  * @Date: 2023-04-06 17:13:38
- * @LastEditTime: 2023-04-10 15:08:52
+ * @LastEditTime: 2023-04-14 13:47:23
  * @LastEditors: NMTuan
  * @Description: 
  * @FilePath: \ezUI\components\my\button.vue
@@ -10,10 +10,12 @@
 <template>
     <ez-button :class="[
         `ez-button--${type}`,
-        `ez-button--${size}`,
+        `ez-button--${size || 'base'}`,
         light ? 'is_light' : '',
     ]">
-        <slot v-for="(slot, name) in slots" :name="name"></slot>
+        <template v-for="(slot, name) in $slots" v-slot:[name]>
+            <slot :name="name" :slot="slot"></slot>
+        </template>
     </ez-button>
 </template>
 <script setup>
@@ -58,11 +60,11 @@ const slots = useSlots()
 
         @each $size in $sizes {
             &--#{$size} {
-                @apply text-#{$size};
-                @apply p-#{$size};
-                @apply h-#{$size};
 
                 .ez-button__content {
+                    @apply text-#{$size};
+                    @apply p-#{$size};
+                    @apply h-#{$size};
 
                     @if $size =='xs' {
                         @apply mx-0.5;
